@@ -1,0 +1,41 @@
+
+
+# COMMON #######################################################################
+
+COMMONDIR:=~/rpisys
+
+# DOWNLOAD #####################################################################
+
+DOWNLOADDIR:=~/Downloads/rpisys
+
+# TOOLCHAIN ####################################################################
+
+TOOLCHAINDLURL:=https://github.com/raspberrypi/tools
+TOOLCHAINNAMETAR:=gcc-linaro-arm-linux-gnueabihf-raspbian-4.8.3.tar.gz
+
+# LINUX #######################################################################
+
+LINUXNAMETAR:=linux-rpi-4.4.36.tar.gz
+
+# Parallel Execution this is the number of recipes to execute at once.
+LINUX_PAR_EXE:=1
+
+# DEFINITIONS ##################################################################
+
+MSG_ERROR := \033[1;31m
+MSG_WARN := \033[0;33m
+MSG_INFO := \033[0;34m
+MSG_DEBUG := \033[0;34m
+MSG_END := \033[0m
+
+ECHO := echo
+
+# CONDITIONAL ##################################################################
+
+ifeq ($(VERBOSE), 1)
+MAKE := make -C
+else
+MAKE := make -s -C
+V := @
+endif
+
