@@ -2,7 +2,8 @@
 
 # COMMON #######################################################################
 
-COMMONDIR:=~/rpisys
+PRJPATH?=$(shell pwd)
+COMMONDIR:=/home/$(USER)/rpisys
 
 # DOWNLOAD #####################################################################
 
@@ -12,13 +13,24 @@ DOWNLOADDIR:=~/Downloads/rpisys
 
 TOOLCHAINDLURL:=https://github.com/raspberrypi/tools
 TOOLCHAINNAMETAR:=gcc-linaro-arm-linux-gnueabihf-raspbian-4.8.3.tar.gz
+TOOLCHAIN_PATH:=$(COMMONDIR)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
+TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
 
 # LINUX #######################################################################
 
 LINUXNAMETAR:=linux-rpi-4.4.36.tar.gz
 
 # Parallel Execution this is the number of recipes to execute at once.
-LINUX_PAR_EXE:=1
+LINUX_PAR_EXE:=2
+
+# By default are added the kernel flags ARCH=arm CROSS_COMPILE=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)
+# This variable allows add some extra flag
+LINUX_KERNEL_EXTRAFLAGS:=kernel7
+
+LINUX_DEFCONFIG:=bcm2709_defconfig
+LINUX_MOD_INSTALLDIR:=modules
+LINUX_KERNEL_INSTALLDIR:=kernel
+
 
 # DEFINITIONS ##################################################################
 
@@ -30,6 +42,10 @@ MSG_END := \033[0m
 
 ECHO := echo
 
+CP :=cp
+RM :=rm -rf
+MKDIR :=mkdir -p
+
 # CONDITIONAL ##################################################################
 
 ifeq ($(VERBOSE), 1)
@@ -38,4 +54,6 @@ else
 MAKE := make -s -C
 V := @
 endif
+
+
 
