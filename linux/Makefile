@@ -22,11 +22,11 @@ all: header sys-linux-install
 header:
 	@$(ECHO) "${MSG_INFO}Linux build${MSG_END} "
 
-$(DOWNLOADDIR)/$(TOOLCHAINNAMETAR):
+$(DOWNLOADDIR)/$(LINUXNAMETAR):
 	@$(ECHO) "${MSG_INFO}  Download toolchain${MSG_END} "
 	#$(V) wget $(LINUXURL)/$(LINUXNAMETAR) -P $(DOWNLOADDIR)
 
-sys-linux-uncomp: $(DOWNLOADDIR)/$(TOOLCHAINNAMETAR)
+sys-linux-uncomp: $(DOWNLOADDIR)/$(LINUXNAMETAR)
 	@    $(ECHO) "${MSG_INFO}  Uncompress linux ${MSG_END}"
 	$(V) $(MKDIR) $(COMMONDIR)
 	$(V) tar -xf $(DOWNLOADDIR)/$(LINUXNAMETAR)

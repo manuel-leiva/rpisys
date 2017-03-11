@@ -2,7 +2,9 @@
 
 # COMMON #######################################################################
 
-PRJPATH?=$(shell pwd)
+PRJDIR=/home/mleiva/devdirs/rpisys/
+
+# This directory is used to share files between projects as the toolchain
 COMMONDIR:=/home/$(USER)/rpisys
 
 # DOWNLOAD #####################################################################
@@ -11,8 +13,8 @@ DOWNLOADDIR:=~/Downloads/rpisys
 
 # TOOLCHAIN ####################################################################
 
-TOOLCHAINDLURL:=https://github.com/raspberrypi/tools
-TOOLCHAINNAMETAR:=gcc-linaro-arm-linux-gnueabihf-raspbian-4.8.3.tar.gz
+TOOLCHAIN_DLURL:=https://dl.dropboxusercontent.com/u/54376508/download/
+TOOLCHAIN_NAMETAR:=gcc-linaro-arm-linux-gnueabihf-raspbian-4.8.3.tar.gz
 TOOLCHAIN_PATH:=$(COMMONDIR)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
 TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
 

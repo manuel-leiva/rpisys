@@ -8,14 +8,14 @@ include ../Make.defs
 
 all: sys-toolchain-uncomp
 
-$(DOWNLOADDIR)/$(TOOLCHAINNAMETAR):
+$(DOWNLOADDIR)/$(TOOLCHAIN_NAMETAR):
 	@$(ECHO) "${MSG_INFO}  Download toolchain${MSG_END} "
-	#$(V) wget $(TOOLCHAINURL)/$(TOOLCHAINNAMETAR) -P $(DOWNLOADDIR)
+	$(V) wget $(TOOLCHAIN_DLURL)/$(TOOLCHAIN_NAMETAR) -P $(DOWNLOADDIR)
 
-sys-toolchain-uncomp: $(DOWNLOADDIR)/$(TOOLCHAINNAMETAR)
+sys-toolchain-uncomp: $(DOWNLOADDIR)/$(TOOLCHAIN_NAMETAR)
 	@$(ECHO) "${MSG_INFO}  Uncompress toolchain${MSG_END} "
 	$(V) mkdir -p $(COMMONDIR)
-	$(V) tar -xf $(DOWNLOADDIR)/$(TOOLCHAINNAMETAR) -C $(COMMONDIR)
+	$(V) tar -xf $(DOWNLOADDIR)/$(TOOLCHAIN_NAMETAR) -C $(COMMONDIR)
 	$(V) touch sys-toolchain-uncomp
 
 
