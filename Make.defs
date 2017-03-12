@@ -2,7 +2,7 @@
 
 # COMMON #######################################################################
 
-PRJDIR=/home/mleiva/devdirs/rpisys/
+PRJDIR=/home/mleiva/devdirs/rpisys
 
 # This directory is used to share files between projects as the toolchain
 COMMONDIR:=/home/$(USER)/rpisys
@@ -33,6 +33,10 @@ LINUX_DEFCONFIG:=bcm2709_defconfig
 LINUX_MOD_INSTALLDIR:=modules
 LINUX_KERNEL_INSTALLDIR:=kernel
 
+# LIBRARIES ####################################################################
+
+# Libraries for the normal user-programs installation Directory
+LIBS_INSTALLDIR:=/usr/lib/arm-linux-gnueabihf
 
 # DEFINITIONS ##################################################################
 

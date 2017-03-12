@@ -5,8 +5,8 @@ include ../../Make.defs
 
 PKGNAME := $(notdir $(shell pwd))
 
-export DESTDIR=$(PRJDIR)/libs/libs/
-export PKG_CONFIG_PATH=$(PRJDIR)/libs/libs/$(LIBS_INSTALLDIR)
+export DESTDIR=$(PRJDIR)/libraries/libs/
+export PKG_CONFIG_PATH=$(PRJDIR)/libraries/libs$(LIBS_INSTALLDIR)/pkgconfig
 
 CROSS_COMPILE:=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)
 
@@ -37,7 +37,7 @@ autotools-uncomp: $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
 autotools-configure: autotools-uncomp
 	@    $(ECHO) "${MSG_INFO}  Configure ${PKGNAME} ${MSG_END}"
 	$(V) cd ${PKGNAME} ; \
-	     DESTDIR=$(PRJDIR)/libs/libs/ AR=${CROSS_COMPILE}ar CC=${CROSS_COMPILE}gcc RANLIB=${CROSS_COMPILE}ranlib ./configure $(AUTOTOOLS_FLAGS)
+	AR=${CROSS_COMPILE}ar CC=${CROSS_COMPILE}gcc RANLIB=${CROSS_COMPILE}ranlib ./configure $(AUTOTOOLS_FLAGS)
 	$(V) touch $@
 
 autotools-make: autotools-configure
