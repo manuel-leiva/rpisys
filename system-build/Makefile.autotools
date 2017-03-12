@@ -12,7 +12,7 @@ AUTOTOOLS_DL_TAR_PATH = $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
 export DESTDIR=$(PRJDIR)/libraries/libs/
 export PKG_CONFIG_PATH=$(PRJDIR)/libraries/libs$(LIBS_INSTALLDIR)/pkgconfig
 
-.PHONY: all clean header
+.PHONY: all clean download install
 
 all: autotools-make
 
@@ -26,10 +26,10 @@ clean:
 	$(V) $(RM) $(PKGNAME)
 
 # Alias target to download the package
-autotools-download: $(AUTOTOOLS_DL_TAR_PATH)
+download: $(AUTOTOOLS_DL_TAR_PATH)
 
 $(AUTOTOOLS_DL_TAR_PATH):
-	@$(ECHO) "${MSG_INFO}  Download ${PKGNAME}${MSG_END} "
+	@$(ECHO) "${MSG_INFO}  Download ${PKGNAME}${MSG_END}"
 	$(V) wget $(AUTOTOOLS_DL_URL_FILE) -P $(DOWNLOADDIR)
 
 autotools-uncomp: $(AUTOTOOLS_DL_TAR_PATH)
@@ -64,4 +64,4 @@ autotools-debug-var:
 	@echo AUTOTOOLS_FLAGS: ${AUTOTOOLS_FLAGS}
 	@echo AUTOTOOLS_DL_URL_FILE: ${AUTOTOOLS_DL_URL_FILE}
 	@echo AUTOTOOLS_DL_TAR_PATH: ${AUTOTOOLS_DL_TAR_PATH}
-
+	@echo
