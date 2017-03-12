@@ -8,6 +8,7 @@ PKGNAME := $(notdir $(shell pwd))
 CROSS_COMPILE := $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)
 AUTOTOOLS_DL_URL_FILE = $(AUTOTOOLS_DL_URL)$(AUTOTOOLS_NAME_TAR)
 AUTOTOOLS_DL_TAR_PATH = $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
+AUTOTOOLS_PKG_PATH = $(PRJDIR)/libraries/$(PKGNAME)
 
 export DESTDIR=$(PRJDIR)/libraries/libs/
 export PKG_CONFIG_PATH=$(PRJDIR)/libraries/libs$(LIBS_INSTALLDIR)/pkgconfig
@@ -16,12 +17,12 @@ export PKG_CONFIG_PATH=$(PRJDIR)/libraries/libs$(LIBS_INSTALLDIR)/pkgconfig
 
 all: autotools-make
 
-clean:
+clean: autotools-unpatch
 	@$(ECHO) "${MSG_INFO}  Clean ${PKGNAME}${MSG_END} "
 # Remove flags files
 	$(V) $(RM) autotools-build \
 	autotools-uncomp autotools-make autotools-configure \
-	autotools-make-install
+	autotools-make-install autotools-patch
 # Remove package directory
 	$(V) $(RM) $(PKGNAME)
 
@@ -38,10 +39,23 @@ autotools-uncomp: $(AUTOTOOLS_DL_TAR_PATH)
 	$(V) tar -xf $(AUTOTOOLS_DL_TAR_PATH)
 	$(V) touch $@
 
-autotools-configure: autotools-uncomp
+autotools-unpatch:
+	$(V) if [ -d ${AUTOTOOLS_PKG_PATH}/patches ]; then \
+        echo "${MSG_INFO}  Unpatch ${PKGNAME} ${MSG_END}" ; \
+        quilt pop -a ; \
+    fi
+	$(RM) autotools-patch
+
+autotools-patch: autotools-uncomp
+	$(V) if [ -d ${AUTOTOOLS_PKG_PATH}/patches ]; then \
+        echo "${MSG_INFO}  Patch ${PKGNAME} ${MSG_END}" ; \
+        quilt push -a ; \
+    fi
+
+autotools-configure: autotools-patch
 	@    $(ECHO) "${MSG_INFO}  Configure ${PKGNAME} ${MSG_END}"
 	$(V) cd ${PKGNAME} ; \
-	AR=${CROSS_COMPILE}ar CC=${CROSS_COMPILE}gcc RANLIB=${CROSS_COMPILE}ranlib ./configure $(AUTOTOOLS_FLAGS)
+	CXX=${CROSS_COMPILE}g++ AR=${CROSS_COMPILE}ar CC=${CROSS_COMPILE}gcc RANLIB=${CROSS_COMPILE}ranlib ./configure $(AUTOTOOLS_FLAGS)
 	$(V) touch $@
 
 autotools-make: autotools-configure
@@ -64,4 +78,5 @@ autotools-debug-var:
 	@echo AUTOTOOLS_FLAGS: ${AUTOTOOLS_FLAGS}
 	@echo AUTOTOOLS_DL_URL_FILE: ${AUTOTOOLS_DL_URL_FILE}
 	@echo AUTOTOOLS_DL_TAR_PATH: ${AUTOTOOLS_DL_TAR_PATH}
+	@echo AUTOTOOLS_PKG_PATH: ${AUTOTOOLS_PKG_PATH}
 	@echo
