@@ -1,0 +1,64 @@
+
+
+# Include local definition
+include ../../Make.defs
+
+PKGNAME := $(notdir $(shell pwd))
+
+export DESTDIR=$(PRJDIR)/libs/libs/
+export PKG_CONFIG_PATH=$(PRJDIR)/libs/libs/$(LIBS_INSTALLDIR)
+
+CROSS_COMPILE:=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)
+
+.PHONY: all clean header
+
+all: autotools-make
+
+clean:
+	@$(ECHO) "${MSG_INFO}  Clean ${PKGNAME}${MSG_END} "
+# Remove flags files
+	$(V) $(RM) autotools-build autotools-uncomp autotools-make autotools-configure
+# Remove package directory
+	$(V) $(RM) $(PKGNAME)
+
+# Alias target to download the package
+autotools-download: $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
+
+$(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR):
+	@$(ECHO) "${MSG_INFO}  Download ${PKGNAME}${MSG_END} "
+	$(V) wget $(AUTOTOOLS_DL_URL)/$(AUTOTOOLS_NAME_TAR) -P $(DOWNLOADDIR)
+	 
+autotools-uncomp: $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
+	@    $(ECHO) "${MSG_INFO}  Uncompress ${PKGNAME} ${MSG_END}"
+	$(V) $(MKDIR) $(COMMONDIR)
+	$(V) tar -xf $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
+	$(V) touch $@
+
+autotools-configure: autotools-uncomp
+	@    $(ECHO) "${MSG_INFO}  Configure ${PKGNAME} ${MSG_END}"
+	$(V) cd ${PKGNAME} ; \
+	     DESTDIR=$(PRJDIR)/libs/libs/ AR=${CROSS_COMPILE}ar CC=${CROSS_COMPILE}gcc RANLIB=${CROSS_COMPILE}ranlib ./configure $(AUTOTOOLS_FLAGS)
+	$(V) touch $@
+
+autotools-make: autotools-configure
+	@    $(ECHO) "${MSG_INFO}  Make ${PKGNAME}${MSG_END}"
+	$(V) $(MAKE) ${PKGNAME}
+	$(V) touch $@
+
+autotools-make-install: autotools-uncomp
+	@    $(ECHO) "${MSG_INFO}  Make install ${PKGNAME}${MSG_END}"
+	$(V) $(MAKE) ${PKGNAME} install
+	$(V) touch $@
+
+# Alias target to download the package
+install: autotools-make-install
+	
+autotools-debug-var:
+	@echo PKGNAME: ${PKGNAME}
+	@echo DESTDIR: ${DESTDIR}
+	@echo AUTOTOOLS_FLAGS: ${AUTOTOOLS_FLAGS}
+	@echo PKG_CONFIG_PATH: ${PKG_CONFIG_PATH}
+	@echo DOWNLOAD FILE: $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
+	@echo DOWNLOAD URL: $(AUTOTOOLS_DL_URL)/$(AUTOTOOLS_NAME_TAR)
+
+	
