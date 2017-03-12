@@ -5,10 +5,12 @@ include ../../Make.defs
 
 PKGNAME := $(notdir $(shell pwd))
 
+CROSS_COMPILE := $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)
+AUTOTOOLS_DL_URL_FILE = $(AUTOTOOLS_DL_URL)$(AUTOTOOLS_NAME_TAR)
+AUTOTOOLS_DL_TAR_PATH = $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
+
 export DESTDIR=$(PRJDIR)/libraries/libs/
 export PKG_CONFIG_PATH=$(PRJDIR)/libraries/libs$(LIBS_INSTALLDIR)/pkgconfig
-
-CROSS_COMPILE:=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)
 
 .PHONY: all clean header
 
@@ -17,21 +19,23 @@ all: autotools-make
 clean:
 	@$(ECHO) "${MSG_INFO}  Clean ${PKGNAME}${MSG_END} "
 # Remove flags files
-	$(V) $(RM) autotools-build autotools-uncomp autotools-make autotools-configure
+	$(V) $(RM) autotools-build \
+	autotools-uncomp autotools-make autotools-configure \
+	autotools-make-install
 # Remove package directory
 	$(V) $(RM) $(PKGNAME)
 
 # Alias target to download the package
-autotools-download: $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
+autotools-download: $(AUTOTOOLS_DL_TAR_PATH)
 
-$(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR):
+$(AUTOTOOLS_DL_TAR_PATH):
 	@$(ECHO) "${MSG_INFO}  Download ${PKGNAME}${MSG_END} "
-	$(V) wget $(AUTOTOOLS_DL_URL)/$(AUTOTOOLS_NAME_TAR) -P $(DOWNLOADDIR)
-	 
-autotools-uncomp: $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
+	$(V) wget $(AUTOTOOLS_DL_URL_FILE) -P $(DOWNLOADDIR)
+
+autotools-uncomp: $(AUTOTOOLS_DL_TAR_PATH)
 	@    $(ECHO) "${MSG_INFO}  Uncompress ${PKGNAME} ${MSG_END}"
 	$(V) $(MKDIR) $(COMMONDIR)
-	$(V) tar -xf $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
+	$(V) tar -xf $(AUTOTOOLS_DL_TAR_PATH)
 	$(V) touch $@
 
 autotools-configure: autotools-uncomp
@@ -52,13 +56,12 @@ autotools-make-install: autotools-uncomp
 
 # Alias target to download the package
 install: autotools-make-install
-	
+
 autotools-debug-var:
 	@echo PKGNAME: ${PKGNAME}
 	@echo DESTDIR: ${DESTDIR}
-	@echo AUTOTOOLS_FLAGS: ${AUTOTOOLS_FLAGS}
 	@echo PKG_CONFIG_PATH: ${PKG_CONFIG_PATH}
-	@echo DOWNLOAD FILE: $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
-	@echo DOWNLOAD URL: $(AUTOTOOLS_DL_URL)/$(AUTOTOOLS_NAME_TAR)
+	@echo AUTOTOOLS_FLAGS: ${AUTOTOOLS_FLAGS}
+	@echo AUTOTOOLS_DL_URL_FILE: ${AUTOTOOLS_DL_URL_FILE}
+	@echo AUTOTOOLS_DL_TAR_PATH: ${AUTOTOOLS_DL_TAR_PATH}
 
-	
