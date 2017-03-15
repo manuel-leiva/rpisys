@@ -1,6 +1,6 @@
 
 
-# Include local definition
+# Include global definitions
 include ../../Make.defs
 
 PKGNAME := $(notdir $(shell pwd))
@@ -17,11 +17,11 @@ export PKG_CONFIG_PATH=$(PRJDIR)/libraries/libs$(LIBS_INSTALLDIR)/pkgconfig
 
 all: autotools-make
 
-clean: autotools-unpatch
+clean: autotools-revpatch
 	@$(ECHO) "${MSG_INFO}  Clean ${PKGNAME}${MSG_END} "
 # Remove flags files
 	$(V) $(RM) autotools-build \
-	autotools-uncomp autotools-make autotools-configure \
+	autotools-decomp autotools-make autotools-configure \
 	autotools-make-install autotools-patch
 # Remove package directory
 	$(V) $(RM) $(PKGNAME)
@@ -33,23 +33,30 @@ $(AUTOTOOLS_DL_TAR_PATH):
 	@$(ECHO) "${MSG_INFO}  Download ${PKGNAME}${MSG_END}"
 	$(V) wget $(AUTOTOOLS_DL_URL_FILE) -P $(DOWNLOADDIR)
 
-autotools-uncomp: $(AUTOTOOLS_DL_TAR_PATH)
-	@    $(ECHO) "${MSG_INFO}  Uncompress ${PKGNAME} ${MSG_END}"
+autotools-decomp: $(AUTOTOOLS_DL_TAR_PATH)
+	@    $(ECHO) "${MSG_INFO}  Decompress ${PKGNAME} ${MSG_END}"
 	$(V) $(MKDIR) $(COMMONDIR)
 	$(V) tar -xf $(AUTOTOOLS_DL_TAR_PATH)
 	$(V) touch $@
 
-autotools-unpatch:
+# Reverse patches
+autotools-revpatch:
+# Verify if patches directory exists, if it exists, then verify if the
+# flag autotools-patch file exists, if it exists, then remove the
+# patches
 	$(V) if [ -d ${AUTOTOOLS_PKG_PATH}/patches ]; then \
-        echo "${MSG_INFO}  Unpatch ${PKGNAME} ${MSG_END}" ; \
-        quilt pop -a ; \
+		if [ -f ${AUTOTOOLS_PKG_PATH}/autotools-patch ]; then \
+			echo "${MSG_INFO}  Reverse patches ${PKGNAME} ${MSG_END}" ; \
+			quilt pop -a ; \
+			rm autotools-patch ; \
+        fi \
     fi
-	$(RM) autotools-patch
 
-autotools-patch: autotools-uncomp
+autotools-patch: autotools-decomp
 	$(V) if [ -d ${AUTOTOOLS_PKG_PATH}/patches ]; then \
         echo "${MSG_INFO}  Patch ${PKGNAME} ${MSG_END}" ; \
         quilt push -a ; \
+        touch $@ ; \
     fi
 
 autotools-configure: autotools-patch
@@ -63,7 +70,7 @@ autotools-make: autotools-configure
 	$(V) $(MAKE) ${PKGNAME}
 	$(V) touch $@
 
-autotools-make-install: autotools-uncomp
+autotools-make-install: autotools-decomp
 	@    $(ECHO) "${MSG_INFO}  Make install ${PKGNAME}${MSG_END}"
 	$(V) $(MAKE) ${PKGNAME} install
 	$(V) touch $@
