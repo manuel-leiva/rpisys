@@ -13,7 +13,7 @@ AUTOTOOLS_PKG_PATH = $(PRJDIR)/libraries/$(PKGNAME)
 export DESTDIR=$(PRJDIR)/libraries/libs/
 export PKG_CONFIG_PATH=$(PRJDIR)/libraries/libs$(LIBS_INSTALLDIR)/pkgconfig
 
-.PHONY: all clean download install
+.PHONY: all clean help download install
 
 all: autotools-make
 
@@ -77,6 +77,16 @@ autotools-make-install: autotools-decomp
 
 # Alias target to download the package
 install: autotools-make-install
+
+help:
+	@ $(ECHO) "  Targets:"
+	@ $(ECHO) "    all:       Build autotools package"
+	@ $(ECHO) "    install:   Install autotools package"
+	@ $(ECHO) "    download:  Download autotools package"
+	@ $(ECHO) "  Variables"
+	@ $(ECHO) "    AUTOTOOLS_DL_URL    : URL address"
+	@ $(ECHO) "    AUTOTOOLS_NAME_TAR  : Tar package name"
+	@ $(ECHO) "    AUTOTOOLS_FLAGS     : configure script flags"
 
 autotools-debug-var:
 	@echo PKGNAME: ${PKGNAME}
