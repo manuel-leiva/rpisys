@@ -3,6 +3,7 @@ include ../Make.defs
 
 .PHONY: $(LIB_NAME_LIST)
 
+
 define BUILD_RECIPE
 $(1): $(2)
 	$(V)$(MAKE) $(1)
@@ -10,8 +11,33 @@ $(1): $(2)
 
 endef
 
+define CLEAN_RECIPE
+clean-$(1):
+	$(V)$(MAKE) $(1) clean
 
+endef
+
+LIB_CLEAN_TARGET_LIST:=$(LIB_NAME_LIST:%=clean-%)
+
+
+all: $(LIB_NAME_LIST)
+
+clean: $(LIB_CLEAN_TARGET_LIST)
+	@$(ECHO) "${MSG_INFO}  Clean Libraries ${MSG_END}"
+	@$(RM) libs
+
+# Build targets
 $(info $(foreach i,$(LIB_NAME_LIST),$(eval $(call BUILD_RECIPE,$(i),$(shell if [ -f $(i)/dependency.txt ]; then cat $(i)/dependency.txt ; fi )))))
 
-debug:
+# Clean targets
+$(info $(foreach i,$(LIB_NAME_LIST),$(eval $(call CLEAN_RECIPE,$(i)))))
+
+
+libraries-debug-targets:
+# The lines must be coherent with the lines used in order to show the real recipes
 	@echo $(info $(foreach i,$(LIB_NAME_LIST),$(call BUILD_RECIPE,$(i),$(shell if [ -f $(i)/dependency.txt ]; then cat $(i)/dependency.txt ; fi ))))
+	@echo $(info $(foreach i,$(LIB_CLEAN_TARGET_LIST),$(call CLEAN_RECIPE,$(i))))
+
+libraries-debug-var:
+	@echo "LIB_NAME_LIST: $(LIB_NAME_LIST)"
+	@echo "LIB_CLEAN_TARGET_LIST: $(LIB_CLEAN_TARGET_LIST)"
