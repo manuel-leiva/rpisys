@@ -24,7 +24,7 @@ all: $(LIB_NAME_LIST)
 
 clean: $(LIB_CLEAN_TARGET_LIST)
 	@$(ECHO) "${MSG_INFO}  Clean Libraries ${MSG_END}"
-	@$(RM) libs
+	@$(RM) host-libs board-libs
 
 # Build targets
 $(info $(foreach i,$(LIB_NAME_LIST),$(eval $(call BUILD_RECIPE,$(i),$(shell if [ -f $(i)/dependency.txt ]; then cat $(i)/dependency.txt ; fi )))))
