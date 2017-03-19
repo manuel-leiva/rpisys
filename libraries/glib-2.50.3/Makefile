@@ -4,7 +4,8 @@ AUTOTOOLS_DL_URL := http://ftp.gnome.org/pub/GNOME/sources/glib/2.50/
 
 AUTOTOOLS_NAME_TAR := glib-2.50.3.tar.xz
 
-AUTOTOOLS_FLAGS += --prefix=/usr --libdir=/usr/lib/arm-linux-gnueabihf/ --host=arm
+AUTOTOOLS_FLAGS += --prefix=/usr --libdir=/usr/lib/arm-linux-gnueabihf/ --host=arm \
+CFLAGS="-I$(AUTOTOOLS_PREFIX_INC_DIR)/usr/include/ -L$(AUTOTOOLS_PREFIX_INC_DIR)/usr/lib/arm-linux-gnueabihf/"
 
 # Build package using autotools recipe
 include ../../system-build/Makefile.autotools
