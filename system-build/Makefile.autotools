@@ -11,7 +11,8 @@ AUTOTOOLS_DL_TAR_PATH = $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
 AUTOTOOLS_PKG_PATH = $(PRJDIR)/libraries/$(PKGNAME)
 
 export DESTDIR=$(PRJDIR)/libraries/libs/
-export PKG_CONFIG_PATH=$(PRJDIR)/libraries/libs$(LIBS_INSTALLDIR)/pkgconfig
+# PKG_CONFIG_LIBDIR: Replaces the default pkg-config search directory.
+export PKG_CONFIG_LIBDIR=$(PRJDIR)/libraries/libs$(LIBS_INSTALLDIR)/pkgconfig
 
 .PHONY: all clean help download install
 
@@ -45,10 +46,10 @@ autotools-revpatch:
 # flag autotools-patch file exists, if it exists, then remove the
 # patches
 	$(V) if [ -d ${AUTOTOOLS_PKG_PATH}/patches ]; then \
-		if [ -f ${AUTOTOOLS_PKG_PATH}/autotools-patch ]; then \
-			echo "${MSG_INFO}  Reverse patches ${PKGNAME} ${MSG_END}" ; \
-			quilt pop -a ; \
-			rm autotools-patch ; \
+        if [ -f ${AUTOTOOLS_PKG_PATH}/autotools-patch ]; then \
+            echo "${MSG_INFO}  Reverse patches ${PKGNAME} ${MSG_END}" ; \
+            quilt pop -a ; \
+            rm autotools-patch ; \
         fi \
     fi
 
@@ -75,25 +76,51 @@ autotools-make-install: autotools-decomp
 	$(V) $(MAKE) ${PKGNAME} install
 	$(V) touch $@
 
+autotools-make-host-install:
+	@$(eval AUTOTOOLS_LA_LIBS := $(shell find -name *.la))
+	@for i in $(AUTOTOOLS_LA_LIBS); do \
+        echo Lib $$i ; \
+        sed -i "s:libdir=':libdir='$(PRJDIR)/libraries/host-libs:g" $$i ; \
+    done
+	@$(eval AUTOTOOLS_LAI_LIBS := $(shell find -name *.lai))
+	@for i in $(AUTOTOOLS_LAI_LIBS); do \
+        echo Lib $$i ; \
+        sed -i "s:libdir=':libdir='$(PRJDIR)/libraries/host-libs:g" $$i ; \
+    done
+	@$(eval AUTOTOOLS_PC_FILES := $(shell find -name *.pc))
+	@for i in $(AUTOTOOLS_PC_FILES); do \
+        echo Files $$i ; \
+        sed -i "s:prefix=:prefix=$(PRJDIR)/libraries/host-libs:g" $$i ; \
+        sed -i "s:libdir=:libdir=$(PRJDIR)/libraries/host-libs:g" $$i ; \
+        sed -i "s:toolexeclibdir=:toolexeclibdir=$(PRJDIR)/libraries/host-libs:g" $$i ; \
+    done
+	DESTDIR=$(PRJDIR)/libraries/host-libs/ $(MAKE) ${PKGNAME} install
+
 # Alias target to download the package
 install: autotools-make-install
 
 help:
-	@ $(ECHO) "  Targets:"
-	@ $(ECHO) "    all:       Build autotools package"
-	@ $(ECHO) "    install:   Install autotools package"
-	@ $(ECHO) "    download:  Download autotools package"
-	@ $(ECHO) "  Variables"
-	@ $(ECHO) "    AUTOTOOLS_DL_URL    : URL address"
-	@ $(ECHO) "    AUTOTOOLS_NAME_TAR  : Tar package name"
-	@ $(ECHO) "    AUTOTOOLS_FLAGS     : configure script flags"
+	@$(ECHO) "  Targets:"
+	@$(ECHO) "    all:       Build autotools package"
+	@$(ECHO) "    install:   Install autotools package"
+	@$(ECHO) "    download:  Download autotools package"
+	@$(ECHO) "  Variables"
+	@$(ECHO) "    AUTOTOOLS_DL_URL    : URL address"
+	@$(ECHO) "    AUTOTOOLS_NAME_TAR  : Tar package name"
+	@$(ECHO) "    AUTOTOOLS_FLAGS     : configure script flags"
+
+help-debug:
+	@$(ECHO) "    autotools-debug-var:            Show variables used during build process"
+	@$(ECHO) "    autotools-debug-libs-installed: Show the list of libraries installed using: pkg-config --list-all"
 
 autotools-debug-var:
-	@echo PKGNAME: ${PKGNAME}
-	@echo DESTDIR: ${DESTDIR}
-	@echo PKG_CONFIG_PATH: ${PKG_CONFIG_PATH}
-	@echo AUTOTOOLS_FLAGS: ${AUTOTOOLS_FLAGS}
-	@echo AUTOTOOLS_DL_URL_FILE: ${AUTOTOOLS_DL_URL_FILE}
-	@echo AUTOTOOLS_DL_TAR_PATH: ${AUTOTOOLS_DL_TAR_PATH}
-	@echo AUTOTOOLS_PKG_PATH: ${AUTOTOOLS_PKG_PATH}
-	@echo
+	@$(ECHO) PKGNAME: ${PKGNAME}
+	@$(ECHO) DESTDIR: ${DESTDIR}
+	@$(ECHO) PKG_CONFIG_LIBDIR: ${PKG_CONFIG_LIBDIR}
+	@$(ECHO) AUTOTOOLS_FLAGS: ${AUTOTOOLS_FLAGS}
+	@$(ECHO) AUTOTOOLS_DL_URL_FILE: ${AUTOTOOLS_DL_URL_FILE}
+	@$(ECHO) AUTOTOOLS_DL_TAR_PATH: ${AUTOTOOLS_DL_TAR_PATH}
+	@$(ECHO) AUTOTOOLS_PKG_PATH: ${AUTOTOOLS_PKG_PATH}
+
+autotools-debug-libs-installed:
+	@pkg-config --list-all
