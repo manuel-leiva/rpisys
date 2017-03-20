@@ -1,0 +1,2 @@
+libxml2-2.9.4
+sqlite-autoconf-3170000
