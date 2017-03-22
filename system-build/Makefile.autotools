@@ -56,16 +56,16 @@ autotools-revpatch:
         if [ -f ${AUTOTOOLS_PKG_PATH}/autotools-patch ]; then \
             echo "${MSG_INFO}  Reverse patches ${PKGNAME} ${MSG_END}" ; \
             quilt pop -a ; \
-            rm autotools-patch ; \
         fi \
     fi
+	$(V) $(RM) autotools-patch
 
 autotools-patch: autotools-decomp
 	$(V) if [ -d ${AUTOTOOLS_PKG_PATH}/patches ]; then \
         echo "${MSG_INFO}  Patch ${PKGNAME} ${MSG_END}" ; \
         quilt push -a ; \
-        touch $@ ; \
     fi
+	$(V) touch $@ ;
 
 autotools-configure: autotools-patch
 	@    $(ECHO) "${MSG_INFO}  Configure ${PKGNAME} ${MSG_END}"
@@ -84,31 +84,9 @@ autotools-make-install-board: autotools-decomp
 	$(V) touch $@
 
 autotools-make-install-host: autotools-make-install-board
-	@$(eval AUTOTOOLS_LA_LIBS := $(shell find ${PKGNAME} -name *.la))
-	$(V) if [ -n ${AUTOTOOLS_LA_LIBS} ]; then \
-        for i in $(AUTOTOOLS_LA_LIBS); do \
-            echo Lib $$i ; \
-            sed -i "s:libdir=':libdir='$(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR):g" $$i ; \
-        done ; \
-    fi
-	@$(eval AUTOTOOLS_LAI_LIBS := $(shell find ${PKGNAME} -name *.lai))
-	$(V) if [ -n ${AUTOTOOLS_LAI_LIBS} ]; then \
-        for i in $(AUTOTOOLS_LAI_LIBS); do \
-            echo Lib $$i ; \
-            sed -i "s:libdir=':libdir='$(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR):g" $$i ; \
-        done ; \
-    fi
-	@$(eval AUTOTOOLS_PC_FILES := $(shell find ${PKGNAME} -name *.pc))
-	$(V) set -x ; \
-	if [ -n ${AUTOTOOLS_PC_FILES} ]; then \
-		for i in $(AUTOTOOLS_PC_FILES); do \
-			echo Files $$i ; \
-			sed -i "s:^prefix=:prefix=$(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR):g" $$i ; \
-			sed -i "s:^libdir=:libdir=$(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR):g" $$i ; \
-			sed -i "s:^toolexeclibdir=:toolexeclibdir=$(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR):g" $$i ; \
-		done ; \
-	fi
-	DESTDIR=$(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/ $(MAKE) ${PKGNAME} install
+# Change prefix
+	$(PRJDIR)/system-build/scripts/autotools-change-prefix.sh ${PKGNAME} $(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)
+	DESTDIR=$(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR) $(MAKE) ${PKGNAME} install
 	touch $@
 
 # Alias target to download the package
