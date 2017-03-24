@@ -8,7 +8,7 @@ PREFIX=$2
 LIBS_INSTALLDIR=$3
 
 # Change library la files
-AUTOTOOLS_LA_LIBS=$(find ${PKGNAME} -name *.la)
+AUTOTOOLS_LA_LIBS=$(find install -name *.la)
 if [ -n "${AUTOTOOLS_LA_LIBS}" ]; then
     for i in ${AUTOTOOLS_LA_LIBS}; do
         echo Lib $i ;
@@ -18,7 +18,7 @@ if [ -n "${AUTOTOOLS_LA_LIBS}" ]; then
     done ;
 fi
 
-AUTOTOOLS_LAI_LIBS=$(find ${PKGNAME} -name *.lai)
+AUTOTOOLS_LAI_LIBS=$(find install -name *.lai)
 if [ -n "${AUTOTOOLS_LAI_LIBS}" ]; then
     for i in ${AUTOTOOLS_LAI_LIBS}; do
         echo Lib $i ;
@@ -29,7 +29,7 @@ if [ -n "${AUTOTOOLS_LAI_LIBS}" ]; then
 fi
 
 # Change library package config files
-AUTOTOOLS_PC_FILES=$(find ${PKGNAME} -name *.pc)
+AUTOTOOLS_PC_FILES=$(find install -name *.pc)
 if [ -n "${AUTOTOOLS_PC_FILES}" ]; then
     for i in ${AUTOTOOLS_PC_FILES}; do
         echo Files $i ;
