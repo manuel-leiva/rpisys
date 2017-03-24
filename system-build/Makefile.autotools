@@ -87,26 +87,15 @@ autotools-make: autotools-configure
 	$(V) $(MAKE) ${PKGNAME}
 	$(V) touch $@
 
-autotools-make-install-board: autotools-decomp
-	$(V) $(MAKE) ${PKGNAME} install
-	$(V) touch $@
-
-autotools-make-install-host: autotools-make-install-board
-# Change prefix
-	$(PRJDIR)/system-build/scripts/autotools-change-prefix.sh ${PKGNAME} $(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR) ${LIBS_INSTALLDIR}
-	DESTDIR=$(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR) $(MAKE) ${PKGNAME} install > /dev/null
-	touch $@
-
-
 autotools-make-install: autotools-make
 	@    $(ECHO) "${MSG_INFO}  Make install ${PKGNAME}${MSG_END}"
-	mkdir -p install
-	DESTDIR=$(PRJDIR)/libraries/${PKGNAME}/install $(MAKE) ${PKGNAME} install > /dev/null
-	cp -a $(PRJDIR)/libraries/${PKGNAME}/install/* $(PRJDIR)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)/
-	$(PRJDIR)/system-build/scripts/autotools-change-prefix.sh ${PKGNAME} $(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR) ${LIBS_INSTALLDIR}
-	cp -a $(PRJDIR)/libraries/${PKGNAME}/install/* $(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/
-	rm -rf install
-	touch $@
+	$(V) mkdir -p install
+	$(V) DESTDIR=$(PRJDIR)/libraries/${PKGNAME}/install $(MAKE) ${PKGNAME} install
+	$(V) cp -ar $(PRJDIR)/libraries/${PKGNAME}/install/* $(PRJDIR)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)/
+	$(V) $(PRJDIR)/system-build/scripts/autotools-change-prefix.sh ${PKGNAME} $(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR) ${LIBS_INSTALLDIR}
+	$(V) cp -ar $(PRJDIR)/libraries/${PKGNAME}/install/* $(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/
+#~ 	$(V) $(RM) install
+	$(V) touch $@
 
 # Alias target to download the package
 install: autotools-make-install
