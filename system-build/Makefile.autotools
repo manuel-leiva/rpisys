@@ -34,6 +34,14 @@ clean: autotools-revpatch
 # Remove package directory
 	$(V) $(RM) $(PKGNAME)
 
+distclean:
+# Delete all files in the package directory that are created by
+# configuring or building the program.
+	$(V) $(RM) \
+	autotools-configure \
+	autotools-make
+	$(V) $(MAKE) ${PKGNAME} distclean
+
 # Alias target to download the package
 download: $(AUTOTOOLS_DL_TAR_PATH)
 
@@ -75,22 +83,22 @@ autotools-configure: autotools-patch
 
 autotools-make: autotools-configure
 	@    $(ECHO) "${MSG_INFO}  Make ${PKGNAME}${MSG_END}"
-	$(V) $(MAKE) ${PKGNAME} V=1
+	$(V) $(MAKE) ${PKGNAME}
 	$(V) touch $@
 
 autotools-make-install-board: autotools-decomp
-	@    $(ECHO) "${MSG_INFO}  Make install ${PKGNAME}${MSG_END}"
 	$(V) $(MAKE) ${PKGNAME} install
 	$(V) touch $@
 
 autotools-make-install-host: autotools-make-install-board
 # Change prefix
-	$(PRJDIR)/system-build/scripts/autotools-change-prefix.sh ${PKGNAME} $(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)
+	$(PRJDIR)/system-build/scripts/autotools-change-prefix.sh ${PKGNAME} $(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR) ${LIBS_INSTALLDIR}
 	DESTDIR=$(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR) $(MAKE) ${PKGNAME} install
 	touch $@
 
 # Alias target to download the package
 install: autotools-make-install-host
+	@    $(ECHO) "${MSG_INFO}  Make install ${PKGNAME}${MSG_END}"
 
 help:
 	@$(ECHO) "  Targets:"
