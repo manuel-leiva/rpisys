@@ -22,14 +22,14 @@ all: header sys-linux-install
 header:
 	@$(ECHO) "${MSG_INFO}Linux build${MSG_END} "
 
-$(DOWNLOADDIR)/$(LINUXNAMETAR):
+$(PRJ_DOWNLOAD_PATH)/$(LINUXNAMETAR):
 	@$(ECHO) "${MSG_INFO}  Download toolchain${MSG_END} "
-	#$(V) wget $(LINUXURL)/$(LINUXNAMETAR) -P $(DOWNLOADDIR)
+	#$(V) wget $(LINUXURL)/$(LINUXNAMETAR) -P $(PRJ_DOWNLOAD_PATH)
 
-sys-linux-uncomp: $(DOWNLOADDIR)/$(LINUXNAMETAR)
+sys-linux-uncomp: $(PRJ_DOWNLOAD_PATH)/$(LINUXNAMETAR)
 	@    $(ECHO) "${MSG_INFO}  Uncompress linux ${MSG_END}"
-	$(V) $(MKDIR) $(COMMONDIR)
-	$(V) tar -xf $(DOWNLOADDIR)/$(LINUXNAMETAR)
+	$(V) $(MKDIR) $(PRJ_COMMON_PATH)
+	$(V) tar -xf $(PRJ_DOWNLOAD_PATH)/$(LINUXNAMETAR)
 	$(V) touch $@
 
 sys-linux-patch: sys-linux-uncomp

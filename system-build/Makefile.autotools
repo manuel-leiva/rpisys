@@ -7,17 +7,17 @@ PKGNAME := $(notdir $(shell pwd))
 
 CROSS_COMPILE := $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)
 AUTOTOOLS_DL_URL_FILE = $(AUTOTOOLS_DL_URL)$(AUTOTOOLS_NAME_TAR)
-AUTOTOOLS_DL_TAR_PATH = $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
-AUTOTOOLS_PKG_PATH = $(PRJDIR)/libraries/$(PKGNAME)
+AUTOTOOLS_DL_TAR_PATH = $(PRJ_DOWNLOAD_PATH)/$(AUTOTOOLS_NAME_TAR)
+AUTOTOOLS_PKG_PATH = $(PRJ_ROOT_PATH)/libraries/$(PKGNAME)
 
 AUTOTOOLS_BOARD_LIBS_DIR:=board-libs
 AUTOTOOLS_HOST_LIBS_DIR:=host-libs
 
-AUTOTOOLS_PREFIX_INC_DIR:=$(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)
+AUTOTOOLS_PREFIX_INC_DIR:=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)
 
-export DESTDIR=$(PRJDIR)/libraries/${PKGNAME}/install
+export DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install
 # PKG_CONFIG_LIBDIR: Replaces the default pkg-config search directory.
-export PKG_CONFIG_LIBDIR=$(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/$(LIBS_INSTALLDIR)/pkgconfig
+export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/$(LIBS_INSTALLDIR)/pkgconfig
 
 .PHONY: all clean help download install
 
@@ -48,11 +48,11 @@ download: $(AUTOTOOLS_DL_TAR_PATH)
 
 $(AUTOTOOLS_DL_TAR_PATH):
 	@$(ECHO) "${MSG_INFO}  Download ${PKGNAME}${MSG_END}"
-	$(V) wget $(AUTOTOOLS_DL_URL_FILE) -P $(DOWNLOADDIR)
+	$(V) wget $(AUTOTOOLS_DL_URL_FILE) -P $(PRJ_DOWNLOAD_PATH)
 
 autotools-decomp: $(AUTOTOOLS_DL_TAR_PATH)
 	@    $(ECHO) "${MSG_INFO}  Decompress ${PKGNAME} ${MSG_END}"
-	$(V) $(MKDIR) $(COMMONDIR)
+	$(V) $(MKDIR) $(PRJ_COMMON_PATH)
 	$(V) tar -xf $(AUTOTOOLS_DL_TAR_PATH)
 	$(V) touch $@
 
@@ -90,10 +90,10 @@ autotools-make: autotools-configure
 autotools-make-install: autotools-make
 	@    $(ECHO) "${MSG_INFO}  Make install ${PKGNAME}${MSG_END}"
 	$(V) mkdir -p install
-	$(V) DESTDIR=$(PRJDIR)/libraries/${PKGNAME}/install $(MAKE) ${PKGNAME} install
-	$(V) cp -ar $(PRJDIR)/libraries/${PKGNAME}/install/* $(PRJDIR)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)/
-	$(V) $(PRJDIR)/system-build/scripts/autotools-change-prefix.sh ${PKGNAME} $(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR) ${LIBS_INSTALLDIR}
-	$(V) cp -ar $(PRJDIR)/libraries/${PKGNAME}/install/* $(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/
+	$(V) DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install $(MAKE) ${PKGNAME} install
+	$(V) cp -ar $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/* $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)/
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-change-prefix.sh ${PKGNAME} $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR) ${LIBS_INSTALLDIR}
+	$(V) cp -ar $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/* $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/
 #~ 	$(V) $(RM) install
 	$(V) touch $@
 

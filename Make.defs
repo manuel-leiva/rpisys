@@ -2,21 +2,18 @@
 
 # COMMON #######################################################################
 
-PRJDIR=/home/mleiva/devdirs/rpisys
-RPISYS_PATH:=/home/${USER}/devdirs/rpisys
+PRJ_ROOT_PATH:=/home/${USER}/devdirs/rpisys
 
 # This directory is used to share files between projects as the toolchain
-COMMONDIR:=/home/$(USER)/rpisys
-
-# DOWNLOAD #####################################################################
-
-DOWNLOADDIR:=~/Downloads/rpisys
+PRJ_COMMON_PATH:=/home/${USER}/rpisys
+# Destination directory to download packages
+PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/rpisys
 
 # TOOLCHAIN ####################################################################
 
 TOOLCHAIN_DLURL:=https://dl.dropboxusercontent.com/u/54376508/download/
 TOOLCHAIN_NAMETAR:=gcc-linaro-arm-linux-gnueabihf-raspbian-4.8.3.tar.gz
-TOOLCHAIN_PATH:=$(COMMONDIR)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
+TOOLCHAIN_PATH:=$(PRJ_COMMON_PATH)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
 TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
 
 # LINUX #######################################################################
