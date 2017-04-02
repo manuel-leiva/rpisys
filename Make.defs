@@ -3,6 +3,7 @@
 # COMMON #######################################################################
 
 PRJDIR=/home/mleiva/devdirs/rpisys
+RPISYS_PATH:=/home/${USER}/devdirs/rpisys
 
 # This directory is used to share files between projects as the toolchain
 COMMONDIR:=/home/$(USER)/rpisys
@@ -21,6 +22,7 @@ TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
 # LINUX #######################################################################
 
 LINUXNAMETAR:=linux-rpi-4.4.36.tar.gz
+LINUX_DLURL:=https://www.dropbox.com/s/d4ri5s21jdpw1io/
 
 # Parallel Execution this is the number of recipes to execute at once.
 LINUX_PAR_EXE:=2
@@ -33,11 +35,16 @@ LINUX_DEFCONFIG:=bcm2709_defconfig
 LINUX_MOD_INSTALLDIR:=modules
 LINUX_KERNEL_INSTALLDIR:=kernel
 
+# FILESYSTEM ###################################################################
+
+FILESYSTEM_NAMETAR:=raspberrypi-fs-2017_03_02.tar.gz
+FILESYSTEM_DLURL:=https://www.dropbox.com/s/ne8zpjwod9nm6r7/
+
 # LIBRARIES ####################################################################
 
 # Library directory for the normal user-programs installation
 LIBS_INSTALLDIR:=/usr/lib/arm-linux-gnueabihf
-# List of library to be build
+# List of library to build
 LIB_NAME_LIST := readline-6.3 libffi-3.2.1 pcre-8.40  zlib-1.2.11 glib-2.50.3 libsoup-2.57.1 libxml2-2.9.4 sqlite-autoconf-3170000
 
 # DEFINITIONS ##################################################################
