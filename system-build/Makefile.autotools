@@ -15,7 +15,7 @@ AUTOTOOLS_HOST_LIBS_DIR:=host-libs
 
 AUTOTOOLS_PREFIX_INC_DIR:=$(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)
 
-export DESTDIR=$(PRJDIR)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)/
+export DESTDIR=$(PRJDIR)/libraries/${PKGNAME}/install
 # PKG_CONFIG_LIBDIR: Replaces the default pkg-config search directory.
 export PKG_CONFIG_LIBDIR=$(PRJDIR)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/$(LIBS_INSTALLDIR)/pkgconfig
 
