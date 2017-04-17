@@ -21,7 +21,7 @@ function DownloadTar
     # Verify if the package was already downloaded
     if [ ! -f ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} ]; then
         echo -e "${INFOCOLOR}  Download ${PKG_NAME}${ENDCOLOR} "
-        wget ${DOWNLOAD_URL}/${PKG_TARGET_NAME} -P ${DOWNLOAD_URL}
+        wget ${DOWNLOAD_URL}/${PKG_TARGET_NAME} -P ${DOWNLOAD_PATH}
     fi ;
 
     # Descompres Package
