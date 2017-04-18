@@ -1,6 +1,5 @@
 
 
-
 .PHONY: all clean header
 
 # Include local definition
@@ -8,16 +7,16 @@ include ../Make.defs
 
 # Local definitions
 
-LINUX_DIR:=${PRJ_ROOT_PATH}/linux
+LINUX_PATH:=${PRJ_ROOT_PATH}/linux
 
 # Create kernel compilation flags
 KERNEL_FLAGS:=CROSS_COMPILE=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX) KERNEL=$(LINUX_KERNEL_EXTRAFLAGS)
 
 # Instalation paths
-LINUX_KERNEL_INSTALLPATH:=$(LINUX_DIR)/$(LINUX_KERNEL_INSTALLDIR)
-LINUX_MOD_INSTALLPATH   :=$(LINUX_DIR)/$(LINUX_MOD_INSTALLDIR)
+LINUX_KERNEL_INSTALLPATH:=$(LINUX_PATH)/$(LINUX_KERNEL_INSTALLDIR)
+LINUX_MOD_INSTALLPATH   :=$(LINUX_PATH)/$(LINUX_MOD_INSTALLDIR)
 
-all: header sys-linux-install
+all: header linux-install
 
 header:
 	@$(ECHO) "${MSG_INFO}Linux build${MSG_END} "
@@ -27,11 +26,11 @@ linux-download:
 	linux ${LINUX_NAMETAR} ${PRJ_DOWNLOAD_PATH} ${LINUX_DLURL}
 	$(V) touch $@
 
-sys-linux-patch: linux-download
+linux-patch: linux-download
 	@    $(ECHO) "${MSG_INFO}  Apply linux patches ${MSG_END}"
 	$(V) touch $@
 
-sys-linux-build: sys-linux-patch
+linux-build: linux-patch
 	@    $(ECHO) "${MSG_INFO}  Build linux ${MSG_END}"
 	$(V) $(MAKE) linux $(KERNEL_FLAGS) $(LINUX_DEFCONFIG)
 	$(V) $(MAKE) linux -j $(LINUX_PAR_EXE) $(KERNEL_FLAGS) zImage dtbs
@@ -44,21 +43,21 @@ sys-linux-build: sys-linux-patch
 	$(V) $(CP) linux/arch/arm/boot/dts/overlays/README $(LINUX_KERNEL_INSTALLPATH)/overlays
 	$(V) touch $@
 
-sys-linux-modules: sys-linux-build
+linux-modules: linux-build
 	@    $(ECHO) "${MSG_INFO}  Build linux modules ${MSG_END}"
 	$(V) $(MAKE) linux -j $(LINUX_PAR_EXE) $(KERNEL_FLAGS) modules
 # Install Kernel modules
-	$(V) $(MKDIR) $(LINUX_DIR)/$(LINUX_MOD_INSTALLDIR)
+	$(V) $(MKDIR) $(LINUX_PATH)/$(LINUX_MOD_INSTALLDIR)
 	$(V) $(MAKE) linux $(KERNEL_FLAGS) INSTALL_MOD_PATH=$(LINUX_MOD_INSTALLPATH) modules_install
 	$(V) touch $@
 
-sys-linux-install: sys-linux-modules
+linux-install: linux-modules
 	@$(ECHO) "${MSG_INFO}  Install linux${MSG_END}"
-	touch $@
+	$(V) touch $@
 
 clean: header
 	@$(ECHO) "${MSG_INFO}  Remove linux${MSG_END}"
-	$(V) $(RM) sys-linux-uncomp sys-linux-build sys-linux-install sys-linux-patch linux-download sys-linux-modules
+	$(V) $(RM) linux-uncomp linux-build linux-install linux-patch linux-download linux-modules
 # Remove Linux code
 	$(V) $(RM) linux
 # Remove linux modules
