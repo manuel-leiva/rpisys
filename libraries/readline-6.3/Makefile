@@ -11,7 +11,4 @@ AUTOTOOLS_FLAGS = --prefix=/usr --libdir=/usr/lib/arm-linux-gnueabihf/ --host=ar
 export bash_cv_wcwidth_broken=no
 
 # Build package using autotools recipe
-include ../../system-build/Makefile.autotools
-
-
-
+include ../../system-build/makefile/Makefile.autotools

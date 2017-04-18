@@ -16,4 +16,4 @@ AUTOTOOLS_FLAGS += --prefix=/usr --libdir=/usr/lib/arm-linux-gnueabihf/ --host=a
 
 
 # Build package using autotools recipe
-include ../../system-build/Makefile.autotools
+include ../../system-build/makefile/Makefile.autotools
