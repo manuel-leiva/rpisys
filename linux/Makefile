@@ -8,10 +8,10 @@ include ../Make.defs
 
 # Local definitions
 
-LINUX_DIR:=$(shell pwd)
+LINUX_DIR:=${PRJ_ROOT_PATH}/linux
 
 # Create kernel compilation flags
-KERNEL_FLAGS:=ARCH=arm CROSS_COMPILE=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX) KERNEL=$(LINUX_KERNEL_EXTRAFLAGS)
+KERNEL_FLAGS:=CROSS_COMPILE=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX) KERNEL=$(LINUX_KERNEL_EXTRAFLAGS)
 
 # Instalation paths
 LINUX_KERNEL_INSTALLPATH:=$(LINUX_DIR)/$(LINUX_KERNEL_INSTALLDIR)
@@ -22,17 +22,12 @@ all: header sys-linux-install
 header:
 	@$(ECHO) "${MSG_INFO}Linux build${MSG_END} "
 
-$(PRJ_DOWNLOAD_PATH)/$(LINUXNAMETAR):
-	@$(ECHO) "${MSG_INFO}  Download toolchain${MSG_END} "
-	#$(V) wget $(LINUXURL)/$(LINUXNAMETAR) -P $(PRJ_DOWNLOAD_PATH)
-
-sys-linux-uncomp: $(PRJ_DOWNLOAD_PATH)/$(LINUXNAMETAR)
-	@    $(ECHO) "${MSG_INFO}  Uncompress linux ${MSG_END}"
-	$(V) $(MKDIR) $(PRJ_COMMON_PATH)
-	$(V) tar -xf $(PRJ_DOWNLOAD_PATH)/$(LINUXNAMETAR)
+linux-download:
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
+	linux ${LINUX_NAMETAR} ${PRJ_DOWNLOAD_PATH} ${LINUX_DLURL}
 	$(V) touch $@
 
-sys-linux-patch: sys-linux-uncomp
+sys-linux-patch: linux-download
 	@    $(ECHO) "${MSG_INFO}  Apply linux patches ${MSG_END}"
 	$(V) touch $@
 
@@ -63,7 +58,7 @@ sys-linux-install: sys-linux-modules
 
 clean: header
 	@$(ECHO) "${MSG_INFO}  Remove linux${MSG_END}"
-	$(V) $(RM) sys-linux-uncomp sys-linux-build sys-linux-install sys-linux-patch
+	$(V) $(RM) sys-linux-uncomp sys-linux-build sys-linux-install sys-linux-patch linux-download sys-linux-modules
 # Remove Linux code
 	$(V) $(RM) linux
 # Remove linux modules

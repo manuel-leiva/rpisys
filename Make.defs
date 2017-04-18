@@ -18,15 +18,15 @@ TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
 
 # LINUX #######################################################################
 
-LINUXNAMETAR:=linux-rpi-4.4.36.tar.gz
+LINUX_NAMETAR:=rpi-linux-4.4.36.tar.gz
 LINUX_DLURL:=https://www.dropbox.com/s/d4ri5s21jdpw1io/
 
 # Parallel Execution this is the number of recipes to execute at once.
 LINUX_PAR_EXE:=2
 
-# By default are added the kernel flags ARCH=arm CROSS_COMPILE=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)
+# By default are added the kernel flags CROSS_COMPILE=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)
 # This variable allows add some extra flag
-LINUX_KERNEL_EXTRAFLAGS:=kernel7
+LINUX_KERNEL_EXTRAFLAGS:=kernel7 ARCH=arm
 
 LINUX_DEFCONFIG:=bcm2709_defconfig
 LINUX_MOD_INSTALLDIR:=modules
@@ -34,8 +34,8 @@ LINUX_KERNEL_INSTALLDIR:=kernel
 
 # FILESYSTEM ###################################################################
 
-FILESYSTEM_NAMETAR:=raspberrypi-fs-2017_03_02.tar.gz
-FILESYSTEM_DLURL:=https://www.dropbox.com/s/ne8zpjwod9nm6r7/
+FILESYSTEM_NAMETAR:=rpi-fs-2017_03_02.tar.gz
+FILESYSTEM_DLURL:=https://www.dropbox.com/s/f51c7a3k1dxu3l5/
 
 # LIBRARIES ####################################################################
 
