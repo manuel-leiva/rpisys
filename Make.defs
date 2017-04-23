@@ -58,6 +58,8 @@ CP :=cp
 RM :=rm -rf
 MKDIR :=mkdir -p
 
+INCLUDE_MAKE_PATH:=$(PRJ_ROOT_PATH)/system-build/makefile
+
 # CONDITIONAL ##################################################################
 
 ifeq ($(VERBOSE), 1)

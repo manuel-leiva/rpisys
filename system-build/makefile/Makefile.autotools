@@ -2,6 +2,8 @@
 
 # Include global definitions
 include ../../Make.defs
+include $(PRJ_ROOT_PATH)/system-build/makefile/Makefile.common
+
 
 PKGNAME := $(notdir $(shell pwd))
 
@@ -56,18 +58,10 @@ autotools-decomp: $(AUTOTOOLS_DL_TAR_PATH)
 	$(V) tar -xf $(AUTOTOOLS_DL_TAR_PATH)
 	$(V) touch $@
 
-# Reverse patches
-autotools-revpatch:
-# Verify if patches directory exists, if it exists, then verify if the
-# flag autotools-patch file exists, if it exists, then remove the
-# patches
-	$(V) if [ -d ${AUTOTOOLS_PKG_PATH}/patches ]; then \
-        if [ -f ${AUTOTOOLS_PKG_PATH}/autotools-patch ]; then \
-            echo "${MSG_INFO}  Reverse patches ${PKGNAME} ${MSG_END}" ; \
-            quilt pop -a ; \
-        fi \
-    fi
-	$(V) $(RM) autotools-patch
+# autotools-revpatch:
+# Parameters: target_prefix, dependecies, package-path, message
+$(eval $(call COMMON_REVPATCH_RECIPE,autotools,,${AUTOTOOLS_PKG_PATH},${PKGNAME}))
+
 
 autotools-patch: autotools-decomp
 	$(V) if [ -d ${AUTOTOOLS_PKG_PATH}/patches ]; then \
@@ -125,3 +119,7 @@ autotools-debug-var:
 
 autotools-debug-libs-installed:
 	@pkg-config --list-all
+
+autotools-debug-targets:
+    # The lines must be coherent with the lines used in order to show the real recipes
+	@$(ECHO) $(info $(call COMMON_REVPATCH_RECIPE,autotools,,${AUTOTOOLS_PKG_PATH},${PKGNAME}))
