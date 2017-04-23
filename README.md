@@ -11,15 +11,13 @@
 
 # Libraries #
 
-## How to add a new library ## 
+## How to add a new library
 
-```
-#!bash
 1. Create a new directory with the name of the library at:
 ```
-
+#!bash
 mkdir ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/
-
+```
 2. Create Makefile 
 
 ```
