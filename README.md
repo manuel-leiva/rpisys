@@ -13,7 +13,10 @@
 
 ## How to add a new library ## 
 
+```
+#!bash
 1. Create a new directory with the name of the library at:
+```
 
 mkdir ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/
 
@@ -33,7 +36,7 @@ AUTOTOOLS_NAME_TAR := libsoup-2.57.1.tar.xz
 AUTOTOOLS_FLAGS += --prefix=/usr --libdir=/usr/lib/arm-linux-gnueabihf/ --host=arm
 ```
 
-4. Include Makefile. Since libsoup is an autotools proyect then Makefile.autotools file must be included
+4. Include Makefile. Since libsoup is an autotools project then Makefile.autotools file must be included
 
 ```
 #!Makefile
