@@ -1,11 +1,46 @@
 #! /bin/bash
 
-# Autotools package name
-PKGNAME=$1
-# Prefix string to be used in pc and la files
-PREFIX=$2
-# Library directory for the normal user-programs installation
-LIBS_INSTALLDIR=$3
+
+ERRORCOLOR="\033[1;31m"
+INFOCOLOR="\033[0;36m"
+MSGCOLOR="\033[1;33m"
+ENDCOLOR="\033[0m"
+
+function help
+{
+    echo "help"
+}
+
+while [ $# -gt 1 ]
+do
+    key="$1"
+    case $key in
+        # Autotools package name
+        -p|--pkg-name)
+        PKGNAME="$2"
+        shift
+        ;;
+        # Prefix string to be used in pc and la files
+        -f|--host-prefix)
+        PREFIX="$2"
+        shift
+        ;;
+        # Library directory for the normal user-programs installation
+        -b|--libs-path)
+        LIBS_INSTALLDIR="$2"
+        shift
+        ;;
+        # Help
+        -h|--help)
+        help
+        ;;
+        *)
+          echo -e "${ERRORCOLOR}Error:${ENDCOLOR} invalid option $1"
+          exit
+        ;;
+    esac
+    shift
+done
 
 INSTALL_DIR=install
 
