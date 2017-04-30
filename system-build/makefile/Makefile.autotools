@@ -87,7 +87,7 @@ autotools-make-install: autotools-make
 	$(V) DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install $(MAKE) ${PKGNAME} install
 	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)
 	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)
-	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-change-prefix.sh \
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-lib-installer.sh \
         --pkg-name ${PKGNAME} \
         --host-prefix ${PRJ_ROOT_PATH}/libraries/${AUTOTOOLS_HOST_LIBS_DIR} \
         --libs-path ${LIBS_INSTALLDIR} \
