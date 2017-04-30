@@ -1,6 +1,6 @@
 #! /bin/bash
 
-
+# Message color
 ERRORCOLOR="\033[1;31m"
 INFOCOLOR="\033[0;36m"
 MSGCOLOR="\033[1;33m"
@@ -30,6 +30,21 @@ do
         LIBS_INSTALLDIR="$2"
         shift
         ;;
+        # Library source path
+        -b|--libsrc-path)
+        LIBSRC_PATH="$2"
+        shift
+        ;;
+        # Host library destination
+        -b|--hostdest-path)
+        HOSTDEST_PATH="$2"
+        shift
+        ;;
+        # Host library destination
+        -b|--boarddest-path)
+        BOARDDEST_PATH="$2"
+        shift
+        ;;
         # Help
         -h|--help)
         help
@@ -42,10 +57,51 @@ do
     shift
 done
 
-INSTALL_DIR=install
+## Check parameters
+
+# Check if the filesystem path was defined
+if [ -z ${LIBSRC_PATH} ]; then
+   echo -e "${ERRORCOLOR}Error:${ENDCOLOR} Option \"--libsrc-path\" not defined."
+   exit
+else
+    # Check if the filesystem exists
+    if [ ! -d ${LIBSRC_PATH} ]; then
+       echo -e "${ERRORCOLOR}Error:${ENDCOLOR} ${LIBSRC_PATH} does not exist."
+       exit
+    fi
+fi
+
+# Check if the filesystem path was defined
+if [ -z ${BOARDDEST_PATH} ]; then
+   echo -e "${ERRORCOLOR}Error:${ENDCOLOR} Option \"--boarddest-path\" not defined."
+   exit
+else
+    # Check if the filesystem exists
+    if [ ! -d ${BOARDDEST_PATH} ]; then
+       echo -e "${ERRORCOLOR}Error:${ENDCOLOR} ${BOARDDEST_PATH} does not exist."
+       exit
+    fi
+fi
+
+# Check if the filesystem path was defined
+if [ -z ${HOSTDEST_PATH} ]; then
+   echo -e "${ERRORCOLOR}Error:${ENDCOLOR} Option \"--hostdest-path\" not defined."
+   exit
+else
+    # Check if the filesystem exists
+    if [ ! -d ${HOSTDEST_PATH} ]; then
+       echo -e "${ERRORCOLOR}Error:${ENDCOLOR} ${HOSTDEST_PATH} does not exist."
+       exit
+    fi
+fi
+
+## Copy libraries
+
+# Copy original directory into board destination directory
+cp -a ${LIBSRC_PATH}/* ${BOARDDEST_PATH}/
 
 # Change library la files
-AUTOTOOLS_LA_LIBS=$(find ${INSTALL_DIR} -name *.la)
+AUTOTOOLS_LA_LIBS=$(find ${LIBSRC_PATH} -name *.la)
 if [ -n "${AUTOTOOLS_LA_LIBS}" ]; then
     for i in ${AUTOTOOLS_LA_LIBS}; do
         echo Lib $i ;
@@ -56,7 +112,7 @@ if [ -n "${AUTOTOOLS_LA_LIBS}" ]; then
 fi
 
 # Change library package config files
-AUTOTOOLS_PC_FILES=$(find ${INSTALL_DIR} -name *.pc)
+AUTOTOOLS_PC_FILES=$(find ${LIBSRC_PATH} -name *.pc)
 if [ -n "${AUTOTOOLS_PC_FILES}" ]; then
     for i in ${AUTOTOOLS_PC_FILES}; do
         echo Files $i ;
@@ -65,3 +121,6 @@ if [ -n "${AUTOTOOLS_PC_FILES}" ]; then
         sed -i "s:^toolexeclibdir=:toolexeclibdir=${PREFIX}:g" $i ;
     done ;
 fi
+
+# Copy edited libraries into host destination directory
+cp -a ${LIBSRC_PATH}/* ${HOSTDEST_PATH}/

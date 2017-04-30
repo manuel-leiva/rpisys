@@ -85,13 +85,16 @@ autotools-make-install: autotools-make
 	@    $(ECHO) "${MSG_INFO}  Make install ${PKGNAME}${MSG_END}"
 	$(V) mkdir -p install
 	$(V) DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install $(MAKE) ${PKGNAME} install
-	$(V) cp -ar $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/* $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)/
+	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)
+	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-change-prefix.sh \
         --pkg-name ${PKGNAME} \
         --host-prefix ${PRJ_ROOT_PATH}/libraries/${AUTOTOOLS_HOST_LIBS_DIR} \
-        --libs-path ${LIBS_INSTALLDIR} ;
-	$(V) cp -ar $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/* $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/
-#~ 	$(V) $(RM) install
+        --libs-path ${LIBS_INSTALLDIR} \
+        --libsrc-path $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/ \
+        --boarddest-path $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR) \
+        --hostdest-path $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)
+	$(V) $(RM) install
 	$(V) touch $@
 
 # Alias target to download the package
