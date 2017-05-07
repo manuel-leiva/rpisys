@@ -64,6 +64,10 @@ linux-install: linux-modules
 # Alias target to install linux
 install: linux-install
 
+uninstall:
+	@$(ECHO) "${MSG_INFO}  Uninstall linux${MSG_END}"
+	$(V) $(RM) linux-install
+
 clean: header
 	@$(ECHO) "${MSG_INFO}  Remove linux${MSG_END}"
 	$(V) $(RM) linux-uncomp linux-build linux-install linux-patch linux-download linux-modules

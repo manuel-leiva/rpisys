@@ -40,6 +40,10 @@ libraries-install:
 # Alias target to install linux
 install: libraries-install
 
+uninstall:
+	@$(ECHO) "${MSG_INFO}  Uninstall libraries${MSG_END}"
+	$(V) $(RM) libraries-install
+
 libraries-debug-targets:
 # The lines must be coherent with the lines used in order to show the real recipes
 	@echo $(info $(foreach i,$(LIB_NAME_LIST),$(call BUILD_RECIPE,$(i),$(shell if [ -f $(i)/dependency.txt ]; then cat $(i)/dependency.txt ; fi ))))

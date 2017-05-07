@@ -7,3 +7,7 @@ header:
 
 install:
 	@$(ECHO) "${MSG_INFO}  Install applications${MSG_END}"
+
+uninstall:
+	@$(ECHO) "${MSG_INFO}  Uninstall applications${MSG_END}"
+	$(V) $(RM) applications-install
