@@ -24,7 +24,7 @@ all: $(LIB_NAME_LIST)
 
 clean: $(LIB_CLEAN_TARGET_LIST)
 	@$(ECHO) "${MSG_INFO}  Clean Libraries ${MSG_END}"
-	@$(RM) host-libs board-libs
+	@$(RM) host-libs board-libs libraries-install
 
 # Build targets
 $(info $(foreach i,$(LIB_NAME_LIST),$(eval $(call BUILD_RECIPE,$(i),$(shell if [ -f $(i)/dependency.txt ]; then cat $(i)/dependency.txt ; fi )))))
@@ -32,7 +32,7 @@ $(info $(foreach i,$(LIB_NAME_LIST),$(eval $(call BUILD_RECIPE,$(i),$(shell if [
 # Clean targets
 $(info $(foreach i,$(LIB_NAME_LIST),$(eval $(call CLEAN_RECIPE,$(i)))))
 
-libraries-install:
+libraries-install: all
 	@$(ECHO) "${MSG_INFO}  Libraries install${MSG_END}"
 	$(V) cd board-libs; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/rootfs/
 	$(V) touch $@
