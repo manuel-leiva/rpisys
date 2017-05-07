@@ -1,19 +1,59 @@
 #!/bin/bash
 
-# Package name
-PKG_NAME=$1
+# download-package is a script tool to download software packages
+# Author: Manuel Leiva F. <manuelleivaf@gmail.com>
 
-PKG_TARGET_NAME=$2
-
-DOWNLOAD_PATH=$3
-
-DOWNLOAD_URL=$4
-
-
+# Message color
 ERRORCOLOR="\033[1;31m"
 INFOCOLOR="\033[0;36m"
 MSGCOLOR="\033[1;33m"
 ENDCOLOR="\033[0m"
+
+function help
+{
+    echo "help"
+}
+
+while [ $# -gt 1 ]
+do
+    key="$1"
+    case $key in
+        # Autotools package name
+        -p|--pkg-name)
+        PKG_NAME="$2"
+        shift
+        ;;
+        # Prefix string to be used in pc and la files
+        -t|--pkg-target-name)
+        PKG_TARGET_NAME="$2"
+        shift
+        ;;
+        # Download destination path
+        -d|--dl-path)
+        DOWNLOAD_PATH="$2"
+        shift
+        ;;
+        # Download URL
+        -u|--dl-url)
+        DOWNLOAD_URL="$2"
+        shift
+        ;;
+        # Use super user during decompress process
+        -s|--su)
+        SUPER_USER="Y"
+        #~ shift
+        ;;
+        # Help
+        -h|--help)
+        help
+        ;;
+        *)
+          echo -e "${ERRORCOLOR}Error:${ENDCOLOR} invalid option $1"
+          exit
+        ;;
+    esac
+    shift
+done
 
 # Download tarball package
 function DownloadTar
