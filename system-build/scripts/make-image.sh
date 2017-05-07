@@ -103,10 +103,10 @@ if [ ! -b ${PARTITION_ROOTFS} ]; then
 fi
 
 # Create partitions
-sudo sfdisk $DEVICE_FILE << EOF
-8192,63MiB,0x0C,*
-137216,4GiB,,-
-EOF
+{
+    echo '8192,63MiB,0x0C,*'
+    echo '137216,4GiB,,-'
+} | sudo sfdisk $DEVICE_FILE
 
 # Give format for each partition
 echo -e "${INFOCOLOR}  Creating BOOT partition${ENDCOLOR}\n"
