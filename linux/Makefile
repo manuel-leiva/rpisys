@@ -53,7 +53,16 @@ linux-modules: linux-build
 
 linux-install: linux-modules
 	@$(ECHO) "${MSG_INFO}  Install linux${MSG_END}"
+	@$(ECHO) "${MSG_INFO}    Install kernel${MSG_END}"
+	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/boot
+	$(V) cd kernel; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/boot
+	@$(ECHO) "${MSG_INFO}    Install modules${MSG_END}"
+	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/rootfs/
+	$(V) cd modules; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/rootfs
 	$(V) touch $@
+
+# Alias target to install linux
+install: linux-install
 
 clean: header
 	@$(ECHO) "${MSG_INFO}  Remove linux${MSG_END}"
