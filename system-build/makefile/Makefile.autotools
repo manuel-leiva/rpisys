@@ -51,6 +51,11 @@ download: $(AUTOTOOLS_DL_TAR_PATH)
 $(AUTOTOOLS_DL_TAR_PATH):
 	@$(ECHO) "${MSG_INFO}  Download ${PKGNAME}${MSG_END}"
 	$(V) wget $(AUTOTOOLS_DL_URL_FILE) -P $(PRJ_DOWNLOAD_PATH)
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
+    --pkg-name ${PKGNAME} \
+    --pkg-target-name $(AUTOTOOLS_NAME_TAR) \
+    --dl-path ${PRJ_DOWNLOAD_PATH} \
+    --dl-url ${AUTOTOOLS_DL_URL}
 
 autotools-decomp: $(AUTOTOOLS_DL_TAR_PATH)
 	@    $(ECHO) "${MSG_INFO}  Decompress ${PKGNAME} ${MSG_END}"

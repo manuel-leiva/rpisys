@@ -23,7 +23,10 @@ header:
 
 linux-download:
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
-	linux ${LINUX_NAMETAR} ${PRJ_DOWNLOAD_PATH} ${LINUX_DLURL}
+    --pkg-name linux \
+    --pkg-target-name ${LINUX_NAMETAR} \
+    --dl-path ${PRJ_DOWNLOAD_PATH} \
+    --dl-url ${LINUX_DLURL}
 	$(V) touch $@
 
 linux-patch: linux-download
