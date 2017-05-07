@@ -62,13 +62,9 @@ autotools-decomp: $(AUTOTOOLS_DL_TAR_PATH)
 # Parameters: target_prefix, dependecies, package-path, message
 $(eval $(call COMMON_REVPATCH_RECIPE,autotools,,${AUTOTOOLS_PKG_PATH},${PKGNAME}))
 
-
-autotools-patch: autotools-decomp
-	$(V) if [ -d ${AUTOTOOLS_PKG_PATH}/patches ]; then \
-        echo "${MSG_INFO}  Patch ${PKGNAME} ${MSG_END}" ; \
-        quilt push -a ; \
-    fi
-	$(V) touch $@ ;
+# autotools-patch:
+# Parameters: target_prefix, dependecies, package-path, message
+$(eval $(call COMMON_PATCH_RECIPE,autotools,autotools-decomp,${AUTOTOOLS_PKG_PATH},${PKGNAME}))
 
 autotools-configure: autotools-patch
 	@    $(ECHO) "${MSG_INFO}  Configure ${PKGNAME} ${MSG_END}"

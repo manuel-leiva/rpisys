@@ -1,13 +1,14 @@
 
 
 # Apply patch
+# Verify if patches directory exists, if it exists, apply the patches
 define COMMON_PATCH_RECIPE
 $(1)-patch: $(2)
 	$(V) if [ -d $(3)/patches ]; then \
         echo "${MSG_INFO}  Patch $(4) ${MSG_END}" ; \
         quilt push -a ; \
     fi
-	$(V) touch $@ ;
+	$(V) touch $(1)-patch ;
 endef
 
 
