@@ -32,6 +32,13 @@ $(info $(foreach i,$(LIB_NAME_LIST),$(eval $(call BUILD_RECIPE,$(i),$(shell if [
 # Clean targets
 $(info $(foreach i,$(LIB_NAME_LIST),$(eval $(call CLEAN_RECIPE,$(i)))))
 
+libraries-install:
+	@$(ECHO) "${MSG_INFO}  Libraries install${MSG_END}"
+	$(V) cd board-libs; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/rootfs/
+	$(V) touch $@
+
+# Alias target to install linux
+install: libraries-install
 
 libraries-debug-targets:
 # The lines must be coherent with the lines used in order to show the real recipes
