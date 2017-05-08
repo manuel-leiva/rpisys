@@ -40,8 +40,8 @@ do
         ;;
         # Use super user during decompress process
         -s|--su)
-        SUPER_USER="Y"
-        #~ shift
+        SUPER_USER="$2"
+        shift
         ;;
         # Help
         -h|--help)
@@ -67,7 +67,7 @@ function DownloadTar
     # Descompres Package
     # Check file owner
     OWNER=$(ls ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -l | awk '{print $3 }')
-    if [ "root" == ${OWNER} ]; then
+    if [ "root" == ${OWNER} ]  || [ "y" == ${SUPER_USER} ] ; then
         echo -e "${MSGCOLOR}You need to be logged in as root you to decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
         sudo tar -xf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME}
     else
