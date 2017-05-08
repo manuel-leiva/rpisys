@@ -36,6 +36,8 @@ LINUX_KERNEL_INSTALLDIR:=kernel
 
 FILESYSTEM_NAMETAR:=rpi-fs-2017_03_02.tar.gz
 FILESYSTEM_DLURL:=https://www.dropbox.com/s/f51c7a3k1dxu3l5/
+# FILESYSTEM_SU: Force to use super user to decompress filesystem
+FILESYSTEM_SU:=y
 
 # LIBRARIES ####################################################################
 
@@ -49,6 +51,7 @@ LIB_NAME_LIST := readline-6.3 libffi-3.2.1 pcre-8.40  zlib-1.2.11 glib-2.50.3 li
 MSG_ERROR := \033[1;31m
 MSG_WARN := \033[0;33m
 MSG_INFO := \033[0;34m
+MSG_REQ := \033[1;33m
 MSG_DEBUG := \033[0;34m
 MSG_END := \033[0m
 

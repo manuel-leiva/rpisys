@@ -5,18 +5,21 @@ include ../Make.defs
 
 # Local definitions
 FILESYSTEM_PATH:=${PRJ_ROOT_PATH}/filesystem/filesystem
+FILESYSTEM_SU?=n
 
 all: header filesystem-patch
 
 header:
 	@$(ECHO) "${MSG_INFO}Filesystem build${MSG_END} "
 
-
-filesystem-download: $(PRJ_DOWNLOAD_PATH)/$(FILESYSTEM_NAMETAR)
+filesystem-download:
 	@    $(ECHO) "${MSG_INFO}  Download filesystem${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
-	filesystem ${FILESYSTEM_NAMETAR} ${PRJ_DOWNLOAD_PATH} ${FILESYSTEM_DLURL} \
-	${FILESYSTEM_PATH}
+    --pkg-name filesystem \
+    --pkg-target-name ${FILESYSTEM_NAMETAR} \
+    --dl-path ${PRJ_DOWNLOAD_PATH} \
+    --dl-url ${FILESYSTEM_DLURL} \
+    --su ${FILESYSTEM_SU}
 	$(V) touch $@
 
 filesystem-patch: filesystem-download
@@ -41,7 +44,18 @@ filesystem-revpatch:
 
 clean: header
 	@$(ECHO) "${MSG_INFO}  Remove filesystem${MSG_END}"
-	$(V) $(RM) sys-filesystem-*
+	$(V) $(RM) filesystem-*
+ifeq ($(FILESYSTEM_SU),y)
+	@$(ECHO) "${MSG_REQ}You need to be logged in as root you to clean filesystem${MSG_END}"
+	$(V) sudo $(RM) filesystem
+else
+	$(V) $(RM) filesystem
+endif
 
 install:
+	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/rootfs
+	cd filesystem; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/rootfs/
 
+uninstall:
+	@$(ECHO) "${MSG_INFO}  Uninstall filesystem${MSG_END}"
+	$(V) $(RM) filesystem-install
