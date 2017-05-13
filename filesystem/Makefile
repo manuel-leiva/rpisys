@@ -10,7 +10,7 @@ FILESYSTEM_SU?=n
 all: header filesystem-patch
 
 header:
-	@$(ECHO) "${MSG_INFO}Filesystem build${MSG_END} "
+	@$(ECHO) "${MSG_INFO}Filesystem${MSG_END} "
 
 filesystem-download:
 	@    $(ECHO) "${MSG_INFO}  Download filesystem${MSG_END}"
@@ -52,9 +52,19 @@ else
 	$(V) $(RM) filesystem
 endif
 
-install:
+# Alias target for install
+install: filesystem-install
+
+filesystem-install: all
+	@$(ECHO) "${MSG_INFO}  Install filesystem${MSG_END}"
 	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/rootfs
-	cd filesystem; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/rootfs/
+ifeq ($(FILESYSTEM_SU),y)
+	@$(ECHO) "${MSG_REQ}You need to be logged in as root you to install filesystem${MSG_END}"
+	$(V) cd filesystem; sudo find . | sudo cpio -pdum ${PRJ_ROOT_PATH}/image/image/rootfs/
+else
+	$(V) cd filesystem; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/rootfs/
+endif
+	$(V) touch $@
 
 uninstall:
 	@$(ECHO) "${MSG_INFO}  Uninstall filesystem${MSG_END}"
