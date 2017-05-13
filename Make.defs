@@ -16,6 +16,11 @@ TOOLCHAIN_NAMETAR:=gcc-linaro-arm-linux-gnueabihf-raspbian-4.8.3.tar.gz
 TOOLCHAIN_PATH:=$(PRJ_COMMON_PATH)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
 TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
 
+# BOOTLOADER ##################################################################
+
+BOOTLOADER_NAMETAR:=rpi-boot-2017-03-02.tar.gz
+BOOTLOADER_DL_URL:=https://www.dropbox.com/s/wxojrzxyge91f26/
+
 # LINUX #######################################################################
 
 LINUX_NAMETAR:=rpi-linux-4.4.36.tar.gz
