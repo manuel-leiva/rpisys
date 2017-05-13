@@ -28,7 +28,7 @@ all: autotools-make
 clean: autotools-revpatch
 	@$(ECHO) "${MSG_INFO}  Clean ${PKGNAME}${MSG_END} "
 # Remove flags files
-	$(V) $(RM) autotools-decomp \
+	$(V) $(RM) autotools-download \
 	autotools-configure \
 	autotools-patch \
 	autotools-make \
@@ -46,21 +46,15 @@ distclean:
 	$(V) $(MAKE) ${PKGNAME} distclean
 
 # Alias target to download the package
-download: $(AUTOTOOLS_DL_TAR_PATH)
+download: autotools-download
 
-$(AUTOTOOLS_DL_TAR_PATH):
+autotools-download:
 	@$(ECHO) "${MSG_INFO}  Download ${PKGNAME}${MSG_END}"
-	$(V) wget $(AUTOTOOLS_DL_URL_FILE) -P $(PRJ_DOWNLOAD_PATH)
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name ${PKGNAME} \
     --pkg-target-name $(AUTOTOOLS_NAME_TAR) \
     --dl-path ${PRJ_DOWNLOAD_PATH} \
     --dl-url ${AUTOTOOLS_DL_URL}
-
-autotools-decomp: $(AUTOTOOLS_DL_TAR_PATH)
-	@    $(ECHO) "${MSG_INFO}  Decompress ${PKGNAME} ${MSG_END}"
-	$(V) $(MKDIR) $(PRJ_COMMON_PATH)
-	$(V) tar -xf $(AUTOTOOLS_DL_TAR_PATH)
 	$(V) touch $@
 
 # autotools-revpatch:
@@ -69,7 +63,7 @@ $(eval $(call COMMON_REVPATCH_RECIPE,autotools,,${AUTOTOOLS_PKG_PATH},${PKGNAME}
 
 # autotools-patch:
 # Parameters: target_prefix, dependecies, package-path, message
-$(eval $(call COMMON_PATCH_RECIPE,autotools,autotools-decomp,${AUTOTOOLS_PKG_PATH},${PKGNAME}))
+$(eval $(call COMMON_PATCH_RECIPE,autotools,autotools-download,${AUTOTOOLS_PKG_PATH},${PKGNAME}))
 
 autotools-configure: autotools-patch
 	@    $(ECHO) "${MSG_INFO}  Configure ${PKGNAME} ${MSG_END}"
