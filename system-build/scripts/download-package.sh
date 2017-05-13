@@ -14,6 +14,8 @@ function help
     echo "help"
 }
 
+SUPER_USER="n"
+
 while [ $# -gt 1 ]
 do
     key="$1"
@@ -38,7 +40,7 @@ do
         DOWNLOAD_URL="$2"
         shift
         ;;
-        # Use super user during decompress process
+        # Use super user during decompress process (optional)
         -s|--su)
         SUPER_USER="$2"
         shift
@@ -78,16 +80,14 @@ function DownloadTar
 # Verify the type of target
 
 case ${PKG_TARGET_NAME} in
-    *.tar.gz)
+    *.tar.*) # tar command recognizes the format by itself
         DownloadTar
         ;;
-
     *.git)
         # TODO
         echo -e "${ERRORCOLOR}ERROR: Target ${PKG_TARGET_NAME} is not supported${ENDCOLOR}"
         ;;
     *)
-
         echo -e "${ERRORCOLOR}ERROR: Target ${PKG_TARGET_NAME} is not supported${ENDCOLOR}"
         exit 1
 esac
