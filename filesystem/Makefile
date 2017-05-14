@@ -53,9 +53,9 @@ else
 endif
 
 # Alias target for install
-install: filesystem-install
+install: header filesystem-install
 
-filesystem-install: all
+filesystem-install: filesystem-patch
 	@$(ECHO) "${MSG_INFO}  Install filesystem${MSG_END}"
 	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/rootfs
 ifeq ($(FILESYSTEM_SU),y)

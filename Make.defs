@@ -1,5 +1,7 @@
 
 
+BOARD:="raspberry pi 3"
+
 # COMMON #######################################################################
 
 PRJ_ROOT_PATH:=/home/${USER}/devdirs/rpisys
@@ -41,7 +43,8 @@ LINUX_KERNEL_INSTALLDIR:=kernel
 
 FILESYSTEM_NAMETAR:=rpi-fs-2017_03_02.tar.gz
 FILESYSTEM_DLURL:=https://www.dropbox.com/s/f51c7a3k1dxu3l5/
-# FILESYSTEM_SU: Force to use super user to decompress filesystem
+# FILESYSTEM_SU: Force to use super user permissions to decompress and manage the
+# filesystem. Options: "y" or "n".
 FILESYSTEM_SU:=y
 
 # LIBRARIES ####################################################################
@@ -50,6 +53,16 @@ FILESYSTEM_SU:=y
 LIBS_INSTALLDIR:=/usr/lib/arm-linux-gnueabihf
 # List of library to build
 LIB_NAME_LIST := readline-6.3 libffi-3.2.1 pcre-8.40  zlib-1.2.11 glib-2.50.3 libsoup-2.57.1 libxml2-2.9.4 sqlite-autoconf-3170000
+
+# APPLICATIONS #################################################################
+
+# List of applications to build
+APP_NAME_LIST:=""
+
+# IMAGE ########################################################################
+
+# IMAGE_EXT_SD_DEVICE: external sd card device used to install the image built
+IMAGE_EXT_SD_DEVICE:=/dev/mmcblk0
 
 # DEFINITIONS ##################################################################
 
@@ -76,6 +89,3 @@ else
 MAKE := make -s -C
 V := @
 endif
-
-
-
