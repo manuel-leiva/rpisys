@@ -2,6 +2,8 @@
 
 # Include global definitions
 include ../../Make.defs
+# Include common definitions
+include $(INCLUDE_MAKE_PATH)/Makefile.common
 
 # Private definitions ##########################################################
 
@@ -76,7 +78,8 @@ generic-make-install: generic-make
 	$(V) touch $@
 
 # Alias target to download the package
-install: generic-make-install
+install:
+	@    $(ECHO) "${MSG_WARN}  Make install not supported yet ${PKGNAME}${MSG_END}"
 
 help:
 	@$(ECHO) "  Targets:"

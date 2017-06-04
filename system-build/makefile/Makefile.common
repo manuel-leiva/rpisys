@@ -1,5 +1,13 @@
 
 
+
+# DEFINITIONS ##################################################################
+
+COMMON_LIB_BOARD_LIBS_DIR:=board-libs
+COMMON_LIB_HOST_LIBS_DIR:=host-libs
+
+# Public targets ###############################################################
+
 # Apply patch
 # Verify if patches directory exists, if it exists, apply the patches
 define COMMON_PATCH_RECIPE

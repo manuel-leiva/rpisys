@@ -1,10 +1,11 @@
 
 
-# Include global definitions
+# Include board definitions
 include ../../Make.defs
+# Include common definitions
 include $(INCLUDE_MAKE_PATH)/Makefile.common
 
-
+# Private definitions ##########################################################
 PKGNAME := $(notdir $(shell pwd))
 
 CROSS_COMPILE := $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)
@@ -12,14 +13,16 @@ AUTOTOOLS_DL_URL_FILE = $(AUTOTOOLS_DL_URL)$(AUTOTOOLS_NAME_TAR)
 AUTOTOOLS_DL_TAR_PATH = $(PRJ_DOWNLOAD_PATH)/$(AUTOTOOLS_NAME_TAR)
 AUTOTOOLS_PKG_PATH = $(PRJ_ROOT_PATH)/libraries/$(PKGNAME)
 
-AUTOTOOLS_BOARD_LIBS_DIR:=board-libs
-AUTOTOOLS_HOST_LIBS_DIR:=host-libs
+#~ COMMON_LIB_BOARD_LIBS_DIR:=board-libs
+#~ COMMON_LIB_HOST_LIBS_DIR:=host-libs
 
-AUTOTOOLS_PREFIX_INC_DIR:=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)
+AUTOTOOLS_PREFIX_INC_DIR:=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
 
 export DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install
 # PKG_CONFIG_LIBDIR: Replaces the default pkg-config search directory.
-export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/$(LIBS_INSTALLDIR)/pkgconfig
+export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/$(LIBS_INSTALLDIR)/pkgconfig
+
+# Public targets ###############################################################
 
 .PHONY: all clean help download install
 
@@ -47,6 +50,8 @@ distclean:
 
 # Alias target to download the package
 download: autotools-download
+
+# Private targets ##############################################################
 
 autotools-download:
 	@$(ECHO) "${MSG_INFO}  Download ${PKGNAME}${MSG_END}"
@@ -80,15 +85,15 @@ autotools-make-install: autotools-make
 	@    $(ECHO) "${MSG_INFO}  Make install ${PKGNAME}${MSG_END}"
 	$(V) mkdir -p install
 	$(V) DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install $(MAKE) ${PKGNAME} install
-	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)
-	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)
+	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_BOARD_LIBS_DIR)
+	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-lib-installer.sh \
         --pkg-name ${PKGNAME} \
-        --host-prefix ${PRJ_ROOT_PATH}/libraries/${AUTOTOOLS_HOST_LIBS_DIR} \
+        --host-prefix ${PRJ_ROOT_PATH}/libraries/${COMMON_LIB_HOST_LIBS_DIR} \
         --libs-path ${LIBS_INSTALLDIR} \
         --libsrc-path $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/ \
-        --boarddest-path $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR) \
-        --hostdest-path $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)
+        --boarddest-path $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_BOARD_LIBS_DIR) \
+        --hostdest-path $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
 	$(V) $(RM) install
 	$(V) touch $@
 
