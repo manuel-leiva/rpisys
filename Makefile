@@ -1,8 +1,10 @@
 
 include Make.defs
-include board.defs
-
 include system-build/makefile/Makefile.common
+
+# Definitions ##################################################################
+
+PWD:=$(shell pwd)
 
 .PHONY: all toolchain bootloader linux filesystem libraries applications image board
 
@@ -52,7 +54,7 @@ image-sd:
 image-file:
 	$(V) $(MAKE) image file
 
-board: board.defs
+board: Make.defs
 
 board-info:
 	@echo "${MSG_INFO}  Name: ${BOARD_NAME}${MSG_END}"
@@ -62,11 +64,11 @@ board-info:
 
 # Private targets ##############################################################
 
-board.defs:
+Make.defs:
 ifdef BOARD
-	$(V) if [ -f board/${BOARD} ]; then \
+	@ if [ -f system-build/boards/${BOARD} ]; then \
         echo "${MSG_INFO}Install ${BOARD}${MSG_END}" ; \
-        ln -s board/$(BOARD) board.defs ; \
+        ln -s ${PWD}/system-build/boards/$(BOARD) Make.defs ; \
     else \
         echo "${MSG_ERROR}ERROR: Board file $(BOARD) doesn't exist${MSG_END}" ; \
     fi
@@ -77,3 +79,5 @@ else
 	@echo
 endif
 
+debug:
+	@echo "  PWD: ${PWD}"
