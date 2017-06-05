@@ -1,7 +1,10 @@
 
 include Make.defs
+include board.defs
 
-.PHONY: all toolchain bootloader linux filesystem libraries applications image
+include system-build/makefile/Makefile.common
+
+.PHONY: all toolchain bootloader linux filesystem libraries applications image board
 
 # Public targets ###############################################################
 
@@ -48,4 +51,29 @@ image-sd:
 
 image-file:
 	$(V) $(MAKE) image file
+
+board: board.defs
+
+board-info:
+	@echo "${MSG_INFO}  Name: ${BOARD_NAME}${MSG_END}"
+	@echo "  Linux:      ${LINUX_NAMETAR}"
+	@echo "  Filesystem: ${FILESYSTEM_NAMETAR}"
+	@echo
+
+# Private targets ##############################################################
+
+board.defs:
+ifdef BOARD
+	$(V) if [ -f board/${BOARD} ]; then \
+        echo "${MSG_INFO}Install ${BOARD}${MSG_END}" ; \
+        ln -s board/$(BOARD) board.defs ; \
+    else \
+        echo "${MSG_ERROR}ERROR: Board file $(BOARD) doesn't exist${MSG_END}" ; \
+    fi
+else
+	@echo "${MSG_ERROR}ERROR: Board variable not defined${MSG_END}"
+	@echo "    board file needs to be defined"
+	@echo "    Example: make board BOARD=board.defs"
+	@echo
+endif
 
