@@ -1,6 +1,6 @@
 
 
-include ../Make.defs
+include ../board.defs
 include $(INCLUDE_MAKE_PATH)/Makefile.common
 
 # Private definitions ##########################################################

@@ -1,6 +1,6 @@
 
 # Include local definition
-include ../Make.defs
+include ../board.defs
 
 
 # Public targets ###############################################################

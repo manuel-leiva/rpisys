@@ -3,7 +3,7 @@
 
 
 # Include local definition
-include ../Make.defs
+include ../board.defs
 
 all: sys-toolchain-uncomp
 

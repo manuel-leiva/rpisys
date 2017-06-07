@@ -1,4 +1,4 @@
-include ../Make.defs
+include ../board.defs
 
 all: applications-header
 

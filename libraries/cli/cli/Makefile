@@ -10,7 +10,7 @@
 .PHONY: all clean help lib lib-clean test test-clean dep
 
 # Include local definition
-include Make.defs
+include board.defs
 
 # List of path for each include public file
 INCINSTALLSRC = $(addprefix $(INCDIR)/,$(PUBINCFILES))

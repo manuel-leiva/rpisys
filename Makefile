@@ -1,5 +1,5 @@
 
-include Make.defs
+include board.defs
 include system-build/makefile/Makefile.common
 
 # Definitions ##################################################################
@@ -54,7 +54,7 @@ image-sd:
 image-file:
 	$(V) $(MAKE) image file
 
-board: Make.defs
+board: board.defs
 
 board-info:
 	@echo "${MSG_INFO}  Name: ${BOARD_NAME}${MSG_END}"
@@ -64,11 +64,11 @@ board-info:
 
 # Private targets ##############################################################
 
-Make.defs:
+board.defs:
 ifdef BOARD
 	@ if [ -f system-build/boards/${BOARD} ]; then \
         echo "${MSG_INFO}Install ${BOARD}${MSG_END}" ; \
-        ln -s ${PWD}/system-build/boards/$(BOARD) Make.defs ; \
+        ln -s ${PWD}/system-build/boards/$(BOARD) board.defs ; \
     else \
         echo "${MSG_ERROR}ERROR: Board file $(BOARD) doesn't exist${MSG_END}" ; \
     fi

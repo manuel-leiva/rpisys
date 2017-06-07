@@ -1,7 +1,7 @@
 
 
 # Include global definitions
-include ../../Make.defs
+include ../../board.defs
 # Include common definitions
 include $(INCLUDE_MAKE_PATH)/Makefile.common
 

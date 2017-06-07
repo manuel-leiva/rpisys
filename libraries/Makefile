@@ -1,5 +1,5 @@
 
-include ../Make.defs
+include ../board.defs
 
 .PHONY: $(LIB_NAME_LIST)
 

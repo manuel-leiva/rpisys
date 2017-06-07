@@ -1,7 +1,7 @@
 .PHONY: all clean header
 
 # Include local definition
-include ../Make.defs
+include ../board.defs
 
 # Local definitions
 FILESYSTEM_PATH:=${PRJ_ROOT_PATH}/filesystem/filesystem
