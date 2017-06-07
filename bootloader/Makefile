@@ -1,7 +1,8 @@
 
 
 include ../board.defs
-include $(INCLUDE_MAKE_PATH)/Makefile.common
+# Include common recipes and definitions
+include ../system-build/makefile/Makefile.common
 
 # Private definitions ##########################################################
 BOOTLOADER_PKG_PATH = $(PRJ_ROOT_PATH)/bootloader/bootloader

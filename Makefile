@@ -1,19 +1,29 @@
 
 include board.defs
+# Include common recipes and definitions
 include system-build/makefile/Makefile.common
 
 # Definitions ##################################################################
 
 PWD:=$(shell pwd)
 
-.PHONY: all toolchain bootloader linux filesystem libraries applications image board
+.PHONY: all clean toolchain bootloader linux filesystem libraries applications image board
 
 # Public targets ###############################################################
 
 all: image
 
+clean:
+	$(V) $(MAKE) bootloader
+	$(V) $(MAKE) linux
+	$(V) $(MAKE) filesystem
+	$(V) $(MAKE) libraries
+	$(V) $(MAKE) applications
+	$(V) $(MAKE) image
+
 help:
 	@$(ECHO) "  Targets:"
+	@$(ECHO) "    clean:        Clean all the modules built"
 	@$(ECHO) "    toolchain:    Build toolchain"
 	@$(ECHO) "    bootloader:   Build bootloader"
 	@$(ECHO) "    linux:        Build linux"

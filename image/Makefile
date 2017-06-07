@@ -1,7 +1,8 @@
 
 # Include local definition
 include ../board.defs
-
+# Include common recipes and definitions
+include ../system-build/makefile/Makefile.common
 
 # Public targets ###############################################################
 all: image-header image-make

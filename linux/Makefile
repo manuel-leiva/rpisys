@@ -4,6 +4,8 @@
 
 # Include local definition
 include ../board.defs
+# Include common recipes and definitions
+include ../system-build/makefile/Makefile.common
 
 # Local definitions
 

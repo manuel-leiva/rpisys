@@ -1,5 +1,7 @@
 
 include ../board.defs
+# Include common recipes and definitions
+include ../system-build/makefile/Makefile.common
 
 .PHONY: $(LIB_NAME_LIST)
 

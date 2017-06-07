@@ -1,4 +1,6 @@
 include ../board.defs
+# Include common recipes and definitions
+include system-build/makefile/Makefile.common
 
 all: applications-header
 

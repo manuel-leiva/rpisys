@@ -2,8 +2,8 @@
 
 # Include global definitions
 include ../../board.defs
-# Include common definitions
-include $(INCLUDE_MAKE_PATH)/Makefile.common
+# Include common recipes and definitions
+include ../system-build/makefile/Makefile.common
 
 # Private definitions ##########################################################
 
