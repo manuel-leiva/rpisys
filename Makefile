@@ -89,5 +89,6 @@ else
 	@echo
 endif
 
-debug:
+debug-var:
 	@echo "  PWD: ${PWD}"
+

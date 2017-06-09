@@ -1,5 +1,4 @@
 
-
 .PHONY: all clean header
 
 # Include local definition
@@ -7,9 +6,18 @@ include ../board.defs
 # Include common recipes and definitions
 include ../system-build/makefile/Makefile.common
 
+## Verify external variables ##
+ifndef LINUX_JOBS_PER_EXE
+# If LINUX_JOBS_PER_EXE is not defined LINUX_MAKE_JOBS=1
+LINUX_MAKE_JOBS:=1
+$(warning WARN: LINUX_JOBS_PER_EXE not defined)
+endif
+
 # Local definitions
 
 LINUX_PATH:=${PRJ_ROOT_PATH}/linux
+#
+LINUX_MAKE_JOBS?=$(shell echo ${LINUX_JOBS_PER_EXE}*${HOST_CORES}/100 | bc )
 
 # Create kernel compilation flags
 KERNEL_FLAGS:=CROSS_COMPILE=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX) KERNEL=$(LINUX_KERNEL_EXTRAFLAGS)
@@ -18,7 +26,7 @@ KERNEL_FLAGS:=CROSS_COMPILE=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX) KERNEL=$(LINUX
 LINUX_KERNEL_INSTALLPATH:=$(LINUX_PATH)/$(LINUX_KERNEL_INSTALLDIR)
 LINUX_MOD_INSTALLPATH   :=$(LINUX_PATH)/$(LINUX_MOD_INSTALLDIR)
 
-all: header linux-install
+all: header linux-modules
 
 header:
 	@$(ECHO) "${MSG_INFO}Linux build${MSG_END} "
@@ -38,7 +46,7 @@ linux-patch: linux-download
 linux-build: linux-patch
 	@    $(ECHO) "${MSG_INFO}  Build linux ${MSG_END}"
 	$(V) $(MAKE) linux $(KERNEL_FLAGS) $(LINUX_DEFCONFIG)
-	$(V) $(MAKE) linux -j $(LINUX_PAR_EXE) $(KERNEL_FLAGS) zImage dtbs
+	$(V) $(MAKE) linux -j $(LINUX_MAKE_JOBS) $(KERNEL_FLAGS) zImage dtbs
 # Install Kernel files
 	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALLPATH)
 	$(V) linux/scripts/mkknlimg linux/arch/arm/boot/zImage $(LINUX_KERNEL_INSTALLPATH)/kernel.img
@@ -50,7 +58,7 @@ linux-build: linux-patch
 
 linux-modules: linux-build
 	@    $(ECHO) "${MSG_INFO}  Build linux modules ${MSG_END}"
-	$(V) $(MAKE) linux -j $(LINUX_PAR_EXE) $(KERNEL_FLAGS) modules
+	$(V) $(MAKE) linux -j $(LINUX_MAKE_JOBS) $(KERNEL_FLAGS) modules
 # Install Kernel modules
 	$(V) $(MKDIR) $(LINUX_PATH)/$(LINUX_MOD_INSTALLDIR)
 	$(V) $(MAKE) linux $(KERNEL_FLAGS) INSTALL_MOD_PATH=$(LINUX_MOD_INSTALLPATH) modules_install
@@ -81,6 +89,9 @@ clean: header
 # Remove linux modules
 	$(V) $(RM) $(LINUX_MOD_INSTALLPATH) $(LINUX_KERNEL_INSTALLPATH)
 
-debug:
+help:
+	@$(ECHO) ""
 
+linux-debug-var:
+	@$(ECHO) LINUX_MAKE_JOBS: ${LINUX_MAKE_JOBS}
 

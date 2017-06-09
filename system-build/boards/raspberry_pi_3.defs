@@ -28,8 +28,11 @@ BOOTLOADER_DL_URL:=https://www.dropbox.com/s/wxojrzxyge91f26/
 LINUX_NAMETAR:=rpi-linux-4.4.36.tar.gz
 LINUX_DLURL:=https://www.dropbox.com/s/d4ri5s21jdpw1io/
 
-# Parallel Execution this is the number of recipes to execute at once.
-LINUX_PAR_EXE:=2
+# Percentage used to compute the number of recipes to execute at once.
+# The number of recipes si computed with this formula:
+# JOBS=HOST_CORES*LINUX_PER_EXE/100
+# If LINUX_JOBS_PER_EXE is not defined JOBS=1
+LINUX_JOBS_PER_EXE:=75
 
 # By default are added the kernel flags CROSS_COMPILE=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)
 # This variable allows add some extra flag

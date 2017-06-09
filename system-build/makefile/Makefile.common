@@ -3,6 +3,10 @@
 
 # DEFINITIONS ##################################################################
 
+# Amount of cores in the host system
+HOST_CORES:=$(shell cat /proc/cpuinfo | grep processor | wc -l)
+
+
 COMMON_LIB_BOARD_LIBS_DIR:=board-libs
 COMMON_LIB_HOST_LIBS_DIR:=host-libs
 
