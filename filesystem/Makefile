@@ -5,24 +5,58 @@ include ../board.defs
 # Include common recipes and definitions
 include ../system-build/makefile/Makefile.common
 
-# Local definitions
+# Definitions ##################################################################
+
+## Verify external variables ##
+ifndef BOARD_FILESYSTEM_NAME_TAR
+$(error ERROR: BOARD_FILESYSTEM_NAME_TAR not defined)
+endif
+ifndef BOARD_FILESYSTEM_DL_URL
+$(error ERROR: BOARD_FILESYSTEM_DL_URL not defined)
+endif
+
+## Local definitions ##
 FILESYSTEM_PATH:=${PRJ_ROOT_PATH}/filesystem/filesystem
-FILESYSTEM_SU?=n
+BOARD_FILESYSTEM_SU?=n
+
+# Public targets ###############################################################
 
 all: header filesystem-patch
 
 header:
 	@$(ECHO) "${MSG_INFO}Filesystem${MSG_END} "
 
+clean: header
+	@$(ECHO) "${MSG_INFO}  Remove filesystem${MSG_END}"
+	$(V) $(RM) filesystem-*
+ifeq ($(BOARD_FILESYSTEM_SU),y)
+	@$(ECHO) "${MSG_REQ}You need to be logged in as root you to clean filesystem${MSG_END}"
+	$(V) sudo $(RM) filesystem
+else
+	$(V) $(RM) filesystem
+endif
+
+# Alias target for install
+install: header filesystem-install
+
+uninstall:
+	@$(ECHO) "${MSG_INFO}  Uninstall filesystem${MSG_END}"
+	$(V) $(RM) filesystem-install
+
+# Private targets ###############################################################
+
 filesystem-download:
 	@    $(ECHO) "${MSG_INFO}  Download filesystem${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name filesystem \
-    --pkg-target-name ${FILESYSTEM_NAMETAR} \
+    --pkg-target-name ${BOARD_FILESYSTEM_NAME_TAR} \
     --dl-path ${PRJ_DOWNLOAD_PATH} \
-    --dl-url ${FILESYSTEM_DLURL} \
-    --su ${FILESYSTEM_SU}
+    --dl-url ${BOARD_FILESYSTEM_DL_URL} \
+    --su ${BOARD_FILESYSTEM_SU}
 	$(V) touch $@
+
+filesystem-post-download-script:
+
 
 filesystem-patch: filesystem-download
 	$(V) if [ -d ${PRJ_ROOT_PATH}/filesystem/patches ]; then \
@@ -44,23 +78,10 @@ filesystem-revpatch:
     fi
 	$(V) $(RM) filesystem-patch
 
-clean: header
-	@$(ECHO) "${MSG_INFO}  Remove filesystem${MSG_END}"
-	$(V) $(RM) filesystem-*
-ifeq ($(FILESYSTEM_SU),y)
-	@$(ECHO) "${MSG_REQ}You need to be logged in as root you to clean filesystem${MSG_END}"
-	$(V) sudo $(RM) filesystem
-else
-	$(V) $(RM) filesystem
-endif
-
-# Alias target for install
-install: header filesystem-install
-
 filesystem-install: filesystem-patch
 	@$(ECHO) "${MSG_INFO}  Install filesystem${MSG_END}"
 	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/rootfs
-ifeq ($(FILESYSTEM_SU),y)
+ifeq ($(BOARD_FILESYSTEM_SU),y)
 	@$(ECHO) "${MSG_REQ}You need to be logged in as root you to install filesystem${MSG_END}"
 	$(V) cd filesystem; sudo find . | sudo cpio -pdum ${PRJ_ROOT_PATH}/image/image/rootfs/
 else
@@ -68,6 +89,4 @@ else
 endif
 	$(V) touch $@
 
-uninstall:
-	@$(ECHO) "${MSG_INFO}  Uninstall filesystem${MSG_END}"
-	$(V) $(RM) filesystem-install
+
