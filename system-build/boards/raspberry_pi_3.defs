@@ -44,10 +44,11 @@ LINUX_KERNEL_INSTALLDIR:=kernel
 
 BOARD_FILESYSTEM_NAME_TAR:=rpi-fs-2017_03_02.tar.gz
 BOARD_FILESYSTEM_DL_URL:=https://www.dropbox.com/s/f51c7a3k1dxu3l5/
+BOARD_FILESYSTEM_PKG_DIR:=filesystem
 # BOARD_FILESYSTEM_SU: Force to use super user permissions to decompress and manage the
 # filesystem. Options: "y" or "n".
 BOARD_FILESYSTEM_SU:=y
-BOARD_FILESYSTEM_POST_DOWNLOAD_SCRIPT:=filesystem.sh
+BOARD_FILESYSTEM_POST_DOWNLOAD_SCRIPT:=filesystem-post-download-script.sh
 
 # LIBRARIES ####################################################################
 

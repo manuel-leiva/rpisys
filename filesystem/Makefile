@@ -14,9 +14,12 @@ endif
 ifndef BOARD_FILESYSTEM_DL_URL
 $(error ERROR: BOARD_FILESYSTEM_DL_URL not defined)
 endif
+ifndef BOARD_FILESYSTEM_PKG_DIR
+$(error ERROR: BOARD_FILESYSTEM_DL_URL not defined)
+endif
 
 ## Local definitions ##
-FILESYSTEM_PATH:=${PRJ_ROOT_PATH}/filesystem/filesystem
+FILESYSTEM_PATH:=${PRJ_ROOT_PATH}/filesystem
 BOARD_FILESYSTEM_SU?=n
 
 # Public targets ###############################################################
@@ -26,15 +29,7 @@ all: header filesystem-patch
 header:
 	@$(ECHO) "${MSG_INFO}Filesystem${MSG_END} "
 
-clean: header
-	@$(ECHO) "${MSG_INFO}  Remove filesystem${MSG_END}"
-	$(V) $(RM) filesystem-*
-ifeq ($(BOARD_FILESYSTEM_SU),y)
-	@$(ECHO) "${MSG_REQ}You need to be logged in as root you to clean filesystem${MSG_END}"
-	$(V) sudo $(RM) filesystem
-else
-	$(V) $(RM) filesystem
-endif
+clean: header filesystem-clean
 
 # Alias target for install
 install: header filesystem-install
@@ -44,6 +39,16 @@ uninstall:
 	$(V) $(RM) filesystem-install
 
 # Private targets ###############################################################
+
+filesystem-clean:
+	@$(ECHO) "${MSG_INFO}  Remove filesystem${MSG_END}"
+	$(V) $(RM) filesystem-*
+ifeq ($(BOARD_FILESYSTEM_SU),y)
+	@$(ECHO) "${MSG_REQ}You need to be logged in as root you to clean filesystem${MSG_END}"
+	$(V) sudo $(RM) filesystem
+else
+	$(V) $(RM) filesystem
+endif
 
 filesystem-download:
 	@    $(ECHO) "${MSG_INFO}  Download filesystem${MSG_END}"
@@ -55,10 +60,16 @@ filesystem-download:
     --su ${BOARD_FILESYSTEM_SU}
 	$(V) touch $@
 
-filesystem-post-download-script:
+filesystem-script-download-post: filesystem-download
+ifdef BOARD_FILESYSTEM_POST_DOWNLOAD_SCRIPT
+	@    $(ECHO) "${MSG_INFO}  Run download post script${MSG_END}"
+	$(V) $(PRJ_ROOT_PATH)/system-build/boards/scripts/${BOARD_FILESYSTEM_POST_DOWNLOAD_SCRIPT} \
+	--pwd ${FILESYSTEM_PATH} \
+	--fs-dir ${BOARD_FILESYSTEM_PKG_DIR}
+	$(V) touch $@
+endif
 
-
-filesystem-patch: filesystem-download
+filesystem-patch: filesystem-script-download-post
 	$(V) if [ -d ${PRJ_ROOT_PATH}/filesystem/patches ]; then \
         echo "${MSG_INFO}  Patch ${PKGNAME} ${MSG_END}" ; \
         quilt push -a ; \
