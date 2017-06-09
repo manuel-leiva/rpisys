@@ -76,12 +76,9 @@ board-info:
 
 board.defs:
 ifdef BOARD
-	@ if [ -f system-build/boards/${BOARD} ]; then \
-        echo "${MSG_INFO}Install ${BOARD}${MSG_END}" ; \
-        ln -s ${PWD}/system-build/boards/$(BOARD) board.defs ; \
-    else \
-        echo "${MSG_ERROR}ERROR: Board file $(BOARD) doesn't exist${MSG_END}" ; \
-    fi
+	$(V) system-build/scripts/init.sh \
+    --pwd ${PWD} \
+    --board ${BOARD}
 else
 	@echo "${MSG_ERROR}ERROR: Board variable not defined${MSG_END}"
 	@echo "    board file needs to be defined"

@@ -3,6 +3,8 @@
 
 # Definitions ##################################################################
 
+PRJ_ROOT_PATH:=project_path
+
 # Amount of cores in the host system
 HOST_CORES:=$(shell cat /proc/cpuinfo | grep processor | wc -l)
 

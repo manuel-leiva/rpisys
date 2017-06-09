@@ -4,8 +4,6 @@ BOARD_NAME:="raspberry pi 3"
 
 # COMMON #######################################################################
 
-PRJ_ROOT_PATH:=/home/${USER}/devdirs/rpisys
-
 # This directory is used to share files between projects as the toolchain
 PRJ_COMMON_PATH:=/home/${USER}/rpisys
 # Destination directory to download packages
