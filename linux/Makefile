@@ -6,6 +6,8 @@ include ../board.defs
 # Include common recipes and definitions
 include ../system-build/makefile/Makefile.common
 
+# Definitions ##################################################################
+
 ## Verify external variables ##
 ifndef LINUX_JOBS_PER_EXE
 # If LINUX_JOBS_PER_EXE is not defined LINUX_MAKE_JOBS=1
@@ -13,7 +15,7 @@ LINUX_MAKE_JOBS:=1
 $(warning WARN: LINUX_JOBS_PER_EXE not defined)
 endif
 
-# Local definitions
+## Local definitions ##
 
 LINUX_PATH:=${PRJ_ROOT_PATH}/linux
 #
@@ -26,10 +28,32 @@ KERNEL_FLAGS:=CROSS_COMPILE=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX) KERNEL=$(LINUX
 LINUX_KERNEL_INSTALLPATH:=$(LINUX_PATH)/$(LINUX_KERNEL_INSTALLDIR)
 LINUX_MOD_INSTALLPATH   :=$(LINUX_PATH)/$(LINUX_MOD_INSTALLDIR)
 
+# Public targets ###############################################################
+
 all: header linux-modules
 
 header:
-	@$(ECHO) "${MSG_INFO}Linux build${MSG_END} "
+	@$(ECHO) "${MSG_INFO}Linux build${MSG_END}"
+
+# Alias target to install linux
+install: linux-install
+
+uninstall:
+	@$(ECHO) "${MSG_INFO}  Uninstall linux${MSG_END}"
+	$(V) $(RM) linux-install
+
+clean: header
+	@$(ECHO) "${MSG_INFO}  Remove linux${MSG_END}"
+	$(V) $(RM) linux-uncomp linux-build linux-install linux-patch linux-download linux-modules
+# Remove Linux code
+	$(V) $(RM) linux
+# Remove linux modules
+	$(V) $(RM) $(LINUX_MOD_INSTALLPATH) $(LINUX_KERNEL_INSTALLPATH)
+
+help:
+	@$(ECHO) ""
+
+# Private targets ###############################################################
 
 linux-download:
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
@@ -73,24 +97,6 @@ linux-install: linux-modules
 	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/rootfs/
 	$(V) cd modules; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/rootfs
 	$(V) touch $@
-
-# Alias target to install linux
-install: linux-install
-
-uninstall:
-	@$(ECHO) "${MSG_INFO}  Uninstall linux${MSG_END}"
-	$(V) $(RM) linux-install
-
-clean: header
-	@$(ECHO) "${MSG_INFO}  Remove linux${MSG_END}"
-	$(V) $(RM) linux-uncomp linux-build linux-install linux-patch linux-download linux-modules
-# Remove Linux code
-	$(V) $(RM) linux
-# Remove linux modules
-	$(V) $(RM) $(LINUX_MOD_INSTALLPATH) $(LINUX_KERNEL_INSTALLPATH)
-
-help:
-	@$(ECHO) ""
 
 linux-debug-var:
 	@$(ECHO) LINUX_MAKE_JOBS: ${LINUX_MAKE_JOBS}
