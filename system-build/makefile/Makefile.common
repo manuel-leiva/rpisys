@@ -3,7 +3,10 @@
 
 # Definitions ##################################################################
 
-PRJ_ROOT_PATH:=project_path
+PRJ_ROOT_PATH=/home/mleiva/devdirs/rpisys
+
+# Board scripts path
+BOARD_SCRIPT_PATH:=$(PRJ_ROOT_PATH)/system-build/boards/scripts
 
 # Amount of cores in the host system
 HOST_CORES:=$(shell cat /proc/cpuinfo | grep processor | wc -l)
@@ -36,7 +39,6 @@ MAKE := make -s -C
 V := @
 endif
 
-
 # Public targets ###############################################################
 
 # Apply patch
@@ -66,4 +68,18 @@ $(1)-revpatch: $(2)
 	$(V) $(RM) $(1)-patch
 endef
 
-
+# Recipe to call script
+# 1: Target name
+# 2: dependencies list
+# 3: Message
+# 4: Script path
+# 5: Variable that contains the script name
+# 6: Script parameters
+define COMMON_TARGET_SCRIPT
+$(1): $(2)
+ifdef $(5)
+	@ $(ECHO) "${MSG_INFO}  Run $(3) ${MSG_END}"
+	$(V) $(4)/$(${5}) $(6)
+	$(V) touch $(1)
+endif
+endef
