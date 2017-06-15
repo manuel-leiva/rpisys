@@ -20,11 +20,12 @@ TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
 
 BOOTLOADER_NAMETAR:=rpi-boot-2017-03-02.tar.gz
 BOOTLOADER_DL_URL:=https://www.dropbox.com/s/wxojrzxyge91f26/
+BOARD_BOOTLOADER_PKG_DIR_NAME:=boot
 
 # LINUX #######################################################################
 
-LINUX_NAMETAR:=rpi-linux-4.4.36.tar.gz
-LINUX_DLURL:=https://www.dropbox.com/s/d4ri5s21jdpw1io/
+LINUX_NAMETAR:=rpi-linux-4.4.50.tar.gz
+LINUX_DLURL:=https://www.dropbox.com/s/2qwji7i3tw6qder/
 
 # Percentage used to compute the number of recipes to execute at once.
 # The number of recipes si computed with this formula:
@@ -37,8 +38,11 @@ LINUX_JOBS_PER_EXE:=75
 LINUX_KERNEL_EXTRAFLAGS:=kernel7 ARCH=arm
 
 LINUX_DEFCONFIG:=bcm2709_defconfig
-LINUX_MOD_INSTALLDIR:=modules
-LINUX_KERNEL_INSTALLDIR:=kernel
+# BOARD_LINUX_BUILD_POST_SCRIPT_NAME: if the variable is defined,
+# this script is called after to build the kernel
+BOARD_LINUX_BUILD_SCRIPT_POST_NAME:=linux-built-script-post.sh
+# BOARD_LINUX_PKG_DIR_NAME: Specifies the name of the directory where is located linux
+BOARD_LINUX_PKG_DIR_NAME:=linux
 
 # FILESYSTEM ###################################################################
 

@@ -10,6 +10,8 @@ BOOTLOADER_PKG_PATH = $(PRJ_ROOT_PATH)/bootloader/bootloader
 # Public targets ###############################################################
 all: bootloader-header bootloader-make
 
+clean: bootloader-header bootloader-clean
+
 # Alias target to download the package
 download: bootloader-header bootloader-download
 
@@ -26,6 +28,11 @@ help: bootloader-header
 	@$(ECHO) "    download:  Download bootloader package"
 
 # Private targets ##############################################################
+
+bootloader-clean:
+	@$(ECHO) "${MSG_INFO}  Remove bootloader${MSG_END}"
+	${RM} bootloader-install bootloader-patch bootloader-download bootloader-make
+	${RM} ${BOARD_BOOTLOADER_PKG_DIR_NAME}
 
 bootloader-header:
 	@$(ECHO) "${MSG_INFO}Bootloader${MSG_END} "

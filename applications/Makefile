@@ -1,8 +1,10 @@
 include ../board.defs
 # Include common recipes and definitions
-include system-build/makefile/Makefile.common
+include ../system-build/makefile/Makefile.common
 
 all: applications-header
+
+clean: applications-header applications-clean
 
 install: applications-header applications-install
 
@@ -11,6 +13,8 @@ uninstall: applications-header applications-uninstall
 
 # Private targets ##############################################################
 
+applications-clean:
+	@$(ECHO) "${MSG_INFO}  Remove applications${MSG_END}"
 
 applications-header:
 	@$(ECHO) "${MSG_INFO}Applications${MSG_END}"

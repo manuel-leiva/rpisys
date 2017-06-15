@@ -14,12 +14,12 @@ PWD:=$(shell pwd)
 all: image
 
 clean:
-	$(V) $(MAKE) bootloader
-	$(V) $(MAKE) linux
-	$(V) $(MAKE) filesystem
-	$(V) $(MAKE) libraries
-	$(V) $(MAKE) applications
-	$(V) $(MAKE) image
+	$(V) $(MAKE) bootloader clean
+	$(V) $(MAKE) linux clean
+	$(V) $(MAKE) filesystem clean
+	$(V) $(MAKE) libraries clean
+	$(V) $(MAKE) applications clean
+	$(V) $(MAKE) image clean
 
 help:
 	@$(ECHO) "  Targets:"
