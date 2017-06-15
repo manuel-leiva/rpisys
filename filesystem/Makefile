@@ -40,7 +40,7 @@ uninstall:
 
 # Private targets ###############################################################
 
-filesystem-clean:
+filesystem-clean: filesystem-revpatch
 	@$(ECHO) "${MSG_INFO}  Remove filesystem${MSG_END}"
 	$(V) $(RM) filesystem-*
 ifeq ($(BOARD_FILESYSTEM_SU),y)
