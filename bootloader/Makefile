@@ -5,7 +5,8 @@ include ../board.defs
 include ../system-build/makefile/Makefile.common
 
 # Private definitions ##########################################################
-BOOTLOADER_PKG_PATH = $(PRJ_ROOT_PATH)/bootloader/bootloader
+BOOTLOADER_PKG_PATH = $(PRJ_ROOT_PATH)/bootloader/${BOARD_BOOTLOADER_PKG_DIR_NAME}
+BOOTLOADER_PATH = $(PRJ_ROOT_PATH)/bootloader
 
 # Public targets ###############################################################
 all: bootloader-header bootloader-make
@@ -29,7 +30,7 @@ help: bootloader-header
 
 # Private targets ##############################################################
 
-bootloader-clean:
+bootloader-clean: bootloader-revpatch
 	@$(ECHO) "${MSG_INFO}  Remove bootloader${MSG_END}"
 	${RM} bootloader-install bootloader-patch bootloader-download bootloader-make
 	${RM} ${BOARD_BOOTLOADER_PKG_DIR_NAME}
@@ -48,7 +49,7 @@ bootloader-download:
 
 # bootloader-patch:
 # Parameters: target_prefix, dependecies, package-path, message
-$(eval $(call COMMON_PATCH_RECIPE,bootloader,bootloader-download,${BOOTLOADER_PKG_PATH},bootloader))
+$(eval $(call COMMON_PATCH_RECIPE,bootloader,bootloader-download,${BOOTLOADER_PATH},bootloader))
 
 bootloader-make: bootloader-patch
 	@$(ECHO) "${MSG_INFO}  Build bootloader${MSG_END}"
