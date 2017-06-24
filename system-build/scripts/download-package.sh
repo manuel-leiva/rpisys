@@ -14,7 +14,10 @@ function help
     echo "help"
 }
 
+# By default don't use super user permission
 SUPER_USER="n"
+# Default destination path
+DESTINATION_PATH="./"
 
 while [ $# -gt 1 ]
 do
@@ -25,7 +28,7 @@ do
         PKG_NAME="$2"
         shift
         ;;
-        # Prefix string to be used in pc and la files
+        # Package name
         -t|--pkg-target-name)
         PKG_TARGET_NAME="$2"
         shift
@@ -38,6 +41,10 @@ do
         # Download URL
         -u|--dl-url)
         DOWNLOAD_URL="$2"
+        shift
+        ;;
+        -o|--dest)
+        DESTINATION_PATH="$2"
         shift
         ;;
         # Use super user during decompress process (optional)
@@ -62,7 +69,7 @@ function DownloadTar
 {
     # Verify if the package was already downloaded
     if [ ! -f ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} ]; then
-        echo -e "${INFOCOLOR}  Download ${PKG_NAME}${ENDCOLOR} "
+        echo -e "${INFOCOLOR}  Download ${PKG_TARGET_NAME}${ENDCOLOR}"
         wget ${DOWNLOAD_URL}/${PKG_TARGET_NAME} -P ${DOWNLOAD_PATH}
     fi ;
 
@@ -71,9 +78,11 @@ function DownloadTar
     OWNER=$(ls ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -l | awk '{print $3 }')
     if [ "root" == ${OWNER} ]  || [ "y" == ${SUPER_USER} ] ; then
         echo -e "${MSGCOLOR}You need to be logged in as root you to decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
-        sudo tar -xf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME}
+        sudo \
+        tar -xf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -C ${DESTINATION_PATH}
     else
-        tar -xf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME}
+        echo -e "${INFOCOLOR}  Decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
+        tar -xf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -C ${DESTINATION_PATH}
     fi
 }
 

@@ -14,12 +14,16 @@ PWD:=$(shell pwd)
 all: image
 
 clean:
+# Toolchain is not clean by default
 	$(V) $(MAKE) bootloader clean
 	$(V) $(MAKE) linux clean
 	$(V) $(MAKE) filesystem clean
 	$(V) $(MAKE) libraries clean
 	$(V) $(MAKE) applications clean
 	$(V) $(MAKE) image clean
+
+clean-all: clean
+	$(V) $(MAKE) toolchain clean
 
 help:
 	@$(ECHO) "  Targets:"
@@ -40,7 +44,7 @@ toolchain:
 bootloader: toolchain
 	$(V) $(MAKE) $@
 
-linux: toolchain
+linux: bootloader
 	$(V) $(MAKE) $@
 
 filesystem:
@@ -53,6 +57,11 @@ applications: libraries
 	$(V) $(MAKE) $@
 
 image: applications
+	$(V)$(MAKE) ${PRJ_ROOT_PATH}/bootloader install
+	$(V)$(MAKE) ${PRJ_ROOT_PATH}/linux install
+	$(V)$(MAKE) ${PRJ_ROOT_PATH}/libraries install
+	$(V)$(MAKE) ${PRJ_ROOT_PATH}/filesystem install
+	$(V)$(MAKE) ${PRJ_ROOT_PATH}/applications install
 	$(V)$(MAKE) $@
 
 image-clean:
