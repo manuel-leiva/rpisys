@@ -11,7 +11,6 @@ clean: image-header image-clean
 
 sd: image-header image-make-sd
 
-
 # Private targets ##############################################################
 
 image-header:
@@ -19,11 +18,6 @@ image-header:
 
 image-make:
 	@$(ECHO) "${MSG_INFO}  Build image${MSG_END}"
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/bootloader install
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/linux install
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/libraries install
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/filesystem install
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/applications install
 
 image-make-sd:
 	@$(ECHO) "${MSG_INFO}  Build SD image${MSG_END}"
