@@ -31,9 +31,9 @@ help: bootloader-header
 # Private targets ##############################################################
 
 bootloader-clean: bootloader-revpatch
-	@$(ECHO) "${MSG_INFO}  Remove bootloader${MSG_END}"
-	${RM} bootloader-install bootloader-patch bootloader-download bootloader-make
-	${RM} ${BOARD_BOOTLOADER_PKG_DIR_NAME}
+	@    $(ECHO) "${MSG_INFO}  Remove bootloader${MSG_END}"
+	$(V) ${RM} bootloader-install bootloader-patch bootloader-download bootloader-make
+	$(V) ${RM} ${BOARD_BOOTLOADER_PKG_DIR_NAME}
 
 bootloader-header:
 	@$(ECHO) "${MSG_INFO}Bootloader${MSG_END} "
@@ -66,7 +66,7 @@ bootloader-uninstall:
 
 # bootloader-revpatch:
 # Parameters: target_prefix, dependecies, package-path, message
-$(eval $(call COMMON_REVPATCH_RECIPE,bootloader,,${BOOTLOADER_PKG_PATH},bootloader))
+$(eval $(call COMMON_REVPATCH_RECIPE,bootloader,,${BOOTLOADER_PATH},bootloader))
 
 # Debug targets ################################################################
 
