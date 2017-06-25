@@ -1,0 +1,11 @@
+Index: bootloader/boot/config.txt
+===================================================================
+--- bootloader.orig/boot/config.txt
++++ bootloader/boot/config.txt
+@@ -54,3 +54,6 @@
+ 
+ # Enable audio (loads snd_bcm2835)
+ dtparam=audio=on
++
++# Uncomment this to have serial interface but no bluetooth
++dtoverlay=pi3-disable-bt
