@@ -22,9 +22,9 @@ endef
 LIB_CLEAN_TARGET_LIST:=$(LIB_NAME_LIST:%=clean-%)
 
 
-all: $(LIB_NAME_LIST)
+all: libraries-header $(LIB_NAME_LIST)
 
-clean: $(LIB_CLEAN_TARGET_LIST)
+clean: libraries-header $(LIB_CLEAN_TARGET_LIST)
 	@$(ECHO) "${MSG_INFO}  Clean Libraries ${MSG_END}"
 	@$(RM) host-libs board-libs libraries-install
 
@@ -33,6 +33,9 @@ $(info $(foreach i,$(LIB_NAME_LIST),$(eval $(call BUILD_RECIPE,$(i),$(shell if [
 
 # Clean targets
 $(info $(foreach i,$(LIB_NAME_LIST),$(eval $(call CLEAN_RECIPE,$(i)))))
+
+libraries-header:
+	@$(ECHO) "${MSG_INFO}Libraries${MSG_END}"
 
 libraries-install:
 	@$(ECHO) "${MSG_INFO}  Libraries install${MSG_END}"
