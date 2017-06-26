@@ -65,4 +65,4 @@ fi
 
 ln -s ${PWD}/system-build/boards/${BOARD} ${PWD}/board.defs
 
-sed -i "s|PRJ_ROOT_PATH:=project_path|PRJ_ROOT_PATH=${PWD}|g" ${PWD}/system-build/makefile/Makefile.common
+sed -i "s|PRJ_ROOT_PATH:=project_path|PRJ_ROOT_PATH:=${PWD}|g" ${PWD}/system-build/makefile/Makefile.common
