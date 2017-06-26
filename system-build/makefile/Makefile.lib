@@ -21,12 +21,12 @@ AUTOTOOLS_PREFIX_INC_DIR:=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)
 
 # Add standard include files and libraries location
 LIB_CFLAGS+="-I${AUTOTOOLS_PREFIX_INC_DIR}/usr/include"
-LIB_LDFLAGS+="-L$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)$(LIBS_INSTALLDIR)"
+LIB_LDFLAGS+="-L$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)$(BOARD_LIBRARY_BOARD_INSTALLDIR)"
 
 
 export DESTDIR=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)/
 # PKG_CONFIG_LIBDIR: Replaces the default pkg-config search directory.
-export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/$(LIBS_INSTALLDIR)/pkgconfig
+export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/$(BOARD_LIBRARY_BOARD_INSTALLDIR)/pkgconfig
 
 .PHONY: all clean help download install
 
@@ -72,7 +72,7 @@ generic-make-install: generic-make
 	$(V) mkdir -p install
 	$(V) DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install $(MAKE) ${PKGNAME} install $(MAKE_FLAGS)
 	$(V) cp -ar $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/* $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)/
-	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-change-prefix.sh ${PKGNAME} $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR) ${LIBS_INSTALLDIR}
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-change-prefix.sh ${PKGNAME} $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR) ${BOARD_LIBRARY_BOARD_INSTALLDIR}
 	$(V) cp -ar $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/* $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/
 #~ 	$(V) $(RM) install
 	$(V) touch $@

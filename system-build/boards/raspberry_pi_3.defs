@@ -58,7 +58,7 @@ BOARD_FILESYSTEM_POST_DOWNLOAD_SCRIPT:=filesystem-post-download-script.sh
 # LIBRARIES ####################################################################
 
 # Library directory for the normal user-programs installation
-LIBS_INSTALLDIR:=/usr/lib/arm-linux-gnueabihf
+BOARD_LIBRARY_BOARD_INSTALLDIR:=/usr/lib/arm-linux-gnueabihf
 # List of library to build
 LIB_NAME_LIST := readline-6.3 libffi-3.2.1 pcre-8.40  zlib-1.2.11 glib-2.50.3 libsoup-2.57.1 libxml2-2.9.4 sqlite-autoconf-3170000 ncurses-6.0 server cli
 
