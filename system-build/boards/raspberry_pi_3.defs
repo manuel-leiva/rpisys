@@ -20,7 +20,7 @@ TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
 # BOOTLOADER ##################################################################
 
 BOOTLOADER_NAMETAR:=rpi-boot-2017-03-02.tar.gz
-BOOTLOADER_DL_URL:=https://www.dropbox.com/s/wxojrzxyge91f26/
+BOOTLOADER_DL_URL:=https://www.dropbox.com/s/brgw0r3kucwks6n/
 BOARD_BOOTLOADER_PKG_DIR_NAME:=boot
 
 # LINUX #######################################################################
