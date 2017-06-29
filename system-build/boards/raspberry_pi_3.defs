@@ -9,6 +9,8 @@ PRJ_COMMON_PATH:=/home/${USER}/rpisys
 # Destination directory to download packages
 PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/rpisys
 
+BOARD_ARCH=arm
+
 # TOOLCHAIN ####################################################################
 
 BOARD_TOOLCHAIN_DLURL:=https://www.dropbox.com/s/3kvuznuff1qiv6r/
@@ -60,7 +62,11 @@ BOARD_FILESYSTEM_POST_DOWNLOAD_SCRIPT:=filesystem-post-download-script.sh
 # Library directory for the normal user-programs installation
 BOARD_LIBRARY_BOARD_INSTALLDIR:=/usr/lib/arm-linux-gnueabihf
 # List of library to build
-LIB_NAME_LIST := readline-6.3 libffi-3.2.1 pcre-8.40  zlib-1.2.11 glib-2.50.3 libsoup-2.57.1 libxml2-2.9.4 sqlite-autoconf-3170000 ncurses-6.0 server cli
+LIB_NAME_LIST := readline-6.3 libffi-3.2.1 pcre-8.40 zlib-1.2.11 glib-2.50.3 libsoup-2.57.1 libxml2-2.9.4 sqlite-autoconf-3170000 ncurses-6.0 server cli bison-3.0.4 flex-2.6.4 \
+gstreamer-1.10.5 gst-plugins-base-1.10.5 \
+gst-plugins-good-1.10.5 gst-plugins-bad-1.10.5 gst-plugins-ugly-1.10.5 \
+gst-rtsp-server-1.10.5 gst-libav-1.10.5 gst-omx-1.10.5 \
+orc-0.4.26
 
 # APPLICATIONS #################################################################
 
