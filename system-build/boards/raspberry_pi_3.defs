@@ -1,6 +1,6 @@
 
 
-BOARD_NAME:="raspberry pi 3"
+BOARD_NAME:="Raspberry_Pi_3"
 
 # COMMON #######################################################################
 
@@ -66,9 +66,8 @@ BOARD_LIBRARY_BOARD_INSTALLDIR:=/usr/lib/arm-linux-gnueabihf
 LIB_NAME_LIST := readline-6.3 libffi-3.2.1 pcre-8.40 zlib-1.2.11 glib-2.50.3 libsoup-2.57.1 libxml2-2.9.4 sqlite-autoconf-3170000 ncurses-6.0 \
 gstreamer-1.10.5 gst-plugins-base-1.10.5 \
 gst-plugins-good-1.10.5 gst-plugins-bad-1.10.5 gst-plugins-ugly-1.10.5 \
-gst-rtsp-server-1.10.5 gst-libav-1.10.5
+gst-rtsp-server-1.10.5 gst-libav-1.10.5 gst-omx-1.10.5
 # server cli
-# gst-omx-1.10.5
 # orc-0.4.26
 
 # APPLICATIONS #################################################################
