@@ -25,10 +25,5 @@ image-make-sd:
 
 image-clean:
 	@$(ECHO) "${MSG_INFO}  Remove image${MSG_END}"
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/bootloader   uninstall
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/linux        uninstall
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/filesystem   uninstall
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/libraries    uninstall
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/applications uninstall
 	@$(ECHO) "${MSG_REQ}You need to be logged in as root you to remove the image${MSG_END}"
 	$(V) sudo $(RM) image

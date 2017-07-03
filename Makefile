@@ -65,7 +65,12 @@ image: applications
 	$(V)$(MAKE) $@
 
 image-clean:
-	$(V)$(MAKE) image image-clean
+	$(V)$(MAKE) bootloader   uninstall
+	$(V)$(MAKE) linux        uninstall
+	$(V)$(MAKE) filesystem   uninstall
+	$(V)$(MAKE) libraries    uninstall
+	$(V)$(MAKE) applications uninstall
+	$(V)$(MAKE) image clean
 
 image-sd:
 	$(V) $(MAKE) image sd
