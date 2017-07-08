@@ -8,21 +8,12 @@ include ../system-build/makefile/Makefile.common
 
 # Definitions ##################################################################
 
-## Verify external variables ##
-ifndef LINUX_JOBS_PER_EXE
-# If LINUX_JOBS_PER_EXE is not defined LINUX_MAKE_JOBS=1
-LINUX_MAKE_JOBS:=1
-$(warning WARN: LINUX_JOBS_PER_EXE not defined)
-endif
-
 ## Local definitions ##
 
 LINUX_PATH:=${PRJ_ROOT_PATH}/linux
 # Installation directories
 LINUX_MOD_INSTALLDIR:=modules
 LINUX_KERNEL_INSTALLDIR:=kernel
-#
-LINUX_MAKE_JOBS?=$(shell echo ${LINUX_JOBS_PER_EXE}*${HOST_CORES}/100 | bc )
 
 # Create kernel compilation flags
 KERNEL_FLAGS:=CROSS_COMPILE=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX) KERNEL=$(LINUX_KERNEL_EXTRAFLAGS)
@@ -73,7 +64,7 @@ linux-patch: linux-download
 linux-build: linux-patch
 	@    $(ECHO) "${MSG_INFO}  Build linux ${MSG_END}"
 	$(V) $(MAKE) linux $(KERNEL_FLAGS) $(LINUX_DEFCONFIG)
-	$(V) $(MAKE) linux -j $(LINUX_MAKE_JOBS) $(KERNEL_FLAGS) zImage dtbs
+	$(V) $(MAKE) linux -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) zImage dtbs
 # Install Kernel files
 	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)
 	$(V) $(CP) linux/arch/arm/boot/zImage $(LINUX_KERNEL_INSTALL_PATH)
@@ -94,7 +85,7 @@ $(eval $(call COMMON_TARGET_SCRIPT,linux-build-script-post,linux-build,"build po
 
 linux-modules: linux-build-script-post
 	@    $(ECHO) "${MSG_INFO}  Build linux modules ${MSG_END}"
-	$(V) $(MAKE) linux -j $(LINUX_MAKE_JOBS) $(KERNEL_FLAGS) modules
+	$(V) $(MAKE) linux -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) modules
 # Install Kernel modules
 	$(V) $(MKDIR) $(LINUX_PATH)/$(LINUX_MOD_INSTALLDIR)
 	$(V) $(MAKE) linux $(KERNEL_FLAGS) INSTALL_MOD_PATH=$(LINUX_MOD_INSTALL_PATH) modules_install
@@ -111,5 +102,5 @@ linux-install: linux-modules
 	$(V) touch $@
 
 linux-debug-var:
-	@$(ECHO) LINUX_MAKE_JOBS: ${LINUX_MAKE_JOBS}
+	@$(ECHO) COMMON_MAKE_JOBS: ${COMMON_MAKE_JOBS}
 

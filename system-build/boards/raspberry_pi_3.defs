@@ -8,6 +8,11 @@ BOARD_NAME:="Raspberry_Pi_3"
 PRJ_COMMON_PATH:=/home/${USER}/rpisys
 # Destination directory to download packages
 PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/rpisys
+# Percentage used to compute the number of recipes to execute at once.
+# The number of recipes is computed with this formula:
+# JOBS=HOST_CORES*BOARD_MAKE_JOBS_PER_CORE/100
+# If BOARD_MAKE_JOBS_PER_CORE is not defined JOBS=1
+BOARD_MAKE_JOBS_PER_CORE:=75
 
 BOARD_ARCH=arm
 
