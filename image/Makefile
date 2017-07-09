@@ -1,6 +1,7 @@
-
-# Include local definition
+# Include board definition
 include ../board.defs
+# Include local configuration
+include ../system-build/makefile/Makefile.local
 # Include common recipes and definitions
 include ../system-build/makefile/Makefile.common
 

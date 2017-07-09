@@ -1,7 +1,7 @@
-.PHONY: all clean header
-
-# Include local definition
+# Include board definitions
 include ../board.defs
+# Include local configuration
+include ../system-build/makefile/Makefile.local
 # Include common recipes and definitions
 include ../system-build/makefile/Makefile.common
 
@@ -23,6 +23,8 @@ FILESYSTEM_PATH:=${PRJ_ROOT_PATH}/filesystem
 BOARD_FILESYSTEM_SU?=n
 
 # Public targets ###############################################################
+
+.PHONY: all clean header
 
 all: header filesystem-patch
 

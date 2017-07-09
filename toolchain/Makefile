@@ -1,9 +1,7 @@
-
-.PHONY: all clean
-
-
-# Include local definition
+# Include board definitions
 include ../board.defs
+# Include local configuration
+include ../system-build/makefile/Makefile.local
 # Include common recipes and definitions
 include ../system-build/makefile/Makefile.common
 
@@ -27,6 +25,8 @@ $(error ERROR: TOOLCHAIN_PREFIX not defined)
 endif
 
 # Public targets ###############################################################
+
+.PHONY: all clean
 
 all: toolchain-header $(PRJ_COMMON_PATH)/toolchain-download
 

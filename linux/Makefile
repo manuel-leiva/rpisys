@@ -1,8 +1,7 @@
-
-.PHONY: all clean header
-
-# Include local definition
+# Include board definition
 include ../board.defs
+# Include local configuration
+include ../system-build/makefile/Makefile.local
 # Include common recipes and definitions
 include ../system-build/makefile/Makefile.common
 
@@ -23,6 +22,7 @@ LINUX_KERNEL_INSTALL_PATH:=$(LINUX_PATH)/$(LINUX_KERNEL_INSTALLDIR)
 LINUX_MOD_INSTALL_PATH   :=$(LINUX_PATH)/$(LINUX_MOD_INSTALLDIR)
 
 # Public targets ###############################################################
+.PHONY: all clean header
 
 all: header linux-modules
 
