@@ -6,16 +6,16 @@ INFOCOLOR="\033[0;36m"
 MSGCOLOR="\033[1;33m"
 ENDCOLOR="\033[0m"
 
+
 function help
 {
     echo "help"
 }
 
-while [ $# -gt 1 ]
+while [ $# -gt 0 ]
 do
     key="$1"
     case $key in
-        # Autotools package name
         -p|--pwd)
         PWD="$2"
         shift
@@ -23,6 +23,9 @@ do
         -b|--board)
         BOARD="$2"
         shift
+        ;;
+        -c|--clean)
+        CLEAN="1"
         ;;
         # Help
         -h|--help)
@@ -39,7 +42,8 @@ done
 ## Check parameters
 
 if [ -z ${PWD} ]; then
-   echo -e "${ERRORCOLOR}Error:${ENDCOLOR} Option \"--pwd\" not defined."
+   # If PWD is not defined, use the current working path
+   PWD=$(pwd)
    exit
 else
     # Check if the directory exists
@@ -49,9 +53,15 @@ else
     fi
 fi
 
+if [ x${CLEAN} = x"1" ]; then
+   rm ${PWD}/board.defs
+   exit
+fi
+
+
 
 if [ -z ${BOARD} ]; then
-   echo -e "${ERRORCOLOR}Error:${ENDCOLOR} Option \"--pwd\" not defined."
+   echo -e "${ERRORCOLOR}Error:${ENDCOLOR} Option \"--board\" not defined."
    exit
 else
     # Check if the directory exists
@@ -61,8 +71,12 @@ else
     fi
 fi
 
-# Init system
+if [ -f ${PWD}/board.defs ]; then
+    echo -e "${ERRORCOLOR}ERROR:${ENDCOLOR} The system has been configured previusly"
+    echo -e "Run ./configure --clean"
+else
+    ln -s ${PWD}/system-build/boards/${BOARD} ${PWD}/board.defs
+    sed -i "s|PRJ_ROOT_PATH:=project_path|PRJ_ROOT_PATH:=${PWD}|g" ${PWD}/system-build/makefile/Makefile.common
+fi
 
-ln -s ${PWD}/system-build/boards/${BOARD} ${PWD}/board.defs
 
-sed -i "s|PRJ_ROOT_PATH:=project_path|PRJ_ROOT_PATH:=${PWD}|g" ${PWD}/system-build/makefile/Makefile.common

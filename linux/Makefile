@@ -103,4 +103,6 @@ linux-install: linux-modules
 
 linux-debug-var:
 	@$(ECHO) COMMON_MAKE_JOBS: ${COMMON_MAKE_JOBS}
+	@$(ECHO) KERNEL_FLAGS: ${KERNEL_FLAGS}
+
 

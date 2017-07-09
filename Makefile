@@ -89,16 +89,11 @@ board-info:
 # Private targets ##############################################################
 
 board.defs:
-ifdef BOARD
-	$(V) system-build/scripts/init.sh \
-    --pwd ${PWD} \
-    --board ${BOARD}
-else
-	@echo "${MSG_ERROR}ERROR: Board variable not defined${MSG_END}"
+	@echo "${MSG_ERROR}ERROR:${MSG_END} System have not been configured"
 	@echo "    board file needs to be defined"
-	@echo "    Example: make board BOARD=board.defs"
+	@echo "    Example: ./configure --board board_name.defs"
 	@echo
-endif
+	@exit 1
 
 debug-var:
 	@echo "  PWD: ${PWD}"
