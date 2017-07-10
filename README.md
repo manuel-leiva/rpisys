@@ -5,21 +5,13 @@
 * toolchain: Build toolchain
 * linux: Build Linux kernel
 * filesystem: Build filesystem
-* libraries: Build libraries
+* Libraries: Build libraries
 * image: Build image
 * system-build: Collection of recipes and scripts used to build the system
 
 # Build project #
 
 Apply configuration for a specific board.
-
-```
-#!bash
-./configure --board raspberry_pi_3/raspberry_pi_3.defs
-```
-
-Apply configuration for a specific board.
-
 ```
 #!bash
 ./configure --board raspberry_pi_3/raspberry_pi_3.defs
