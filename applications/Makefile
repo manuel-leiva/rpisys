@@ -18,6 +18,7 @@ uninstall: applications-header applications-uninstall
 
 applications-clean:
 	@$(ECHO) "${MSG_INFO}  Remove applications${MSG_END}"
+	$(RM) applications-install
 
 applications-header:
 	@$(ECHO) "${MSG_INFO}Applications${MSG_END}"

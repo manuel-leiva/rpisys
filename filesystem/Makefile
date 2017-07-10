@@ -65,7 +65,7 @@ filesystem-download:
 filesystem-script-download-post: filesystem-download
 ifdef BOARD_FILESYSTEM_POST_DOWNLOAD_SCRIPT
 	@    $(ECHO) "${MSG_INFO}  Run download post script${MSG_END}"
-	$(V) $(PRJ_ROOT_PATH)/system-build/boards/scripts/${BOARD_FILESYSTEM_POST_DOWNLOAD_SCRIPT} \
+	$(V) $(LOCAL_BOARD_DIR)/scripts/${BOARD_FILESYSTEM_POST_DOWNLOAD_SCRIPT} \
 	--pwd ${FILESYSTEM_PATH} \
 	--fs-dir ${BOARD_FILESYSTEM_PKG_DIR}
 	$(V) touch $@

@@ -43,7 +43,7 @@ help:
 toolchain:
 	$(V) $(MAKE) $@
 
-bootloader: toolchain
+bootloader: board toolchain
 	$(V) $(MAKE) $@
 
 linux: bootloader
@@ -80,7 +80,11 @@ image-sd:
 image-file:
 	$(V) $(MAKE) image file
 
-board: board.defs
+board:
+	$(V) $(MAKE) system-build/boards
+
+board-clean:
+	$(V) $(MAKE) system-build/boards clean
 
 board-info:
 	@echo "${MSG_INFO}  Name: ${BOARD_NAME}${MSG_END}"
