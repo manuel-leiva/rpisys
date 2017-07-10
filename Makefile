@@ -40,7 +40,7 @@ help:
 	@$(ECHO) "    image-sd:     Install image generated into a SD card"
 	@$(ECHO) "    image-file:   Create image file"
 
-toolchain:
+toolchain: board
 	$(V) $(MAKE) $@
 
 bootloader: board toolchain
@@ -52,7 +52,7 @@ linux: bootloader
 filesystem:
 	$(V) $(MAKE) $@
 
-libraries: filesystem linux
+libraries: linux filesystem
 	$(V) $(MAKE) $@
 
 applications: libraries
