@@ -21,6 +21,14 @@ Build system
 #!bash
 make
 ```
+ ## Dependecies packages ##
+
+```
+#!bash
+sudo apt-get install autoconf
+sudo apt-get install libtool
+sudo apt-get install quilt
+```
 
 # Libraries #
 
