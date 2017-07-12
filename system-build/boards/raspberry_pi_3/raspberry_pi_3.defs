@@ -29,11 +29,13 @@ TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
 BOOTLOADER_NAMETAR:=rpi-boot-2017-03-02.tar.gz
 BOOTLOADER_DL_URL:=https://www.dropbox.com/s/brgw0r3kucwks6n/
 BOARD_BOOTLOADER_PKG_DIR_NAME:=boot
+BOARD_BOOTLOADER_SHA1SUM:=5c1340a93d6cefdae6c95235b531c23c49913232
 
 # LINUX #######################################################################
 
 LINUX_NAMETAR:=rpi-linux-4.4.50.tar.gz
 LINUX_DLURL:=https://www.dropbox.com/s/2qwji7i3tw6qder/
+BOARD_LINUX_SHA1SUM:=6095d24d68ff198585a42429dd1b5b295098b317
 
 # Percentage used to compute the number of recipes to execute at once.
 # The number of recipes si computed with this formula:
@@ -56,6 +58,7 @@ BOARD_LINUX_PKG_DIR_NAME:=linux
 
 BOARD_FILESYSTEM_NAME_TAR:=rpi-fs-2017_03_02.tar.gz
 BOARD_FILESYSTEM_DL_URL:=https://www.dropbox.com/s/f51c7a3k1dxu3l5/
+BOARD_FILESYSTEM_SHA1SUM:=e04320f1d463585dcb7d74d096b2c1778ede9416
 BOARD_FILESYSTEM_PKG_DIR:=filesystem
 # BOARD_FILESYSTEM_SU: Force to use super user permissions to decompress and manage the
 # filesystem. Options: "y" or "n".

@@ -54,7 +54,8 @@ linux-download:
     --pkg-name linux \
     --pkg-target-name ${LINUX_NAMETAR} \
     --dl-path ${PRJ_DOWNLOAD_PATH} \
-    --dl-url ${LINUX_DLURL}
+    --dl-url ${LINUX_DLURL} \
+    --sha1sum ${BOARD_LINUX_SHA1SUM}
 	$(V) touch $@
 
 linux-patch: linux-download
