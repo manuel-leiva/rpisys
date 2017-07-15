@@ -5,6 +5,7 @@
 
 # Message color
 ERRORCOLOR="\033[1;31m"
+WARNCOLOR="\033[0;33m"
 INFOCOLOR="\033[0;36m"
 MSGCOLOR="\033[1;33m"
 ENDCOLOR="\033[0m"
@@ -84,6 +85,8 @@ function DownloadTar
             echo -e "${ERRORCOLOR}Error:${ENDCOLOR} ${PKG_TARGET_NAME} is corrupted"
             exit 1
         fi
+    else
+        echo -e "${WARNCOLOR}Warn:${ENDCOLOR} ${PKG_TARGET_NAME} is not verified"
     fi
 
     # Descompres Package
