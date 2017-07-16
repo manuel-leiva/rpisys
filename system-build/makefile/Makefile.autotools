@@ -65,11 +65,20 @@ download: autotools-download
 
 autotools-download:
 	@$(ECHO) "${MSG_INFO}  Download ${PKGNAME}${MSG_END}"
+ifdef AUTOTOOLS_SHA1SUM
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
+    --pkg-name ${PKGNAME} \
+    --pkg-target-name $(AUTOTOOLS_NAME_TAR) \
+    --sha1sum ${AUTOTOOLS_SHA1SUM} \
+    --dl-path ${PRJ_DOWNLOAD_PATH} \
+    --dl-url ${AUTOTOOLS_DL_URL}
+else
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name ${PKGNAME} \
     --pkg-target-name $(AUTOTOOLS_NAME_TAR) \
     --dl-path ${PRJ_DOWNLOAD_PATH} \
     --dl-url ${AUTOTOOLS_DL_URL}
+endif
 	$(V) touch $@
 
 # autotools-revpatch:

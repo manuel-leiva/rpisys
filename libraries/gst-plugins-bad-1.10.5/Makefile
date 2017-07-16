@@ -4,6 +4,8 @@ AUTOTOOLS_DL_URL := https://gstreamer.freedesktop.org/src/gst-plugins-bad/
 
 AUTOTOOLS_NAME_TAR := gst-plugins-bad-1.10.5.tar.xz
 
+AUTOTOOLS_SHA1SUM:=6c5134e9b1bcf78e5ffae01ce140849c55dd8721
+
 AUTOTOOLS_FLAGS += --build=x86_64-linux-gnu --prefix=/usr --libdir=$(BOARD_LIBRARY_BOARD_INSTALLDIR) --host=$(BOARD_LIBRARY_HOST) \
 		--disable-dash
 
