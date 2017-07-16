@@ -17,6 +17,9 @@ endif
 ifndef BOARD_FILESYSTEM_PKG_DIR
 $(error ERROR: BOARD_FILESYSTEM_DL_URL not defined)
 endif
+ifndef BOARD_FILESYSTEM_SHA1SUM
+$(error ERROR: BOARD_FILESYSTEM_SHA1SUM not defined)
+endif
 
 ## Local definitions ##
 FILESYSTEM_PATH:=${PRJ_ROOT_PATH}/filesystem
@@ -57,6 +60,7 @@ filesystem-download:
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name filesystem \
     --pkg-target-name ${BOARD_FILESYSTEM_NAME_TAR} \
+    --sha1sum ${BOARD_FILESYSTEM_SHA1SUM} \
     --dl-path ${PRJ_DOWNLOAD_PATH} \
     --dl-url ${BOARD_FILESYSTEM_DL_URL} \
     --su ${BOARD_FILESYSTEM_SU}

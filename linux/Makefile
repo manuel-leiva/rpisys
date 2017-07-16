@@ -7,6 +7,11 @@ include ../system-build/makefile/Makefile.common
 
 # Definitions ##################################################################
 
+## Verify external variables ##
+ifndef BOARD_LINUX_SHA1SUM
+$(error ERROR: BOARD_LINUX_SHA1SUM not defined)
+endif
+
 ## Local definitions ##
 
 LINUX_PATH:=${PRJ_ROOT_PATH}/linux

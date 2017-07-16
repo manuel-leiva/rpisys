@@ -5,6 +5,13 @@ include ../system-build/makefile/Makefile.local
 # Include common recipes and definitions
 include ../system-build/makefile/Makefile.common
 
+# Definitions ##################################################################
+
+## Verify external variables ##
+ifndef BOARD_BOOTLOADER_SHA1SUM
+$(error ERROR: BOARD_BOOTLOADER_SHA1SUM not defined)
+endif
+
 # Private definitions ##########################################################
 BOOTLOADER_PKG_PATH = $(PRJ_ROOT_PATH)/bootloader/${BOARD_BOOTLOADER_PKG_DIR_NAME}
 BOOTLOADER_PATH = $(PRJ_ROOT_PATH)/bootloader
@@ -44,6 +51,7 @@ bootloader-download:
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name bootloader \
     --pkg-target-name $(BOOTLOADER_NAMETAR) \
+    --sha1sum ${BOARD_BOOTLOADER_SHA1SUM} \
     --dl-path ${PRJ_DOWNLOAD_PATH} \
     --dl-url ${BOOTLOADER_DL_URL}
 	$(V) touch $@
