@@ -21,13 +21,22 @@ Build system
 #!bash
 make
 ```
- ## Dependecies packages ##
+ ## Dependecies packages
 
 ```
 #!bash
 sudo apt-get install autoconf
 sudo apt-get install libtool
 sudo apt-get install quilt
+```
+
+## Clean project
+
+```
+#!bash
+make clean
+make board-clean
+./configure --clean
 ```
 
 # Libraries #
