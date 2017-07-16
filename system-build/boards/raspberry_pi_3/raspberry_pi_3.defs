@@ -20,6 +20,7 @@ BOARD_ARCH=arm
 
 BOARD_TOOLCHAIN_DLURL:=https://www.dropbox.com/s/3kvuznuff1qiv6r/
 BOARD_TOOLCHAIN_NAMETAR:=gcc-linaro-arm-linux-gnueabihf-raspbian-4.8.3.tar.gz
+BOARD_TOOLCHAIN_SHA1SUM:=efd6f554eb34fc5226e5ab095430bbbd9c4b681a
 BOARD_TOOLCHAIN_PKG_NAME:=tools
 TOOLCHAIN_PATH:=$(PRJ_COMMON_PATH)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
 TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-

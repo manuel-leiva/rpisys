@@ -16,6 +16,10 @@ ifndef BOARD_TOOLCHAIN_NAMETAR
 $(error ERROR: BOARD_TOOLCHAIN_NAMETAR not defined)
 endif
 
+ifndef BOARD_TOOLCHAIN_SHA1SUM
+$(error ERROR: BOARD_TOOLCHAIN_SHA1SUM not defined)
+endif
+
 ifndef TOOLCHAIN_PATH
 $(error ERROR: TOOLCHAIN_PATH not defined)
 endif
@@ -30,9 +34,7 @@ endif
 
 all: toolchain-header $(PRJ_COMMON_PATH)/toolchain-download
 
-clean:
-	$(V) ${RM} $(PRJ_COMMON_PATH)/${BOARD_TOOLCHAIN_PKG_NAME}
-	$(V) ${RM} $(PRJ_COMMON_PATH)/toolchain-download
+clean: toolchain-header toolchain-clean
 
 download: toolchain-header $(PRJ_COMMON_PATH)/toolchain-download
 
@@ -48,10 +50,16 @@ help-debug:
 toolchain-header:
 	@$(ECHO) "${MSG_INFO}Toolchain${MSG_END}"
 
+toolchain-clean:
+	@$(ECHO) "${MSG_INFO}  Remove Toolchain${MSG_END}"
+	$(V) ${RM} $(PRJ_COMMON_PATH)/${BOARD_TOOLCHAIN_PKG_NAME}
+	$(V) ${RM} $(PRJ_COMMON_PATH)/toolchain-download
+
 $(PRJ_COMMON_PATH)/toolchain-download:
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name ${BOARD_TOOLCHAIN_PKG_NAME} \
     --pkg-target-name ${BOARD_TOOLCHAIN_NAMETAR} \
+    --sha1sum ${BOARD_TOOLCHAIN_SHA1SUM} \
     --dl-path ${PRJ_DOWNLOAD_PATH} \
     --dl-url ${BOARD_TOOLCHAIN_DLURL} \
     --dest ${PRJ_COMMON_PATH}
