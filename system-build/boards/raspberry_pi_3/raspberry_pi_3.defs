@@ -58,7 +58,7 @@ BOARD_LINUX_PKG_DIR_NAME:=linux
 # FILESYSTEM ###################################################################
 
 BOARD_FILESYSTEM_NAME_TAR:=rpi-fs-2017_03_02.tar.gz
-BOARD_FILESYSTEM_DL_URL:=https://www.dropbox.com/s/f51c7a3k1dxu3l5/
+BOARD_FILESYSTEM_DL_URL:=https://www.dropbox.com/s/39wtb79wl8o60h2/
 BOARD_FILESYSTEM_SHA1SUM:=e04320f1d463585dcb7d74d096b2c1778ede9416
 BOARD_FILESYSTEM_PKG_DIR:=filesystem
 # BOARD_FILESYSTEM_SU: Force to use super user permissions to decompress and manage the
