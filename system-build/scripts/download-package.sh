@@ -80,8 +80,8 @@ function DownloadTar
     fi ;
     # Check hash
     if [ ! -z ${SHA1SUM} ]; then
-        PKG_TARGET_NAME_SHA1SUM=$(sha1sum ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} | grep ${SHA1SUM} )
-        if [ x${PKG_TARGET_NAME_SHA1SUM} = x ]; then
+        PKG_TARGET_NAME_SHA1SUM=$(sha1sum ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} | grep -w ${SHA1SUM} )
+        if [ x"${PKG_TARGET_NAME_SHA1SUM}" = x ]; then
             echo -e "${ERRORCOLOR}Error:${ENDCOLOR} ${PKG_TARGET_NAME} is corrupted"
             exit 1
         fi
