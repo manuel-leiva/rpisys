@@ -7,8 +7,8 @@
 BOOT_NAME="BOOT"
 ROOTFS_NAME="rootfs"
 # Directory name
-MOUNT_BOOT_DIR="rootfs"
-MOUNT_ROOTFS_DIR="boot"
+MOUNT_BOOT_DIR="mount-boot"
+MOUNT_ROOTFS_DIR="mount-rootfs"
 # Messages color
 ERRORCOLOR="\033[1;31m"
 INFOCOLOR="\033[0;36m"
@@ -128,6 +128,8 @@ else
         exit
     else
         echo -e "${INFOCOLOR}Add ${BOOT_PATH} content in ${BOOT_NAME} partition ${ENDCOLOR}."
+        # Remove file if it exists previously
+        rm -rf ${MOUNT_BOOT_DIR}
         # Create directory to mount partitions
         mkdir ${MOUNT_BOOT_DIR}
         sudo mount ${PARTITION_BOOT} ${MOUNT_BOOT_DIR}
@@ -148,6 +150,8 @@ else
        exit
     else
         echo -e "${INFOCOLOR}Add ${FS_PATH} content in ${ROOTFS_NAME} partition${ENDCOLOR}."
+        # Remove file if it exists previously
+        rm -rf ${MOUNT_ROOTFS_DIR}
         # Create directory to mount partition
         mkdir ${MOUNT_ROOTFS_DIR}
         sudo mount ${PARTITION_ROOTFS} ${MOUNT_ROOTFS_DIR}
