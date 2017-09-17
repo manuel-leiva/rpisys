@@ -61,7 +61,7 @@ filesystem-download:
     --pkg-name filesystem \
     --pkg-target-name ${BOARD_FILESYSTEM_NAME_TAR} \
     --sha1sum ${BOARD_FILESYSTEM_SHA1SUM} \
-    --dl-path ${PRJ_DOWNLOAD_PATH} \
+    --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
     --dl-url ${BOARD_FILESYSTEM_DL_URL} \
     --su ${BOARD_FILESYSTEM_SU}
 	$(V) touch $@

@@ -9,12 +9,12 @@ COMMON_HOST_CORES:=$(shell cat /proc/cpuinfo | grep processor | wc -l)
 
 ## Verify external variables ##
 
-ifndef BOARD_MAKE_JOBS_PER_CORE
-# If BOARD_MAKE_JOBS_PER_CORE is not defined LINUX_MAKE_JOBS=1
+ifndef BOARD_PRJ_MAKE_JOBS_PER_CORE
+# If BOARD_PRJ_MAKE_JOBS_PER_CORE is not defined LINUX_MAKE_JOBS=1
 COMMON_MAKE_JOBS:=1
-$(warning WARN: BOARD_MAKE_JOBS_PER_CORE not defined)
+$(warning WARN: BOARD_PRJ_MAKE_JOBS_PER_CORE not defined)
 else
-COMMON_MAKE_JOBS:=$(shell echo ${BOARD_MAKE_JOBS_PER_CORE}*${COMMON_HOST_CORES}/100 | bc )
+COMMON_MAKE_JOBS:=$(shell echo ${BOARD_PRJ_MAKE_JOBS_PER_CORE}*${COMMON_HOST_CORES}/100 | bc )
 endif
 
 COMMON_LIB_BOARD_LIBS_DIR:=board-libs

@@ -15,9 +15,9 @@ endif
 # Private definitions ##########################################################
 PKGNAME := $(notdir $(shell pwd))
 
-CROSS_COMPILE := $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)
+CROSS_COMPILE := $(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX)
 AUTOTOOLS_DL_URL_FILE = $(AUTOTOOLS_DL_URL)$(AUTOTOOLS_NAME_TAR)
-AUTOTOOLS_DL_TAR_PATH = $(PRJ_DOWNLOAD_PATH)/$(AUTOTOOLS_NAME_TAR)
+AUTOTOOLS_DL_TAR_PATH = $(BOARD_PRJ_DOWNLOAD_PATH)/$(AUTOTOOLS_NAME_TAR)
 AUTOTOOLS_PKG_PATH = $(PRJ_ROOT_PATH)/libraries/$(PKGNAME)
 
 #~ COMMON_LIB_BOARD_LIBS_DIR:=board-libs
@@ -70,13 +70,13 @@ ifdef AUTOTOOLS_SHA1SUM
     --pkg-name ${PKGNAME} \
     --pkg-target-name $(AUTOTOOLS_NAME_TAR) \
     --sha1sum ${AUTOTOOLS_SHA1SUM} \
-    --dl-path ${PRJ_DOWNLOAD_PATH} \
+    --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
     --dl-url ${AUTOTOOLS_DL_URL}
 else
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name ${PKGNAME} \
     --pkg-target-name $(AUTOTOOLS_NAME_TAR) \
-    --dl-path ${PRJ_DOWNLOAD_PATH} \
+    --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
     --dl-url ${AUTOTOOLS_DL_URL}
 endif
 	$(V) touch $@

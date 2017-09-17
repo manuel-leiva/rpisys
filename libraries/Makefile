@@ -5,7 +5,7 @@ include ../system-build/makefile/Makefile.local
 # Include common recipes and definitions
 include ../system-build/makefile/Makefile.common
 
-.PHONY: $(LIB_NAME_LIST)
+.PHONY: $(BOARD_LIBRARY_NAME_LIST)
 
 
 define BUILD_RECIPE
@@ -21,20 +21,20 @@ clean-$(1):
 
 endef
 
-LIB_CLEAN_TARGET_LIST:=$(LIB_NAME_LIST:%=clean-%)
+LIB_CLEAN_TARGET_LIST:=$(BOARD_LIBRARY_NAME_LIST:%=clean-%)
 
 
-all: libraries-header $(LIB_NAME_LIST)
+all: libraries-header $(BOARD_LIBRARY_NAME_LIST)
 
 clean: libraries-header $(LIB_CLEAN_TARGET_LIST)
 	@$(ECHO) "${MSG_INFO}  Clean Libraries ${MSG_END}"
 	@$(RM) host-libs board-libs libraries-install
 
 # Build targets
-$(info $(foreach i,$(LIB_NAME_LIST),$(eval $(call BUILD_RECIPE,$(i),$(shell if [ -f $(i)/dependency.txt ]; then cat $(i)/dependency.txt ; fi )))))
+$(info $(foreach i,$(BOARD_LIBRARY_NAME_LIST),$(eval $(call BUILD_RECIPE,$(i),$(shell if [ -f $(i)/dependency.txt ]; then cat $(i)/dependency.txt ; fi )))))
 
 # Clean targets
-$(info $(foreach i,$(LIB_NAME_LIST),$(eval $(call CLEAN_RECIPE,$(i)))))
+$(info $(foreach i,$(BOARD_LIBRARY_NAME_LIST),$(eval $(call CLEAN_RECIPE,$(i)))))
 
 libraries-header:
 	@$(ECHO) "${MSG_INFO}Libraries${MSG_END}"
@@ -53,9 +53,9 @@ uninstall:
 
 libraries-debug-targets:
 # The lines must be coherent with the lines used in order to show the real recipes
-	@echo $(info $(foreach i,$(LIB_NAME_LIST),$(call BUILD_RECIPE,$(i),$(shell if [ -f $(i)/dependency.txt ]; then cat $(i)/dependency.txt ; fi ))))
+	@echo $(info $(foreach i,$(BOARD_LIBRARY_NAME_LIST),$(call BUILD_RECIPE,$(i),$(shell if [ -f $(i)/dependency.txt ]; then cat $(i)/dependency.txt ; fi ))))
 	@echo $(info $(foreach i,$(LIB_CLEAN_TARGET_LIST),$(call CLEAN_RECIPE,$(i))))
 
 libraries-debug-var:
-	@echo "LIB_NAME_LIST: $(LIB_NAME_LIST)"
+	@echo "BOARD_LIBRARY_NAME_LIST: $(BOARD_LIBRARY_NAME_LIST)"
 	@echo "LIB_CLEAN_TARGET_LIST: $(LIB_CLEAN_TARGET_LIST)"

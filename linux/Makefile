@@ -20,7 +20,7 @@ LINUX_MOD_INSTALLDIR:=modules
 LINUX_KERNEL_INSTALLDIR:=kernel
 
 # Create kernel compilation flags
-KERNEL_FLAGS:=CROSS_COMPILE=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX) KERNEL=$(LINUX_KERNEL_EXTRAFLAGS)
+KERNEL_FLAGS:=CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX) KERNEL=$(BOARD_LINUX_KERNEL_EXTRAFLAGS)
 
 # Instalation paths
 LINUX_KERNEL_INSTALL_PATH:=$(LINUX_PATH)/$(LINUX_KERNEL_INSTALLDIR)
@@ -57,9 +57,9 @@ help:
 linux-download:
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name linux \
-    --pkg-target-name ${LINUX_NAMETAR} \
-    --dl-path ${PRJ_DOWNLOAD_PATH} \
-    --dl-url ${LINUX_DLURL} \
+    --pkg-target-name ${BOARD_LINUX_NAMETAR} \
+    --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
+    --dl-url ${BOARD_LINUX_DL_URL} \
     --sha1sum ${BOARD_LINUX_SHA1SUM}
 	$(V) touch $@
 
@@ -69,7 +69,7 @@ linux-patch: linux-download
 
 linux-build: linux-patch
 	@    $(ECHO) "${MSG_INFO}  Build linux ${MSG_END}"
-	$(V) $(MAKE) linux $(KERNEL_FLAGS) $(LINUX_DEFCONFIG)
+	$(V) $(MAKE) linux $(KERNEL_FLAGS) $(BOARD_LINUX_DEFCONFIG)
 	$(V) $(MAKE) linux -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) zImage dtbs
 # Install Kernel files
 	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)

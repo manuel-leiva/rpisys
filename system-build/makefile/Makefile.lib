@@ -9,7 +9,7 @@ include ../../system-build/makefile/Makefile.common
 
 PKGNAME := $(notdir $(shell pwd))
 
-CROSS_COMPILE := $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)
+CROSS_COMPILE := $(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX)
 AUTOTOOLS_DL_URL_FILE = $(AUTOTOOLS_DL_URL)$(AUTOTOOLS_NAME_TAR)
 AUTOTOOLS_DL_TAR_PATH = $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
 AUTOTOOLS_PKG_PATH = $(PRJ_ROOT_PATH)/libraries/$(PKGNAME)
@@ -56,7 +56,7 @@ lib-download:
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name ${PKGNAME} \
     --pkg-target-name $(LIB_NAME_TAR) \
-    --dl-path ${PRJ_DOWNLOAD_PATH} \
+    --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
     --dl-url ${LIB_DL_URL}
 	$(V) touch $@
 

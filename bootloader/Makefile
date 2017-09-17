@@ -50,10 +50,10 @@ bootloader-download:
 	@$(ECHO) "${MSG_INFO}  Download bootloader${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name bootloader \
-    --pkg-target-name $(BOOTLOADER_NAMETAR) \
+    --pkg-target-name $(BOARD_BOOTLOADER_NAMETAR) \
     --sha1sum ${BOARD_BOOTLOADER_SHA1SUM} \
-    --dl-path ${PRJ_DOWNLOAD_PATH} \
-    --dl-url ${BOOTLOADER_DL_URL}
+    --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
+    --dl-url ${BOARD_BOOTLOADER_DL_URL}
 	$(V) touch $@
 
 # bootloader-patch:
@@ -84,6 +84,6 @@ bootloader-debug-help: bootloader-header
 	@$(ECHO) "    bootloader-debug-var:    Show variables used during build process"
 
 bootloader-debug-var: bootloader-header
-	@$(ECHO) BOOTLOADER_NAMETAR:  ${BOOTLOADER_NAMETAR}
-	@$(ECHO) BOOTLOADER_DL_URL:   ${TOOLCHAIN_DL_URL}
+	@$(ECHO) BOARD_BOOTLOADER_NAMETAR:  ${BOARD_BOOTLOADER_NAMETAR}
+	@$(ECHO) BOARD_BOOTLOADER_DL_URL:   ${BOARD_BOOTLOADER_DL_URL}
 	@$(ECHO) BOOTLOADER_PKG_PATH: ${BOOTLOADER_PKG_PATH}

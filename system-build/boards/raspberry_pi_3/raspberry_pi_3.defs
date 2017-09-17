@@ -5,14 +5,16 @@ BOARD_NAME:="Raspberry_Pi_3"
 # COMMON #######################################################################
 
 # This directory is used to share files between projects as the toolchain
-PRJ_COMMON_PATH:=/home/${USER}/rpisys
+BOARD_PRJ_COMMON_PATH:=/home/${USER}/rpisys
+
 # Destination directory to download packages
-PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/rpisys
+BOARD_PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/rpisys
+
 # Percentage used to compute the number of recipes to execute at once.
 # The number of recipes is computed with this formula:
-# JOBS=HOST_CORES*BOARD_MAKE_JOBS_PER_CORE/100
-# If BOARD_MAKE_JOBS_PER_CORE is not defined JOBS=1
-BOARD_MAKE_JOBS_PER_CORE:=75
+# JOBS=HOST_CORES*BOARD_PRJ_MAKE_JOBS_PER_CORE/100
+# If BOARD_PRJ_MAKE_JOBS_PER_CORE is not defined JOBS=1
+BOARD_PRJ_MAKE_JOBS_PER_CORE:=75
 
 BOARD_ARCH=arm
 
@@ -22,33 +24,27 @@ BOARD_TOOLCHAIN_DLURL:=https://www.dropbox.com/s/3kvuznuff1qiv6r/
 BOARD_TOOLCHAIN_NAMETAR:=gcc-linaro-arm-linux-gnueabihf-raspbian-4.8.3.tar.gz
 BOARD_TOOLCHAIN_SHA1SUM:=efd6f554eb34fc5226e5ab095430bbbd9c4b681a
 BOARD_TOOLCHAIN_PKG_NAME:=tools
-TOOLCHAIN_PATH:=$(PRJ_COMMON_PATH)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
-TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
+BOARD_TOOLCHAIN_PATH:=$(BOARD_PRJ_COMMON_PATH)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
+BOARD_TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
 
 # BOOTLOADER ##################################################################
 
-BOOTLOADER_NAMETAR:=rpi-boot-2017-03-02.tar.gz
-BOOTLOADER_DL_URL:=https://www.dropbox.com/s/brgw0r3kucwks6n/
+BOARD_BOOTLOADER_NAMETAR:=rpi-boot-2017-03-02.tar.gz
+BOARD_BOOTLOADER_DL_URL:=https://www.dropbox.com/s/brgw0r3kucwks6n/
 BOARD_BOOTLOADER_PKG_DIR_NAME:=boot
 BOARD_BOOTLOADER_SHA1SUM:=5c1340a93d6cefdae6c95235b531c23c49913232
 
 # LINUX #######################################################################
 
-LINUX_NAMETAR:=rpi-linux-4.4.50.tar.gz
-LINUX_DLURL:=https://www.dropbox.com/s/2qwji7i3tw6qder/
+BOARD_LINUX_NAMETAR:=rpi-linux-4.4.50.tar.gz
+BOARD_LINUX_DL_URL:=https://www.dropbox.com/s/2qwji7i3tw6qder/
 BOARD_LINUX_SHA1SUM:=6095d24d68ff198585a42429dd1b5b295098b317
 
-# Percentage used to compute the number of recipes to execute at once.
-# The number of recipes si computed with this formula:
-# JOBS=HOST_CORES*LINUX_PER_EXE/100
-# If LINUX_JOBS_PER_EXE is not defined JOBS=1
-LINUX_JOBS_PER_EXE:=75
-
-# By default are added the kernel flags CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)
+# By default are added the kernel flags CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX)
 # This variable allows add some extra flag
-LINUX_KERNEL_EXTRAFLAGS:=kernel7 ARCH=arm
+BOARD_LINUX_KERNEL_EXTRAFLAGS:=kernel7 ARCH=arm
 
-LINUX_DEFCONFIG:=bcm2709_defconfig
+BOARD_LINUX_DEFCONFIG:=bcm2709_defconfig
 # BOARD_LINUX_BUILD_POST_SCRIPT_NAME: if the variable is defined,
 # this script is called after to build the kernel
 BOARD_LINUX_BUILD_SCRIPT_POST_NAME:=linux-built-script-post.sh
@@ -72,20 +68,32 @@ BOARD_LIBRARY_HOST=arm-none-linux
 # Library directory for the normal user-programs installation
 BOARD_LIBRARY_BOARD_INSTALLDIR:=/usr/lib/arm-linux-gnueabihf
 # List of library to build
-LIB_NAME_LIST := readline-6.3 libffi-3.2.1 pcre-8.40 zlib-1.2.11 glib-2.50.3 libsoup-2.57.1 libxml2-2.9.4 sqlite-autoconf-3170000 ncurses-6.0 \
-gstreamer-1.10.5 gst-plugins-base-1.10.5 \
-gst-plugins-good-1.10.5 gst-plugins-bad-1.10.5 gst-plugins-ugly-1.10.5 \
-gst-rtsp-server-1.10.5 gst-libav-1.10.5 gst-omx-1.10.5 \
+BOARD_LIBRARY_NAME_LIST := \
+readline-6.3 \
+libffi-3.2.1 \
+pcre-8.40 \
+zlib-1.2.11 \
+glib-2.50.3 \
+libsoup-2.57.1 \
+libxml2-2.9.4 \
+sqlite-autoconf-3170000 ncurses-6.0 \
+gstreamer-1.10.5 \
+gst-plugins-base-1.10.5 \
+gst-plugins-good-1.10.5 \
+gst-plugins-bad-1.10.5 \
+gst-plugins-ugly-1.10.5 \
+gst-rtsp-server-1.10.5 \
+gst-libav-1.10.5 \
+gst-omx-1.10.5 \
 gst-rpicamsrc-4fc608e
-# server cli
-# orc-0.4.26
+
 
 # APPLICATIONS #################################################################
 
 # List of applications to build
-APP_NAME_LIST:=""
+BOARD_APPLICATION_NAME_LIST:=""
 
 # IMAGE ########################################################################
 
-# IMAGE_EXT_SD_DEVICE: external sd card device used to install the image built
-IMAGE_EXT_SD_DEVICE:=/dev/mmcblk0
+# BOARD_IMAGE_EXT_SD_DEVICE: external sd card device used to install the image built
+BOARD_IMAGE_EXT_SD_DEVICE:=/dev/mmcblk0
