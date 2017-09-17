@@ -85,7 +85,8 @@ gst-plugins-ugly-1.10.5 \
 gst-rtsp-server-1.10.5 \
 gst-libav-1.10.5 \
 gst-omx-1.10.5 \
-gst-rpicamsrc-4fc608e
+gst-rpicamsrc-4fc608e \
+x264-snapshot-20170811-2245-stable
 
 
 # APPLICATIONS #################################################################
