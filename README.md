@@ -38,6 +38,17 @@ make clean
 make board-clean
 ./configure --clean
 ```
+# Board configuration #
+
+##Prefix description
+
+* BOARD_PRJ_: Board variables realated to the general project configuration.
+* BOARD_TOOLCHAIN_: Board toolchain configuration.
+* BOARD_BOOTLOADER: Board bootloader configuration.
+* BOARD_FILESYSTEM: Board filesystem configuration.
+* BOARD_LINUX: Board Linux kernel configuration.
+* BOARD_LIBRARY: Board filesystem libraries configuration.
+* BOARD_IMAGE: Board image configuration.
 
 # Libraries #
 
