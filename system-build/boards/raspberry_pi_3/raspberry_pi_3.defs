@@ -61,6 +61,8 @@ BOARD_FILESYSTEM_PKG_DIR:=filesystem
 # filesystem. Options: "y" or "n".
 BOARD_FILESYSTEM_SU:=y
 BOARD_FILESYSTEM_POST_DOWNLOAD_SCRIPT:=filesystem-post-download-script.sh
+# Directory name when the filesystem is expanded
+BOARD_FILESYSTEM_NAME:=filesystem
 
 # LIBRARIES ####################################################################
 

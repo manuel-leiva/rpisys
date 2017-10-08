@@ -1,0 +1,12 @@
+# Board hook recipe
+
+linux-install-post:
+	echo "  Linux post install"
+	cp $(LINUX_BOOT_INSTALL_PATH)/zImage $(LINUX_BOOT_INSTALL_PATH)/kernel7.img
+
+filesystem-patch-pre:
+# Change owner
+	echo "You need root permisions"
+	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant
+	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant/wpa_supplicant.conf
+

@@ -22,9 +22,16 @@ LINUX_KERNEL_INSTALLDIR:=kernel
 # Create kernel compilation flags
 KERNEL_FLAGS:=CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX) KERNEL=$(BOARD_LINUX_KERNEL_EXTRAFLAGS)
 
-# Instalation paths
-LINUX_KERNEL_INSTALL_PATH:=$(LINUX_PATH)/$(LINUX_KERNEL_INSTALLDIR)
-LINUX_MOD_INSTALL_PATH   :=$(LINUX_PATH)/$(LINUX_MOD_INSTALLDIR)
+## Exported variables
+# Linux instalation paths
+export LINUX_KERNEL_INSTALL_PATH:=$(LINUX_PATH)/$(LINUX_KERNEL_INSTALLDIR)
+export LINUX_MOD_INSTALL_PATH   :=$(LINUX_PATH)/$(LINUX_MOD_INSTALLDIR)
+# Destination directories
+# Path to install kernel and device tree
+export LINUX_BOOT_INSTALL_PATH:=$(COMMON_IMAGE_BOOT_PATH)
+# Path to install root file system
+export LINUX_ROOTFS_INSTALL_PATH:=$(COMMON_IMAGE_ROOTFS_PATH)
+
 
 # Public targets ###############################################################
 .PHONY: all clean header
@@ -80,16 +87,7 @@ linux-build: linux-patch
 	$(V) $(CP) linux/arch/arm/boot/dts/overlays/README $(LINUX_KERNEL_INSTALL_PATH)/overlays
 	$(V) touch $@
 
-# linux-build-script-post: linux-build
-# 1: Target name
-# 2: dependencies list
-# 3: Message
-# 4: Script path
-# 5: Variable that contains the script name
-# 6: Script parameters
-$(eval $(call COMMON_TARGET_SCRIPT,linux-build-script-post,linux-build,"build post script",${BOARD_SCRIPT_PATH},BOARD_LINUX_BUILD_SCRIPT_POST_NAME,--build-path $(LINUX_PATH) --pkg-dir-name $(BOARD_LINUX_PKG_DIR_NAME) --kernel-install-path $(LINUX_KERNEL_INSTALL_PATH) --module-install-path $(LINUX_MOD_INSTALL_PATH)))
-
-linux-modules: linux-build-script-post
+linux-modules: linux-build
 	@    $(ECHO) "${MSG_INFO}  Build linux modules ${MSG_END}"
 	$(V) $(MAKE) linux -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) modules
 # Install Kernel modules
@@ -99,16 +97,26 @@ linux-modules: linux-build-script-post
 
 linux-install: linux-modules
 	@$(ECHO) "${MSG_INFO}  Install linux${MSG_END}"
+# Call pre-install recipe
+	$(call COMMON_HOOK_RECIPE,$(LOCAL_BOARD_DIR)/board.hook,linux-install-pre)
+# Install kernel image, device tree and overlays
 	@$(ECHO) "${MSG_INFO}    Install kernel${MSG_END}"
 	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/boot
 	$(V) cd kernel; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/boot
+# Install kernel modules
 	@$(ECHO) "${MSG_INFO}    Install modules${MSG_END}"
 	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/rootfs/
 	$(V) cd modules; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/rootfs
+# Call post-install recipe
+	$(call COMMON_HOOK_RECIPE,$(LOCAL_BOARD_DIR)/board.hook,linux-install-post)
 	$(V) touch $@
 
 linux-debug-var:
 	@$(ECHO) COMMON_MAKE_JOBS: ${COMMON_MAKE_JOBS}
 	@$(ECHO) KERNEL_FLAGS: ${KERNEL_FLAGS}
 
-
+linux-export-var:
+	@$(ECHO) LINUX_KERNEL_INSTALL_PATH: ${LINUX_KERNEL_INSTALL_PATH}
+	@$(ECHO) LINUX_MOD_INSTALL_PATH: ${LINUX_MOD_INSTALL_PATH}
+	@$(ECHO) LINUX_BOOT_INSTALL_PATH: $(LINUX_BOOT_INSTALL_PATH)
+	@$(ECHO) LINUX_ROOTFS_INSTALL_PATH: $(LINUX_ROOTFS_INSTALL_PATH)

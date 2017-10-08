@@ -25,6 +25,9 @@ endif
 FILESYSTEM_PATH:=${PRJ_ROOT_PATH}/filesystem
 BOARD_FILESYSTEM_SU?=n
 
+## Exported definitions
+export FILESYSTEM_PKG_PATH:=${PRJ_ROOT_PATH}/filesystem/${BOARD_FILESYSTEM_NAME}
+
 # Public targets ###############################################################
 
 .PHONY: all clean header
@@ -66,20 +69,16 @@ filesystem-download:
     --su ${BOARD_FILESYSTEM_SU}
 	$(V) touch $@
 
-filesystem-script-download-post: filesystem-download
-ifdef BOARD_FILESYSTEM_POST_DOWNLOAD_SCRIPT
-	@    $(ECHO) "${MSG_INFO}  Run download post script${MSG_END}"
-	$(V) $(LOCAL_BOARD_DIR)/scripts/${BOARD_FILESYSTEM_POST_DOWNLOAD_SCRIPT} \
-	--pwd ${FILESYSTEM_PATH} \
-	--fs-dir ${BOARD_FILESYSTEM_PKG_DIR}
-	$(V) touch $@
-endif
-
-filesystem-patch: filesystem-script-download-post
+filesystem-patch: filesystem-download
+# Call pre-patch recipe
+	$(call COMMON_HOOK_RECIPE,$(LOCAL_BOARD_DIR)/board.hook,filesystem-patch-pre)
+# Apply patch
 	$(V) if [ -d ${PRJ_ROOT_PATH}/filesystem/patches ]; then \
         echo "${MSG_INFO}  Patch ${PKGNAME} ${MSG_END}" ; \
         quilt push -a ; \
     fi
+# Call post-patch recipe
+	$(call COMMON_HOOK_RECIPE,$(LOCAL_BOARD_DIR)/board.hook,filesystem-patch-post)
 	$(V) touch $@ ;
 
 # Reverse patches
@@ -106,4 +105,5 @@ else
 endif
 	$(V) touch $@
 
-
+linux-export-var:
+	@$(ECHO) FILESYSTEM_PKG_PATH: ${FILESYSTEM_PKG_PATH}

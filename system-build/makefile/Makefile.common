@@ -9,6 +9,7 @@ COMMON_HOST_CORES:=$(shell cat /proc/cpuinfo | grep processor | wc -l)
 
 ## Verify external variables ##
 
+
 ifndef BOARD_PRJ_MAKE_JOBS_PER_CORE
 # If BOARD_PRJ_MAKE_JOBS_PER_CORE is not defined LINUX_MAKE_JOBS=1
 COMMON_MAKE_JOBS:=1
@@ -16,6 +17,9 @@ $(warning WARN: BOARD_PRJ_MAKE_JOBS_PER_CORE not defined)
 else
 COMMON_MAKE_JOBS:=$(shell echo ${BOARD_PRJ_MAKE_JOBS_PER_CORE}*${COMMON_HOST_CORES}/100 | bc )
 endif
+
+COMMON_IMAGE_BOOT_PATH:=${PRJ_ROOT_PATH}/image/image/boot
+COMMON_IMAGE_ROOTFS_PATH:=${PRJ_ROOT_PATH}/image/image/rootfs
 
 COMMON_LIB_BOARD_LIBS_DIR:=board-libs
 COMMON_LIB_HOST_LIBS_DIR:=host-libs
@@ -74,18 +78,13 @@ $(1)-revpatch: $(2)
 	$(V) $(RM) $(1)-patch
 endef
 
-# Recipe to call script
-# 1: Target name
-# 2: dependencies list
-# 3: Message
-# 4: Script path
-# 5: Variable that contains the script name
-# 6: Script parameters
-define COMMON_TARGET_SCRIPT
-$(1): $(2)
-ifdef $(5)
-	@ $(ECHO) "${MSG_INFO}  Run $(3) ${MSG_END}"
-	$(V) $(4)/$(${5}) $(6)
-	$(V) touch $(1)
-endif
+# Common hook recipe
+# Parameters:
+# 1: Makefile hook path
+# 2: Target
+define COMMON_HOOK_RECIPE
+	@make -s -f $(1) -q $(2) 2> /dev/null ; \
+if [ $$? -le 1 ] ; then \
+    make -s -f $(1) $(2) ; \
+fi
 endef
