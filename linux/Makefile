@@ -34,32 +34,36 @@ export LINUX_ROOTFS_INSTALL_PATH:=$(COMMON_IMAGE_ROOTFS_PATH)
 
 
 # Public targets ###############################################################
-.PHONY: all clean header
+.PHONY: all clean zimage modules dtbs install uninstall clean
 
-all: header linux-modules
+all: linux-header linux-modules linux-dtbs
 
-header:
-	@$(ECHO) "${MSG_INFO}Linux build${MSG_END}"
+zimage: linux-header linux-zimage
+
+modules: linux-header linux-modules
+
+dtbs: linux-header linux-dtbs
 
 # Alias target to install linux
-install: linux-install
+install: linux-header linux-install
 
-uninstall:
-	@$(ECHO) "${MSG_INFO}  Uninstall linux${MSG_END}"
-	$(V) $(RM) linux-install
+uninstall: linux-header linux-uninstall
 
-clean: header
+clean: linux-header linux-clean ## Remove linux
+
+# Private targets ###############################################################
+
+linux-header:
+	@$(ECHO) "${MSG_INFO}Linux kernel${MSG_END}"
+
+linux-clean: linux-revpatch
 	@$(ECHO) "${MSG_INFO}  Remove linux${MSG_END}"
-	$(V) $(RM) linux-uncomp linux-build linux-install linux-patch linux-download linux-modules linux-built-script-post
+	$(V) $(RM) linux-download linux-patch linux-revpatch linux-config linux-menuconfig linux-zimage linux-modules linux-dtbs linux-install
 # Remove Linux code
 	$(V) $(RM) linux
 # Remove linux modules
 	$(V) $(RM) $(LINUX_MOD_INSTALL_PATH) $(LINUX_KERNEL_INSTALL_PATH)
 
-help:
-	@$(ECHO) ""
-
-# Private targets ###############################################################
 
 linux-download:
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
@@ -70,24 +74,45 @@ linux-download:
     --sha1sum ${BOARD_LINUX_SHA1SUM}
 	$(V) touch $@
 
-linux-patch: linux-download
-	@    $(ECHO) "${MSG_INFO}  Apply linux patches ${MSG_END}"
+
+# linux-revpatch:
+# Parameters: target_prefix, dependecies, package-path, message
+$(eval $(call COMMON_REVPATCH_RECIPE,linux,,${LINUX_PATH},${BOARD_LINUX_PKG_DIR_NAME}))
+
+# linux-patch:
+# Parameters: target_prefix, dependecies, package-path, message
+$(eval $(call COMMON_PATCH_RECIPE,linux,linux-download,${LINUX_PATH},${BOARD_LINUX_PKG_DIR_NAME}))
+
+linux-config: linux-patch
+	@    $(ECHO) "${MSG_INFO}  Configuration $(BOARD_LINUX_DEFCONFIG)${MSG_END}"
+	$(V) $(MAKE) linux $(KERNEL_FLAGS) $(BOARD_LINUX_DEFCONFIG)
 	$(V) touch $@
 
-linux-build: linux-patch
-	@    $(ECHO) "${MSG_INFO}  Build linux ${MSG_END}"
-	$(V) $(MAKE) linux $(KERNEL_FLAGS) $(BOARD_LINUX_DEFCONFIG)
-	$(V) $(MAKE) linux -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) zImage dtbs
+linux-menuconfig: linux-config
+	@    $(ECHO) "${MSG_INFO}  Menuconfig $(BOARD_LINUX_DEFCONFIG)${MSG_END}"
+	$(V) $(MAKE) linux $(KERNEL_FLAGS) menuconfig
+	$(V) touch $@
+
+linux-zimage: linux-config
+	@    $(ECHO) "${MSG_INFO}  Build linux${MSG_END}"
+	$(V) $(MAKE) linux -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) zImage
 # Install Kernel files
 	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)
 	$(V) $(CP) linux/arch/arm/boot/zImage $(LINUX_KERNEL_INSTALL_PATH)
+	$(V) touch $@
+
+linux-dtbs: linux-zimage
+	@    $(ECHO) "${MSG_INFO}  Build dtbs${MSG_END}"
+	$(V) $(MAKE) linux -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) dtbs
+# Install device tree files
+	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)
 	$(V) $(CP) linux/arch/arm/boot/dts/*.dtb $(LINUX_KERNEL_INSTALL_PATH)
 	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)/overlays
 	$(V) $(CP) linux/arch/arm/boot/dts/overlays/*.dtb* $(LINUX_KERNEL_INSTALL_PATH)/overlays
 	$(V) $(CP) linux/arch/arm/boot/dts/overlays/README $(LINUX_KERNEL_INSTALL_PATH)/overlays
 	$(V) touch $@
 
-linux-modules: linux-build
+linux-modules: linux-zimage
 	@    $(ECHO) "${MSG_INFO}  Build linux modules ${MSG_END}"
 	$(V) $(MAKE) linux -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) modules
 # Install Kernel modules
@@ -95,7 +120,7 @@ linux-modules: linux-build
 	$(V) $(MAKE) linux $(KERNEL_FLAGS) INSTALL_MOD_PATH=$(LINUX_MOD_INSTALL_PATH) modules_install
 	$(V) touch $@
 
-linux-install: linux-modules
+linux-install: linux-modules linux-dtbs
 	@$(ECHO) "${MSG_INFO}  Install linux${MSG_END}"
 # Call pre-install recipe
 	$(call COMMON_HOOK_RECIPE,$(LOCAL_BOARD_DIR)/board.hook,linux-install-pre)
@@ -110,6 +135,10 @@ linux-install: linux-modules
 # Call post-install recipe
 	$(call COMMON_HOOK_RECIPE,$(LOCAL_BOARD_DIR)/board.hook,linux-install-post)
 	$(V) touch $@
+
+linux-uninstall:
+	@$(ECHO) "${MSG_INFO}  Uninstall linux${MSG_END}"
+	$(V) $(RM) linux-install
 
 linux-debug-var:
 	@$(ECHO) COMMON_MAKE_JOBS: ${COMMON_MAKE_JOBS}
