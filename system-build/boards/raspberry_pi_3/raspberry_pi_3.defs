@@ -42,7 +42,7 @@ BOARD_LINUX_SHA1SUM:=6095d24d68ff198585a42429dd1b5b295098b317
 
 # By default are added the kernel flags CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX)
 # This variable allows add some extra flag
-BOARD_LINUX_KERNEL_EXTRAFLAGS:=kernel7 ARCH=arm
+BOARD_LINUX_KERNEL_EXTRAFLAGS:="KERNEL=kernel7"
 # Kernel configuration file
 BOARD_LINUX_DEFCONFIG:=bcm2709_defconfig
 # BOARD_LINUX_PKG_DIR_NAME: Specifies the name of the directory where is located linux

@@ -12,6 +12,26 @@ ifndef BOARD_LINUX_SHA1SUM
 $(error ERROR: BOARD_LINUX_SHA1SUM not defined)
 endif
 
+ifndef BOARD_ARCH
+$(error ERROR: BOARD_ARCH not defined)
+endif
+
+ifndef BOARD_TOOLCHAIN_PATH
+$(error ERROR: BOARD_TOOLCHAIN_PATH not defined)
+endif
+
+ifndef BOARD_TOOLCHAIN_PREFIX
+$(error ERROR: BOARD_TOOLCHAIN_PREFIX not defined)
+endif
+
+ifndef BOARD_LINUX_DEFCONFIG
+$(error ERROR: BOARD_LINUX_DEFCONFIG not defined)
+endif
+
+ifndef BOARD_LINUX_PKG_DIR_NAME
+$(error ERROR: BOARD_LINUX_PKG_DIR_NAME not defined)
+endif
+
 ## Local definitions ##
 
 LINUX_PATH:=${PRJ_ROOT_PATH}/linux
@@ -20,7 +40,7 @@ LINUX_MOD_INSTALLDIR:=modules
 LINUX_KERNEL_INSTALLDIR:=kernel
 
 # Create kernel compilation flags
-KERNEL_FLAGS:=CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX) KERNEL=$(BOARD_LINUX_KERNEL_EXTRAFLAGS)
+KERNEL_FLAGS:=CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX) $(BOARD_LINUX_KERNEL_EXTRAFLAGS) ARCH=$(BOARD_ARCH)
 
 ## Exported variables
 # Linux instalation paths
@@ -60,14 +80,14 @@ linux-clean: linux-revpatch
 	@$(ECHO) "${MSG_INFO}  Remove linux${MSG_END}"
 	$(V) $(RM) linux-download linux-patch linux-revpatch linux-config linux-menuconfig linux-zimage linux-modules linux-dtbs linux-install
 # Remove Linux code
-	$(V) $(RM) linux
+	$(V) $(RM) ${BOARD_LINUX_PKG_DIR_NAME}
 # Remove linux modules
 	$(V) $(RM) $(LINUX_MOD_INSTALL_PATH) $(LINUX_KERNEL_INSTALL_PATH)
 
 
 linux-download:
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
-    --pkg-name linux \
+    --pkg-name ${BOARD_LINUX_PKG_DIR_NAME} \
     --pkg-target-name ${BOARD_LINUX_NAMETAR} \
     --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
     --dl-url ${BOARD_LINUX_DL_URL} \
@@ -85,39 +105,39 @@ $(eval $(call COMMON_PATCH_RECIPE,linux,linux-download,${LINUX_PATH},${BOARD_LIN
 
 linux-config: linux-patch
 	@    $(ECHO) "${MSG_INFO}  Configuration $(BOARD_LINUX_DEFCONFIG)${MSG_END}"
-	$(V) $(MAKE) linux $(KERNEL_FLAGS) $(BOARD_LINUX_DEFCONFIG)
+	$(V) $(MAKE) ${BOARD_LINUX_PKG_DIR_NAME} $(KERNEL_FLAGS) $(BOARD_LINUX_DEFCONFIG)
 	$(V) touch $@
 
 linux-menuconfig: linux-config
 	@    $(ECHO) "${MSG_INFO}  Menuconfig $(BOARD_LINUX_DEFCONFIG)${MSG_END}"
-	$(V) $(MAKE) linux $(KERNEL_FLAGS) menuconfig
+	$(V) $(MAKE) ${BOARD_LINUX_PKG_DIR_NAME} $(KERNEL_FLAGS) menuconfig
 	$(V) touch $@
 
 linux-zimage: linux-config
 	@    $(ECHO) "${MSG_INFO}  Build linux${MSG_END}"
-	$(V) $(MAKE) linux -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) zImage
+	$(V) $(MAKE) ${BOARD_LINUX_PKG_DIR_NAME} -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) zImage
 # Install Kernel files
 	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)
-	$(V) $(CP) linux/arch/arm/boot/zImage $(LINUX_KERNEL_INSTALL_PATH)
+	$(V) $(CP) ${BOARD_LINUX_PKG_DIR_NAME}/arch/$(BOARD_ARCH)/boot/zImage $(LINUX_KERNEL_INSTALL_PATH)
 	$(V) touch $@
 
 linux-dtbs: linux-zimage
 	@    $(ECHO) "${MSG_INFO}  Build dtbs${MSG_END}"
-	$(V) $(MAKE) linux -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) dtbs
+	$(V) $(MAKE) ${BOARD_LINUX_PKG_DIR_NAME} -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) dtbs
 # Install device tree files
 	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)
-	$(V) $(CP) linux/arch/arm/boot/dts/*.dtb $(LINUX_KERNEL_INSTALL_PATH)
+	$(V) $(CP) ${BOARD_LINUX_PKG_DIR_NAME}/arch/$(BOARD_ARCH)/boot/dts/*.dtb $(LINUX_KERNEL_INSTALL_PATH)
 	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)/overlays
-	$(V) $(CP) linux/arch/arm/boot/dts/overlays/*.dtb* $(LINUX_KERNEL_INSTALL_PATH)/overlays
-	$(V) $(CP) linux/arch/arm/boot/dts/overlays/README $(LINUX_KERNEL_INSTALL_PATH)/overlays
+	$(V) $(CP) ${BOARD_LINUX_PKG_DIR_NAME}/arch/$(BOARD_ARCH)/boot/dts/overlays/*.dtb* $(LINUX_KERNEL_INSTALL_PATH)/overlays
+	$(V) $(CP) ${BOARD_LINUX_PKG_DIR_NAME}/arch/$(BOARD_ARCH)/boot/dts/overlays/README $(LINUX_KERNEL_INSTALL_PATH)/overlays
 	$(V) touch $@
 
 linux-modules: linux-zimage
 	@    $(ECHO) "${MSG_INFO}  Build linux modules ${MSG_END}"
-	$(V) $(MAKE) linux -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) modules
+	$(V) $(MAKE) ${BOARD_LINUX_PKG_DIR_NAME} -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) modules
 # Install Kernel modules
 	$(V) $(MKDIR) $(LINUX_PATH)/$(LINUX_MOD_INSTALLDIR)
-	$(V) $(MAKE) linux $(KERNEL_FLAGS) INSTALL_MOD_PATH=$(LINUX_MOD_INSTALL_PATH) modules_install
+	$(V) $(MAKE) ${BOARD_LINUX_PKG_DIR_NAME} $(KERNEL_FLAGS) INSTALL_MOD_PATH=$(LINUX_MOD_INSTALL_PATH) modules_install
 	$(V) touch $@
 
 linux-install: linux-modules linux-dtbs
