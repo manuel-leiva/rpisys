@@ -43,11 +43,8 @@ BOARD_LINUX_SHA1SUM:=6095d24d68ff198585a42429dd1b5b295098b317
 # By default are added the kernel flags CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX)
 # This variable allows add some extra flag
 BOARD_LINUX_KERNEL_EXTRAFLAGS:=kernel7 ARCH=arm
-
+# Kernel configuration file
 BOARD_LINUX_DEFCONFIG:=bcm2709_defconfig
-# BOARD_LINUX_BUILD_POST_SCRIPT_NAME: if the variable is defined,
-# this script is called after to build the kernel
-BOARD_LINUX_BUILD_SCRIPT_POST_NAME:=linux-built-script-post.sh
 # BOARD_LINUX_PKG_DIR_NAME: Specifies the name of the directory where is located linux
 BOARD_LINUX_PKG_DIR_NAME:=linux
 
@@ -60,7 +57,6 @@ BOARD_FILESYSTEM_PKG_DIR:=filesystem
 # BOARD_FILESYSTEM_SU: Force to use super user permissions to decompress and manage the
 # filesystem. Options: "y" or "n".
 BOARD_FILESYSTEM_SU:=y
-BOARD_FILESYSTEM_POST_DOWNLOAD_SCRIPT:=filesystem-post-download-script.sh
 # Directory name when the filesystem is expanded
 BOARD_FILESYSTEM_NAME:=filesystem
 
