@@ -1,5 +1,10 @@
 # Board hook recipe
 
+linux-dtbs-post:
+	$(V) mkdir $(LINUX_KERNEL_INSTALL_PATH)/overlays
+	$(V) cp ${LINUX_PKG_DIR_NAME}/arch/arm/boot/dts/overlays/*.dtb* $(LINUX_KERNEL_INSTALL_PATH)/overlays
+	$(V) cp ${LINUX_PKG_DIR_NAME}/arch/arm/boot/dts/overlays/README $(LINUX_KERNEL_INSTALL_PATH)/overlays
+
 linux-install-post:
 	echo "  Linux post install"
 	cp $(LINUX_BOOT_INSTALL_PATH)/zImage $(LINUX_BOOT_INSTALL_PATH)/kernel7.img
