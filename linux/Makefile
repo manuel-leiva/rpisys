@@ -44,6 +44,7 @@ KERNEL_FLAGS:=CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX) $(
 
 ## Exported variables
 # Linux instalation paths
+export LINUX_PKG_DIR_NAME:=$(BOARD_LINUX_PKG_DIR_NAME)
 export LINUX_KERNEL_INSTALL_PATH:=$(LINUX_PATH)/$(LINUX_KERNEL_INSTALLDIR)
 export LINUX_MOD_INSTALL_PATH   :=$(LINUX_PATH)/$(LINUX_MOD_INSTALLDIR)
 # Destination directories
@@ -127,6 +128,8 @@ linux-dtbs: linux-zimage
 # Install device tree files
 	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)
 	$(V) $(CP) ${BOARD_LINUX_PKG_DIR_NAME}/arch/$(BOARD_ARCH)/boot/dts/*.dtb $(LINUX_KERNEL_INSTALL_PATH)
+# Call post-dtbs recipe
+	$(call COMMON_HOOK_RECIPE,$(LOCAL_BOARD_DIR)/board.hook,linux-dtbs-post)
 	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)/overlays
 	$(V) $(CP) ${BOARD_LINUX_PKG_DIR_NAME}/arch/$(BOARD_ARCH)/boot/dts/overlays/*.dtb* $(LINUX_KERNEL_INSTALL_PATH)/overlays
 	$(V) $(CP) ${BOARD_LINUX_PKG_DIR_NAME}/arch/$(BOARD_ARCH)/boot/dts/overlays/README $(LINUX_KERNEL_INSTALL_PATH)/overlays
@@ -165,6 +168,7 @@ linux-debug-var:
 	@$(ECHO) KERNEL_FLAGS: ${KERNEL_FLAGS}
 
 linux-export-var:
+	@$(ECHO) LINUX_PKG_DIR_NAME: ${LINUX_PKG_DIR_NAME}
 	@$(ECHO) LINUX_KERNEL_INSTALL_PATH: ${LINUX_KERNEL_INSTALL_PATH}
 	@$(ECHO) LINUX_MOD_INSTALL_PATH: ${LINUX_MOD_INSTALL_PATH}
 	@$(ECHO) LINUX_BOOT_INSTALL_PATH: $(LINUX_BOOT_INSTALL_PATH)
