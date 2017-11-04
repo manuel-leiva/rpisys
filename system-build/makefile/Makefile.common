@@ -33,7 +33,6 @@ MSG_DEBUG := \033[0;34m
 MSG_END := \033[0m
 
 # Commands
-ECHO := echo
 CP :=cp
 RM :=rm -rf
 MKDIR :=mkdir -p
