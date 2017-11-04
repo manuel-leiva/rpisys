@@ -37,7 +37,7 @@ BOARD_BOOTLOADER_SHA1SUM:=5c1340a93d6cefdae6c95235b531c23c49913232
 # LINUX #######################################################################
 
 BOARD_LINUX_NAMETAR:=rpi-linux-4.4.50.tar.gz
-BOARD_LINUX_DL_URL:=https://www.dropbox.com/s/2qwji7i3tw6qder/
+BOARD_LINUX_DL_URL:=https://www.dropbox.com/s/pqdudsngje3ryoz/
 BOARD_LINUX_SHA1SUM:=6095d24d68ff198585a42429dd1b5b295098b317
 
 # By default are added the kernel flags CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX)
