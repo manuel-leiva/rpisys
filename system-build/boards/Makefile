@@ -48,6 +48,10 @@ clean: header
 	$(RM) board-install
 
 board-install:
+# Create default directories
+	$(MKDIR) $(BOARD_PRJ_COMMON_PATH)
+	$(MKDIR) $(BOARD_PRJ_DOWNLOAD_PATH)
+# Install patches
 	$(V) if [ -d ${LOCAL_BOARD_DIR}/toolchain.patch ]; then \
         echo "${MSG_INFO}  Install toolchain patches${MSG_END}" ; \
         ln -s ${LOCAL_BOARD_DIR}/toolchain.patch ${PRJ_ROOT_PATH}/toolchain/patches ; \
