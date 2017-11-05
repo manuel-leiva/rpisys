@@ -43,8 +43,10 @@ INCLUDE_MAKE_PATH:=$(PRJ_ROOT_PATH)/system-build/makefile
 
 ifeq ($(VERBOSE), 1)
 MAKE := make -C
+MAKE_F:= make -f
 else
 MAKE := make -s -C
+MAKE_F:= make -s -f
 V := @
 endif
 
@@ -93,8 +95,8 @@ endef
 # 1: Makefile hook path
 # 2: Target
 define COMMON_HOOK_RECIPE
-	@make -s -f $(1) -q $(2) 2> /dev/null ; \
+	@ $(MAKE_F) $(1) -q $(2) 2> /dev/null ; \
 if [ $$? -le 1 ] ; then \
-    $(MAKE) -s -f $(1) $(2) ; \
+    $(MAKE_F) $(1) $(2) ; \
 fi
 endef
