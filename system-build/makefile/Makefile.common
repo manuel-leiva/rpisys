@@ -82,7 +82,7 @@ endef
 # Parameters:
 # 1: Patches path
 define COMMON_RECIPE_RM_PATCH
-	$(V) set -x; if [ -d $(1)/patches ]; then \
+	$(V) if [ -d $(1)/patches ]; then \
         $(RM) $(1)/.pc; \
     fi
 endef
