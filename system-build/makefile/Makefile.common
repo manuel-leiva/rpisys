@@ -55,7 +55,7 @@ endif
 define COMMON_PATCH_RECIPE
 $(1)-patch: $(2)
 	$(V) if [ -d $(3)/patches ]; then \
-        echo "${MSG_INFO}  Patch $(4) ${MSG_END}" ; \
+        $(ECHO) "${MSG_INFO}  Patch $(4) ${MSG_END}" ; \
         quilt push -a ; \
     fi
 	$(V) touch $(1)-patch ;
@@ -70,7 +70,7 @@ define COMMON_REVPATCH_RECIPE
 $(1)-revpatch: $(2)
 	$(V) if [ -d $(3)/patches ]; then \
         if [ -f $(3)/$(1)-patch ]; then \
-            echo "${MSG_INFO}  Reverse patch $(4) ${MSG_END}" ; \
+            $(ECHO) "${MSG_INFO}  Reverse patch $(4) ${MSG_END}" ; \
             quilt pop -a ; \
         fi \
     fi
@@ -95,6 +95,6 @@ endef
 define COMMON_HOOK_RECIPE
 	@make -s -f $(1) -q $(2) 2> /dev/null ; \
 if [ $$? -le 1 ] ; then \
-    make -s -f $(1) $(2) ; \
+    $(MAKE) -s -f $(1) $(2) ; \
 fi
 endef
