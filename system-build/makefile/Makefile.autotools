@@ -20,15 +20,13 @@ AUTOTOOLS_DL_URL_FILE = $(AUTOTOOLS_DL_URL)$(AUTOTOOLS_NAME_TAR)
 AUTOTOOLS_DL_TAR_PATH = $(BOARD_PRJ_DOWNLOAD_PATH)/$(AUTOTOOLS_NAME_TAR)
 AUTOTOOLS_PKG_PATH = $(PRJ_ROOT_PATH)/libraries/$(PKGNAME)
 
-#~ COMMON_LIB_BOARD_LIBS_DIR:=board-libs
-#~ COMMON_LIB_HOST_LIBS_DIR:=host-libs
-
 AUTOTOOLS_PREFIX_INC_DIR:=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
+AUTOTOOLS_PATH:=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/usr/bin
 
 export DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install
 # Some packages verify the PATH looking for some application, then
 # the directory /usr/bin created is added to PATH
-export PATH := $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/usr/bin:$(PATH)
+export PATH:=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/usr/bin:$(PATH)
 # PKG_CONFIG_LIBDIR: Replaces the default pkg-config search directory.
 export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/$(BOARD_LIBRARY_BOARD_INSTALLDIR)/pkgconfig
 

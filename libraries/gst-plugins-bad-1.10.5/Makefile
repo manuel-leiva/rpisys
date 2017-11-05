@@ -7,7 +7,7 @@ AUTOTOOLS_NAME_TAR := gst-plugins-bad-1.10.5.tar.xz
 AUTOTOOLS_SHA1SUM:=6c5134e9b1bcf78e5ffae01ce140849c55dd8721
 
 AUTOTOOLS_FLAGS += --build=x86_64-linux-gnu --prefix=/usr --libdir=$(BOARD_LIBRARY_BOARD_INSTALLDIR) --host=$(BOARD_LIBRARY_HOST) \
-		--disable-dash
+		--disable-dash --with-libgcrypt-prefix=$(AUTOTOOLS_PATH)
 
 # Dash has been disable in order to avoid this error
 # /home/mleiva/rpisys/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/../lib/gcc/arm-linux-gnueabihf/4.8.3/../../../../arm-linux-gnueabihf/bin/ld: warning: libgsturidownloader-1.0.so.0, needed by ../../gst-libs/gst/adaptivedemux/.libs/libgstadaptivedemux-1.0.so, not found (try using -rpath or -rpath-link)
