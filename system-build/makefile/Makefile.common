@@ -77,6 +77,17 @@ $(1)-revpatch: $(2)
 	$(V) $(RM) $(1)-patch
 endef
 
+# Common recipe
+# Remove patch metainformation
+# Parameters:
+# 1: Patches path
+define COMMON_RECIPE_RM_PATCH
+	$(V) set -x; if [ -d $(1)/patches ]; then \
+        $(RM) $(1)/.pc; \
+    fi
+endef
+
+
 # Common hook recipe
 # Parameters:
 # 1: Makefile hook path

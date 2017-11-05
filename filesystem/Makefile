@@ -51,6 +51,7 @@ uninstall:
 filesystem-clean: filesystem-revpatch
 	@$(ECHO) "${MSG_INFO}  Remove filesystem${MSG_END}"
 	$(V) $(RM) filesystem-*
+	$(call COMMON_RECIPE_RM_PATCH,$(FILESYSTEM_PATH))
 ifeq ($(BOARD_FILESYSTEM_SU),y)
 	@$(ECHO) "${MSG_REQ}You need to be logged in as root you to clean filesystem${MSG_END}"
 	$(V) sudo $(RM) filesystem

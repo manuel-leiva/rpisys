@@ -40,6 +40,7 @@ help: bootloader-header
 
 bootloader-clean: bootloader-revpatch
 	@    $(ECHO) "${MSG_INFO}  Remove bootloader${MSG_END}"
+	$(call COMMON_RECIPE_RM_PATCH,$(BOOTLOADER_PATH))
 	$(V) ${RM} bootloader-install bootloader-patch bootloader-download bootloader-make
 	$(V) ${RM} ${BOARD_BOOTLOADER_PKG_DIR_NAME}
 

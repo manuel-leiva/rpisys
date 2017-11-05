@@ -48,6 +48,7 @@ clean: autotools-revpatch
 	autotools-make-install
 # Remove package directory
 	$(V) $(RM) $(PKGNAME)
+	$(call COMMON_RECIPE_RM_PATCH,$(AUTOTOOLS_PKG_PATH))
 
 distclean:
 # Delete all files in the package directory that are created by
