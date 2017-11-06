@@ -80,7 +80,12 @@ image-sd:
 image-file:
 	$(V) $(MAKE) image file
 
-board:
+$(SYSTEM_BUILD_PATH)/common_dependency:
+	$(V) $(ECHO) "${MSG_INFO}Check system dependencies${MSG_END}"
+	$(call COMMON_RECIPE_DEPENDENCY,$(SYSTEM_BUILD_PATH)/dependency.txt)
+	$(V) touch $@
+
+board: $(SYSTEM_BUILD_PATH)/common_dependency
 	$(V) $(MAKE) system-build/boards
 
 board-clean:

@@ -38,6 +38,7 @@ RM :=rm -rf
 MKDIR :=mkdir -p
 
 INCLUDE_MAKE_PATH:=$(PRJ_ROOT_PATH)/system-build/makefile
+SYSTEM_BUILD_PATH:=$(PRJ_ROOT_PATH)/system-build
 
 # Conditional ##################################################################
 
@@ -51,6 +52,23 @@ V := @
 endif
 
 # Public targets ###############################################################
+
+# Common recipe
+# Remove patch metainformation
+# Parameters:
+# 1: Dependency file path
+define COMMON_RECIPE_DEPENDENCY
+	$(V) if [ -f $(1) ]; then \
+        for PACKAGE in $$(cat $(1)) ; do \
+             PKG_INSTALLED=$$(apt-cache policy $$PACKAGE  | grep Installed) ; \
+             $(ECHO) "    $$PACKAGE:$$PKG_INSTALLED" ; \
+             if [ -n "$$(echo $$PKG_INSTALLED | grep none )" ]; then \
+                 $(ECHO) "${MSG_REQ}You need root permissions to install $$PACKAGE${MSG_END}" ; \
+                 sudo apt-get install $$PACKAGE ; \
+             fi \
+        done \
+    fi
+endef
 
 # Apply patch
 # Verify if patches directory exists, if it exists, apply the patches

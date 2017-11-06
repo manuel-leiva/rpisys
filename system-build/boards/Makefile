@@ -46,8 +46,14 @@ clean: header
         $(RM) ${PRJ_ROOT_PATH}/image/patches ; \
     fi
 	$(RM) board-install
+	$(RM) $(LOCAL_BOARD_DIR)/board_dependency
 
-board-install:
+$(LOCAL_BOARD_DIR)/board_dependency:
+	$(V) $(ECHO) "${MSG_INFO}  Check ${BOARD_NAME} dependencies${MSG_END}"
+	$(call COMMON_RECIPE_DEPENDENCY,$(LOCAL_BOARD_DIR)/$(BOARD_DEPENDENCY_PKG_FILE))
+	$(V) touch $@
+
+board-install: $(LOCAL_BOARD_DIR)/board_dependency
 # Create default directories
 	$(MKDIR) $(BOARD_PRJ_COMMON_PATH)
 	$(MKDIR) $(BOARD_PRJ_DOWNLOAD_PATH)

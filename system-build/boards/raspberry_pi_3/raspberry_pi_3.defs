@@ -16,6 +16,9 @@ BOARD_PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/rpisys
 # If BOARD_PRJ_MAKE_JOBS_PER_CORE is not defined JOBS=1
 BOARD_PRJ_MAKE_JOBS_PER_CORE:=75
 
+# This file contains the list of packages needed to build the board image
+BOARD_DEPENDENCY_PKG_FILE:=dependency.txt
+
 BOARD_ARCH=arm
 
 # TOOLCHAIN ####################################################################
