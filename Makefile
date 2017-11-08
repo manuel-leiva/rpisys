@@ -29,16 +29,18 @@ clean-all: clean
 
 help:
 	@$(ECHO) "  Targets:"
-	@$(ECHO) "    clean:        Clean all the modules built"
-	@$(ECHO) "    toolchain:    Build toolchain"
-	@$(ECHO) "    bootloader:   Build bootloader"
-	@$(ECHO) "    linux:        Build linux"
-	@$(ECHO) "    filesystem:   Build filesystem"
-	@$(ECHO) "    libraries:    Build libraries"
-	@$(ECHO) "    applications: Build applications"
-	@$(ECHO) "    image:        Build image"
-	@$(ECHO) "    image-sd:     Install image generated into a SD card"
-	@$(ECHO) "    image-file:   Create image file"
+	@$(ECHO) "    check-dependency: Check system dependecies"
+	@$(ECHO) "    board:            Configure system for selected board profile"
+	@$(ECHO) "    clean:            Clean all the modules built"
+	@$(ECHO) "    toolchain:        Build toolchain"
+	@$(ECHO) "    bootloader:       Build bootloader"
+	@$(ECHO) "    linux:            Build linux"
+	@$(ECHO) "    filesystem:       Build filesystem"
+	@$(ECHO) "    libraries:        Build libraries"
+	@$(ECHO) "    applications:     Build applications"
+	@$(ECHO) "    image:            Build image"
+	@$(ECHO) "    image-sd:         Install image generated into a SD card"
+	@$(ECHO) "    image-file:       Create image file"
 
 toolchain: board
 	$(V) $(MAKE) $@
@@ -92,10 +94,10 @@ board-clean:
 	$(V) $(MAKE) system-build/boards clean
 
 board-info:
-	@echo "${MSG_INFO}  Name: ${BOARD_NAME}${MSG_END}"
-	@echo "  Linux:      ${BOARD_LINUX_NAMETAR}"
-	@echo "  Filesystem: ${FILESYSTEM_NAMETAR}"
-	@echo
+	@$(ECHO) "${MSG_INFO}  Name: ${BOARD_NAME}${MSG_END}"
+	@$(ECHO) "  Linux:      ${BOARD_LINUX_NAMETAR}"
+	@$(ECHO) "  Filesystem: ${FILESYSTEM_NAMETAR}"
+	@$(ECHO)
 
 # Private targets ##############################################################
 
@@ -105,12 +107,12 @@ $(SYSTEM_BUILD_PATH)/common_dependency:
 	$(V) touch $@
 
 board.defs:
-	@echo "${MSG_ERROR}ERROR:${MSG_END} System have not been configured"
-	@echo "    board file needs to be defined"
-	@echo "    Example: ./configure --board board_name.defs"
-	@echo
+	@$(ECHO) "${MSG_ERROR}ERROR:${MSG_END} System have not been configured"
+	@$(ECHO) "    board file needs to be defined"
+	@$(ECHO) "    Example: ./configure --board board_name.defs"
+	@$(ECHO)
 	@exit 1
 
 debug-var:
-	@echo "  PWD: ${PWD}"
+	@$(ECHO) "  PWD: ${PWD}"
 
