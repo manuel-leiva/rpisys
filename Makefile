@@ -80,12 +80,12 @@ image-sd:
 image-file:
 	$(V) $(MAKE) image file
 
-$(SYSTEM_BUILD_PATH)/common_dependency:
-	$(V) $(ECHO) "${MSG_INFO}Check system dependencies${MSG_END}"
-	$(call COMMON_RECIPE_DEPENDENCY,$(SYSTEM_BUILD_PATH)/dependency.txt)
-	$(V) touch $@
+check-dependency: $(SYSTEM_BUILD_PATH)/common_dependency
 
-board: $(SYSTEM_BUILD_PATH)/common_dependency
+check-dependency-clean:
+	$(V) $(RM) $(SYSTEM_BUILD_PATH)/common_dependency
+
+board: check-dependency
 	$(V) $(MAKE) system-build/boards
 
 board-clean:
@@ -98,6 +98,11 @@ board-info:
 	@echo
 
 # Private targets ##############################################################
+
+$(SYSTEM_BUILD_PATH)/common_dependency:
+	$(V) $(ECHO) "${MSG_INFO}Check system dependencies${MSG_END}"
+	$(call COMMON_RECIPE_DEPENDENCY,$(SYSTEM_BUILD_PATH)/dependency.txt)
+	$(V) touch $@
 
 board.defs:
 	@echo "${MSG_ERROR}ERROR:${MSG_END} System have not been configured"
