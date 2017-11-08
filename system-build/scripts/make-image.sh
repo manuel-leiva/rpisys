@@ -102,17 +102,19 @@ if [ ! -b ${PARTITION_ROOTFS} ]; then
     PARTITION_ROOTFS=${DEVICE_FILE}p2
 fi
 
+echo -e "${INFOCOLOR}  Defining partition${ENDCOLOR}\n"
 # Create partitions
 {
     echo '8192,63MiB,0x0C,*'
     echo '137216,4GiB,,-'
 } | sudo sfdisk $DEVICE_FILE
-
+# Update the kernel's information about the current status of disk partitions
+# asking it to re-read the partition table.
+sleep 2
+sudo partprobe $DEVICE_FILE
 # Give format for each partition
 echo -e "${INFOCOLOR}  Creating BOOT partition${ENDCOLOR}\n"
-umount ${DEVICE_FILE}p1
 sudo mkfs.vfat -F 32 -n ${BOOT_NAME} ${PARTITION_BOOT}
-umount ${DEVICE_FILE}p2
 echo -e "${INFOCOLOR}  Creating rootfs partition${ENDCOLOR}\n"
 sudo mkfs.ext4 -L ${ROOTFS_NAME} ${PARTITION_ROOTFS}
 
