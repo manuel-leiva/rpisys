@@ -1,2 +1,3 @@
 git
 quilt
+libncurses5-dev
