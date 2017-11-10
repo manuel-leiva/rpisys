@@ -72,7 +72,7 @@ endef
 
 # Apply patch
 # Verify if patches directory exists, if it exists, apply the patches
-define COMMON_PATCH_RECIPE
+define COMMON_TARGET_PATCH
 $(1)-patch: $(2)
 	$(V) if [ -d $(3)/patches ]; then \
         $(ECHO) "${MSG_INFO}  Patch $(4) ${MSG_END}" ; \
@@ -86,7 +86,7 @@ endef
 # Verify if patches directory exists, if it exists, then verify if the
 # flag autotools-patch file exists, if it exists, then remove the
 # patches
-define COMMON_REVPATCH_RECIPE
+define COMMON_TARGET_REVPATCH
 $(1)-revpatch: $(2)
 	$(V) if [ -d $(3)/patches ]; then \
         if [ -f $(3)/$(1)-patch ]; then \
@@ -112,7 +112,7 @@ endef
 # Parameters:
 # 1: Makefile hook path
 # 2: Target
-define COMMON_HOOK_RECIPE
+define COMMON_RECIPE_HOOK
 	@ $(MAKE_F) $(1) -q $(2) 2> /dev/null ; \
 if [ $$? -le 1 ] ; then \
     $(MAKE_F) $(1) $(2) ; \

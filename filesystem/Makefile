@@ -72,14 +72,14 @@ filesystem-download:
 
 filesystem-patch: filesystem-download
 # Call pre-patch recipe
-	$(call COMMON_HOOK_RECIPE,$(LOCAL_BOARD_DIR)/board.hook,filesystem-patch-pre)
+	$(call COMMON_RECIPE_HOOK,$(LOCAL_BOARD_DIR)/board.hook,$@-pre)
 # Apply patch
 	$(V) if [ -d ${PRJ_ROOT_PATH}/filesystem/patches ]; then \
         echo "${MSG_INFO}  Patch ${PKGNAME} ${MSG_END}" ; \
         quilt push -a ; \
     fi
 # Call post-patch recipe
-	$(call COMMON_HOOK_RECIPE,$(LOCAL_BOARD_DIR)/board.hook,filesystem-patch-post)
+	$(call COMMON_RECIPE_HOOK,$(LOCAL_BOARD_DIR)/board.hook,$@-post)
 	$(V) touch $@ ;
 
 # Reverse patches

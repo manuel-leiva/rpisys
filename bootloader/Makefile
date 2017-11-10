@@ -59,7 +59,7 @@ bootloader-download:
 
 # bootloader-patch:
 # Parameters: target_prefix, dependecies, package-path, message
-$(eval $(call COMMON_PATCH_RECIPE,bootloader,bootloader-download,${BOOTLOADER_PATH},bootloader))
+$(eval $(call COMMON_TARGET_PATCH,bootloader,bootloader-download,${BOOTLOADER_PATH},bootloader))
 
 bootloader-make: bootloader-patch
 	@$(ECHO) "${MSG_INFO}  Build bootloader${MSG_END}"
@@ -76,7 +76,7 @@ bootloader-uninstall:
 
 # bootloader-revpatch:
 # Parameters: target_prefix, dependecies, package-path, message
-$(eval $(call COMMON_REVPATCH_RECIPE,bootloader,,${BOOTLOADER_PATH},bootloader))
+$(eval $(call COMMON_TARGET_REVPATCH,bootloader,,${BOOTLOADER_PATH},bootloader))
 
 # Debug targets ################################################################
 

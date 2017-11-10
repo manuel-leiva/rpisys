@@ -84,11 +84,11 @@ endif
 
 # autotools-revpatch:
 # Parameters: target_prefix, dependecies, package-path, message
-$(eval $(call COMMON_REVPATCH_RECIPE,autotools,,${AUTOTOOLS_PKG_PATH},${PKGNAME}))
+$(eval $(call COMMON_TARGET_REVPATCH,autotools,,${AUTOTOOLS_PKG_PATH},${PKGNAME}))
 
 # autotools-patch:
 # Parameters: target_prefix, dependecies, package-path, message
-$(eval $(call COMMON_PATCH_RECIPE,autotools,autotools-download,${AUTOTOOLS_PKG_PATH},${PKGNAME}))
+$(eval $(call COMMON_TARGET_PATCH,autotools,autotools-download,${AUTOTOOLS_PKG_PATH},${PKGNAME}))
 
 autotools-configure: autotools-patch
 	@    $(ECHO) "${MSG_INFO}  Configure ${PKGNAME} ${MSG_END}"
@@ -149,4 +149,4 @@ autotools-debug-libs-installed:
 
 autotools-debug-targets:
     # The lines must be coherent with the lines used in order to show the real recipes
-	@$(ECHO) $(info $(call COMMON_REVPATCH_RECIPE,autotools,,${AUTOTOOLS_PKG_PATH},${PKGNAME}))
+	@$(ECHO) $(info $(call COMMON_TARGET_REVPATCH,autotools,,${AUTOTOOLS_PKG_PATH},${PKGNAME}))
