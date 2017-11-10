@@ -82,12 +82,12 @@ image-sd:
 image-file:
 	$(V) $(MAKE) image file
 
-check-dependency: $(SYSTEM_BUILD_PATH)/common_dependency
+dependency: $(SYSTEM_BUILD_PATH)/common_dependency
 
-check-dependency-clean:
+dependency-clean:
 	$(V) $(RM) $(SYSTEM_BUILD_PATH)/common_dependency
 
-board: check-dependency
+board: dependency
 	$(V) $(MAKE) system-build/boards
 
 board-clean:
