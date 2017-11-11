@@ -5,6 +5,13 @@ include ../../system-build/makefile/Makefile.local
 # Include common recipes and definitions
 include ../../system-build/makefile/Makefile.common
 
+# Definitions ##################################################################
+
+## Verify external variables ##
+ifndef BOARD_DEPENDENCY_TOOLS_PATH
+$(error ERROR: BOARD_DEPENDENCY_TOOLS_PATH not defined)
+endif
+
 # Public targets ###############################################################
 
 .PHONY: all clean header
@@ -50,7 +57,7 @@ clean: header
 
 $(LOCAL_BOARD_PATH)/board_dependency:
 	$(V) $(ECHO) "${MSG_INFO}  Check ${BOARD_NAME} dependencies${MSG_END}"
-	$(call COMMON_RECIPE_DEPENDENCY,$(LOCAL_BOARD_PATH)/$(BOARD_DEPENDENCY_PKG_FILE))
+	$(call COMMON_RECIPE_DEPENDENCY,$(BOARD_DEPENDENCY_TOOLS_PATH))
 	$(V) touch $@
 
 board-install: $(LOCAL_BOARD_PATH)/board_dependency
