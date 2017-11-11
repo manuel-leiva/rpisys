@@ -9,7 +9,7 @@
 * image: Build image
 * system-build: Collection of recipes and scripts used to build the system
 
-# Build project #
+# Build project
 
 Apply configuration for a specific board.
 ```
@@ -38,19 +38,40 @@ make clean
 make board-clean
 ./configure --clean
 ```
-# Board configuration #
+# Board configuration
 
-##Prefix description
+## Variables Naming
+
+### Board Sufix description
 
 * BOARD_PRJ_: Board variables realated to the general project configuration.
 * BOARD_TOOLCHAIN_: Board toolchain configuration.
-* BOARD_BOOTLOADER: Board bootloader configuration.
-* BOARD_FILESYSTEM: Board filesystem configuration.
-* BOARD_LINUX: Board Linux kernel configuration.
-* BOARD_LIBRARY: Board filesystem libraries configuration.
-* BOARD_IMAGE: Board image configuration.
+* BOARD_BOOTLOADER_: Board bootloader configuration.
+* BOARD_FILESYSTEM_: Board filesystem configuration.
+* BOARD_LINUX_: Board Linux kernel configuration.
+* BOARD_LIBRARY_: Board filesystem libraries configuration.
+* BOARD_IMAGE_: Board image configuration.
 
-# Libraries #
+### Modules sufix
+
+* BOARD_: Variables specific for board configuration.
+* BOOTLOADER_: Bootloader variables configuration.
+* FILESYTEM_: Filesystem variables configuration.
+* LIBRARIES_: Libraries variables configuration.
+* LINUX_: Linux kernel variables configuration
+* TOOLCHAIN_: Toolchain variables configuration.
+* COMMON_: Common variables configuration
+* COMMON_RECIPE_: Makefile common recipe
+* COMMON_TARGET_: Makefile common target and recipe
+
+### Prefix description
+
+* _DL_URL: Download URL.
+* _TAR_NAME: Tarball name.
+* _SHA1SUM: SHA1SUM value for tarball file.
+* _PKG_NAME: Package name after decompress the tarball or clone the repository.
+
+# Libraries
 
 ## How to add a new library
 
@@ -68,7 +89,7 @@ touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/Makefile
 ```
 #!Makefile
 AUTOTOOLS_DL_URL := http://ftp.gnome.org/pub/GNOME/sources/libsoup/2.57/
-AUTOTOOLS_NAME_TAR := libsoup-2.57.1.tar.xz
+AUTOTOOLS_TAR_NAME := libsoup-2.57.1.tar.xz
 AUTOTOOLS_FLAGS += --prefix=/usr --libdir=/usr/lib/arm-linux-gnueabihf/ --host=arm
 ```
 4.Include Makefile. Since libsoup is an autotools project then Makefile.autotools file must be included
@@ -85,5 +106,5 @@ touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/dependency.txt
 6.To compile the library as part of the system, add the library name into LIB_NAME_LIST defined in Make.defs
 ```
 #!Makefile
-LIB_NAME_LIST := libsoup-2.57.1
+BOARD_LIBRARY_NAME_LIST := libsoup-2.57.1
 ```
