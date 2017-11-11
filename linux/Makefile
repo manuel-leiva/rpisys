@@ -129,7 +129,7 @@ linux-dtbs: linux-zimage
 	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)
 	$(V) $(CP) ${BOARD_LINUX_PKG_DIR_NAME}/arch/$(BOARD_ARCH)/boot/dts/*.dtb $(LINUX_KERNEL_INSTALL_PATH)
 # Call post-dtbs recipe
-	$(call COMMON_RECIPE_HOOK,$(LOCAL_BOARD_PATH)/board.hook,linux-dtbs-post)
+	$(call COMMON_RECIPE_HOOK,$(BOARD_MAKEFILE_HOOKS_PATH),linux-dtbs-post)
 	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)/overlays
 	$(V) $(CP) ${BOARD_LINUX_PKG_DIR_NAME}/arch/$(BOARD_ARCH)/boot/dts/overlays/*.dtb* $(LINUX_KERNEL_INSTALL_PATH)/overlays
 	$(V) $(CP) ${BOARD_LINUX_PKG_DIR_NAME}/arch/$(BOARD_ARCH)/boot/dts/overlays/README $(LINUX_KERNEL_INSTALL_PATH)/overlays
@@ -146,7 +146,7 @@ linux-modules: linux-zimage
 linux-install: linux-modules linux-dtbs
 	@$(ECHO) "${MSG_INFO}  Install linux${MSG_END}"
 # Call pre-install recipe
-	$(call COMMON_RECIPE_HOOK,$(LOCAL_BOARD_PATH)/board.hook,linux-install-pre)
+	$(call COMMON_RECIPE_HOOK,$(BOARD_MAKEFILE_HOOKS_PATH),linux-install-pre)
 # Install kernel image, device tree and overlays
 	@$(ECHO) "${MSG_INFO}    Install kernel${MSG_END}"
 	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/boot
@@ -156,7 +156,7 @@ linux-install: linux-modules linux-dtbs
 	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/rootfs/
 	$(V) cd modules; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/rootfs
 # Call post-install recipe
-	$(call COMMON_RECIPE_HOOK,$(LOCAL_BOARD_PATH)/board.hook,linux-install-post)
+	$(call COMMON_RECIPE_HOOK,$(BOARD_MAKEFILE_HOOKS_PATH),linux-install-post)
 	$(V) touch $@
 
 linux-uninstall:
