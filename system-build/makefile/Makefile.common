@@ -1,9 +1,6 @@
 
 # Definitions ##################################################################
 
-# Board scripts path
-BOARD_SCRIPT_PATH:=$(LOCAL_BOARD_DIR)/scripts
-
 # Amount of cores in the host system
 COMMON_HOST_CORES:=$(shell cat /proc/cpuinfo | grep processor | wc -l)
 
