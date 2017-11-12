@@ -13,7 +13,7 @@ $(error ERROR: BOARD_BOOTLOADER_SHA1SUM not defined)
 endif
 
 # Private definitions ##########################################################
-BOOTLOADER_PKG_PATH = $(PRJ_ROOT_PATH)/bootloader/${BOARD_BOOTLOADER_PKG_DIR_NAME}
+BOOTLOADER_PKG_PATH = $(PRJ_ROOT_PATH)/bootloader/${BOARD_BOOTLOADER_PKG_NAME}
 BOOTLOADER_PATH = $(PRJ_ROOT_PATH)/bootloader
 
 # Public targets ###############################################################
@@ -42,7 +42,7 @@ bootloader-clean: bootloader-revpatch
 	@    $(ECHO) "${MSG_INFO}  Remove bootloader${MSG_END}"
 	$(call COMMON_RECIPE_RM_PATCH,$(BOOTLOADER_PATH))
 	$(V) ${RM} bootloader-install bootloader-patch bootloader-download bootloader-make
-	$(V) ${RM} ${BOARD_BOOTLOADER_PKG_DIR_NAME}
+	$(V) ${RM} ${BOARD_BOOTLOADER_PKG_NAME}
 
 bootloader-header:
 	@$(ECHO) "${MSG_INFO}Bootloader${MSG_END} "
@@ -51,7 +51,7 @@ bootloader-download:
 	@$(ECHO) "${MSG_INFO}  Download bootloader${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name bootloader \
-    --pkg-target-name $(BOARD_BOOTLOADER_NAMETAR) \
+    --pkg-target-name $(BOARD_BOOTLOADER_TAR_NAME) \
     --sha1sum ${BOARD_BOOTLOADER_SHA1SUM} \
     --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
     --dl-url ${BOARD_BOOTLOADER_DL_URL}
@@ -85,6 +85,6 @@ bootloader-debug-help: bootloader-header
 	@$(ECHO) "    bootloader-debug-var:    Show variables used during build process"
 
 bootloader-debug-var: bootloader-header
-	@$(ECHO) BOARD_BOOTLOADER_NAMETAR:  ${BOARD_BOOTLOADER_NAMETAR}
+	@$(ECHO) BOARD_BOOTLOADER_TAR_NAME:  ${BOARD_BOOTLOADER_TAR_NAME}
 	@$(ECHO) BOARD_BOOTLOADER_DL_URL:   ${BOARD_BOOTLOADER_DL_URL}
 	@$(ECHO) BOOTLOADER_PKG_PATH: ${BOOTLOADER_PKG_PATH}

@@ -8,14 +8,14 @@ include ../system-build/makefile/Makefile.common
 # Definitions ##################################################################
 
 ## Verify external variables ##
-ifndef BOARD_FILESYSTEM_NAME_TAR
-$(error ERROR: BOARD_FILESYSTEM_NAME_TAR not defined)
+ifndef BOARD_FILESYSTEM_PKG_NAME_TAR
+$(error ERROR: BOARD_FILESYSTEM_PKG_NAME_TAR not defined)
 endif
 ifndef BOARD_FILESYSTEM_DL_URL
 $(error ERROR: BOARD_FILESYSTEM_DL_URL not defined)
 endif
-ifndef BOARD_FILESYSTEM_PKG_DIR
-$(error ERROR: BOARD_FILESYSTEM_DL_URL not defined)
+ifndef BOARD_FILESYSTEM_PKG_NAME
+$(error ERROR: BOARD_FILESYSTEM_PKG_NAME not defined)
 endif
 ifndef BOARD_FILESYSTEM_SHA1SUM
 $(error ERROR: BOARD_FILESYSTEM_SHA1SUM not defined)
@@ -26,7 +26,7 @@ FILESYSTEM_PATH:=${PRJ_ROOT_PATH}/filesystem
 BOARD_FILESYSTEM_SU?=n
 
 ## Exported definitions
-export FILESYSTEM_PKG_PATH:=${PRJ_ROOT_PATH}/filesystem/${BOARD_FILESYSTEM_NAME}
+export FILESYSTEM_PKG_PATH:=${PRJ_ROOT_PATH}/filesystem/${BOARD_FILESYSTEM_PKG_NAME}
 
 # Public targets ###############################################################
 
@@ -63,7 +63,7 @@ filesystem-download:
 	@    $(ECHO) "${MSG_INFO}  Download filesystem${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name filesystem \
-    --pkg-target-name ${BOARD_FILESYSTEM_NAME_TAR} \
+    --pkg-target-name ${BOARD_FILESYSTEM_PKG_NAME_TAR} \
     --sha1sum ${BOARD_FILESYSTEM_SHA1SUM} \
     --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
     --dl-url ${BOARD_FILESYSTEM_DL_URL} \
@@ -72,14 +72,14 @@ filesystem-download:
 
 filesystem-patch: filesystem-download
 # Call pre-patch recipe
-	$(call COMMON_RECIPE_HOOK,$(BOARD_MAKEFILE_HOOKS_PATH),$@-pre)
+	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),$@-pre)
 # Apply patch
 	$(V) if [ -d ${PRJ_ROOT_PATH}/filesystem/patches ]; then \
         echo "${MSG_INFO}  Patch ${PKGNAME} ${MSG_END}" ; \
         quilt push -a ; \
     fi
 # Call post-patch recipe
-	$(call COMMON_RECIPE_HOOK,$(BOARD_MAKEFILE_HOOKS_PATH),$@-post)
+	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),$@-post)
 	$(V) touch $@ ;
 
 # Reverse patches

@@ -8,8 +8,8 @@ include ../../system-build/makefile/Makefile.common
 # Definitions ##################################################################
 
 ## Verify external variables ##
-ifndef BOARD_DEPENDENCY_TOOLS_PATH
-$(error ERROR: BOARD_DEPENDENCY_TOOLS_PATH not defined)
+ifndef BOARD_PRJ_TOOLS_PATH
+$(error ERROR: BOARD_PRJ_TOOLS_PATH not defined)
 endif
 
 # Public targets ###############################################################
@@ -57,7 +57,7 @@ clean: header
 
 $(LOCAL_BOARD_PATH)/board_dependency:
 	$(V) $(ECHO) "${MSG_INFO}  Check ${BOARD_NAME} dependencies${MSG_END}"
-	$(call COMMON_RECIPE_DEPENDENCY,$(BOARD_DEPENDENCY_TOOLS_PATH))
+	$(call COMMON_RECIPE_DEPENDENCY,$(BOARD_PRJ_TOOLS_PATH))
 	$(V) touch $@
 
 board-install: $(LOCAL_BOARD_PATH)/board_dependency

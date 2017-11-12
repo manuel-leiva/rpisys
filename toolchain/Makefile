@@ -12,8 +12,8 @@ ifndef BOARD_TOOLCHAIN_DL_URL
 $(error ERROR: BOARD_TOOLCHAIN_DL_URL not defined)
 endif
 
-ifndef BOARD_TOOLCHAIN_NAMETAR
-$(error ERROR: BOARD_TOOLCHAIN_NAMETAR not defined)
+ifndef BOARD_TOOLCHAIN_TAR_NAME
+$(error ERROR: BOARD_TOOLCHAIN_TAR_NAME not defined)
 endif
 
 ifndef BOARD_TOOLCHAIN_SHA1SUM
@@ -58,7 +58,7 @@ toolchain-clean:
 $(BOARD_PRJ_COMMON_PATH)/toolchain-download:
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name ${BOARD_TOOLCHAIN_PKG_NAME} \
-    --pkg-target-name ${BOARD_TOOLCHAIN_NAMETAR} \
+    --pkg-target-name ${BOARD_TOOLCHAIN_TAR_NAME} \
     --sha1sum ${BOARD_TOOLCHAIN_SHA1SUM} \
     --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
     --dl-url ${BOARD_TOOLCHAIN_DL_URL} \
@@ -69,5 +69,5 @@ toolchain-debug-var:
 	@$(ECHO) BOARD_PRJ_DOWNLOAD_PATH: ${BOARD_PRJ_DOWNLOAD_PATH}
 	@$(ECHO) BOARD_PRJ_COMMON_PATH:   ${BOARD_PRJ_COMMON_PATH}
 	@$(ECHO) BOARD_TOOLCHAIN_DL_URL:   ${BOARD_TOOLCHAIN_DL_URL}
-	@$(ECHO) BOARD_TOOLCHAIN_NAMETAR: ${BOARD_TOOLCHAIN_NAMETAR}
+	@$(ECHO) BOARD_TOOLCHAIN_TAR_NAME: ${BOARD_TOOLCHAIN_TAR_NAME}
 	@$(ECHO)
