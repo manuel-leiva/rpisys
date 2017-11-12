@@ -53,7 +53,7 @@ clean: header
         $(RM) ${PRJ_ROOT_PATH}/image/patches ; \
     fi
 	$(RM) board-install
-	$(RM) $(LOCAL_BOARD_PATH)/board_dependency
+	$(RM) $(LOCAL_BOARD_PATH)/board_tools
 
 $(LOCAL_BOARD_PATH)/board_tools:
 	$(V) $(ECHO) "${MSG_INFO}  Check ${BOARD_NAME} dependency tools${MSG_END}"
@@ -95,3 +95,4 @@ board-install: $(LOCAL_BOARD_PATH)/board_tools
     fi
 	touch $@
 
+board-debug-var:

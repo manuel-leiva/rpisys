@@ -91,7 +91,7 @@ board: tools
 	$(V) $(MAKE) system-build/boards
 
 board-clean:
-	$(V) $(MAKE) $(SYSTEM_BUILD_PATH)/board clean
+	$(V) $(MAKE) $(SYSTEM_BUILD_PATH)/boards clean
 
 board-info:
 	@$(ECHO) "${MSG_INFO}  Name: ${BOARD_NAME}${MSG_END}"

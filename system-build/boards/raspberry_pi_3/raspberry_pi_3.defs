@@ -20,9 +20,9 @@ BOARD_PRJ_ARCH=arm
 # CONFIGURATION FILES ##########################################################
 
 # This file contains the list of packages needed to build the board image
-BOARD_PRJ_TOOLS_PATH:=$(LOCAL_BOARD_PATH)/board_tools.txt
+BOARD_PRJ_TOOLS_PATH=$(LOCAL_BOARD_PATH)/board_tools.txt
 
-BOARD_PRJ_MAKEFILE_HOOKS_PATH:=(LOCAL_BOARD_PATH)/Makefile.hook
+BOARD_PRJ_MAKEFILE_HOOKS_PATH=(LOCAL_BOARD_PATH)/Makefile.hook
 
 
 # TOOLCHAIN ####################################################################
