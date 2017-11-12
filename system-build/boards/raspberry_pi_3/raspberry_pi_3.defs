@@ -1,8 +1,7 @@
 
-
 BOARD_NAME:="Raspberry_Pi_3"
 
-# COMMON #######################################################################
+# COMMON VARIABLES #############################################################
 
 # This directory is used to share files between projects as the toolchain
 BOARD_PRJ_COMMON_PATH:=/home/${USER}/rpisys
@@ -15,16 +14,21 @@ BOARD_PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/rpisys
 # JOBS=HOST_CORES*BOARD_PRJ_MAKE_JOBS_PER_CORE/100
 # If BOARD_PRJ_MAKE_JOBS_PER_CORE is not defined JOBS=1
 BOARD_PRJ_MAKE_JOBS_PER_CORE:=75
+# ARM Architecture
+BOARD_PRJ_ARCH=arm
+
+# CONFIGURATION FILES ##########################################################
 
 # This file contains the list of packages needed to build the board image
-BOARD_DEPENDENCY_PKG_FILE:=dependency.txt
+BOARD_PRJ_TOOLS_PATH=$(LOCAL_BOARD_PATH)/board_tools.txt
 
-BOARD_ARCH=arm
+BOARD_PRJ_MAKEFILE_HOOKS_PATH=$(LOCAL_BOARD_PATH)/Makefile.hook
+
 
 # TOOLCHAIN ####################################################################
 
-BOARD_TOOLCHAIN_DLURL:=https://www.dropbox.com/s/3kvuznuff1qiv6r/
-BOARD_TOOLCHAIN_NAMETAR:=gcc-linaro-arm-linux-gnueabihf-raspbian-4.8.3.tar.gz
+BOARD_TOOLCHAIN_TAR_NAME:=gcc-linaro-arm-linux-gnueabihf-raspbian-4.8.3.tar.gz
+BOARD_TOOLCHAIN_DL_URL:=https://www.dropbox.com/s/3kvuznuff1qiv6r/
 BOARD_TOOLCHAIN_SHA1SUM:=efd6f554eb34fc5226e5ab095430bbbd9c4b681a
 BOARD_TOOLCHAIN_PKG_NAME:=tools
 BOARD_TOOLCHAIN_PATH:=$(BOARD_PRJ_COMMON_PATH)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
@@ -32,36 +36,36 @@ BOARD_TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
 
 # BOOTLOADER ##################################################################
 
-BOARD_BOOTLOADER_NAMETAR:=rpi-boot-2017-03-02.tar.gz
+BOARD_BOOTLOADER_TAR_NAME:=rpi-boot-2017-03-02.tar.gz
 BOARD_BOOTLOADER_DL_URL:=https://www.dropbox.com/s/brgw0r3kucwks6n/
-BOARD_BOOTLOADER_PKG_DIR_NAME:=boot
 BOARD_BOOTLOADER_SHA1SUM:=5c1340a93d6cefdae6c95235b531c23c49913232
+BOARD_BOOTLOADER_PKG_NAME:=boot
+
 
 # LINUX #######################################################################
 
 BOARD_LINUX_NAMETAR:=rpi-linux-4.4.50.tar.gz
 BOARD_LINUX_DL_URL:=https://www.dropbox.com/s/pqdudsngje3ryoz/
 BOARD_LINUX_SHA1SUM:=6095d24d68ff198585a42429dd1b5b295098b317
+BOARD_LINUX_PKG_NAME:=linux
 
 # By default are added the kernel flags CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX)
 # This variable allows add some extra flag
 BOARD_LINUX_KERNEL_EXTRAFLAGS:="KERNEL=kernel7"
 # Kernel configuration file
 BOARD_LINUX_DEFCONFIG:=bcm2709_defconfig
-# BOARD_LINUX_PKG_DIR_NAME: Specifies the name of the directory where is located linux
-BOARD_LINUX_PKG_DIR_NAME:=linux
+
+
 
 # FILESYSTEM ###################################################################
 
-BOARD_FILESYSTEM_NAME_TAR:=rpi-fs-2017_03_02.tar.gz
+BOARD_FILESYSTEM_PKG_NAME_TAR:=rpi-fs-2017_03_02.tar.gz
 BOARD_FILESYSTEM_DL_URL:=https://www.dropbox.com/s/39wtb79wl8o60h2/
 BOARD_FILESYSTEM_SHA1SUM:=e04320f1d463585dcb7d74d096b2c1778ede9416
-BOARD_FILESYSTEM_PKG_DIR:=filesystem
+BOARD_FILESYSTEM_PKG_NAME:=filesystem
 # BOARD_FILESYSTEM_SU: Force to use super user permissions to decompress and manage the
 # filesystem. Options: "y" or "n".
 BOARD_FILESYSTEM_SU:=y
-# Directory name when the filesystem is expanded
-BOARD_FILESYSTEM_NAME:=filesystem
 
 # LIBRARIES ####################################################################
 

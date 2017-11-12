@@ -5,6 +5,13 @@ include ../../system-build/makefile/Makefile.local
 # Include common recipes and definitions
 include ../../system-build/makefile/Makefile.common
 
+# Definitions ##################################################################
+
+## Verify external variables ##
+ifndef BOARD_PRJ_TOOLS_PATH
+$(error ERROR: BOARD_PRJ_TOOLS_PATH not defined)
+endif
+
 # Public targets ###############################################################
 
 .PHONY: all clean header
@@ -17,74 +24,75 @@ header:
 install: header board-install
 
 clean: header
-	$(V) if [ -d ${LOCAL_BOARD_DIR}/toolchain.patch ]; then \
+	$(V) if [ -d ${LOCAL_BOARD_PATH}/toolchain.patch ]; then \
         $(ECHO) "${MSG_INFO}  Remove toolchain patches${MSG_END}" ; \
         $(RM) ${PRJ_ROOT_PATH}/toolchain/patches ; \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_DIR}/bootloader.patch ]; then \
+	$(V) if [ -d ${LOCAL_BOARD_PATH}/bootloader.patch ]; then \
         $(ECHO) "${MSG_INFO}  Remove bootloader patches${MSG_END}" ; \
         $(RM) ${PRJ_ROOT_PATH}/bootloader/patches ; \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_DIR}/linux.patch ]; then \
+	$(V) if [ -d ${LOCAL_BOARD_PATH}/linux.patch ]; then \
         $(ECHO) "${MSG_INFO}  Remove linux patches${MSG_END}" ; \
         $(RM) ${PRJ_ROOT_PATH}/linux/patches ; \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_DIR}/filesystem.patch ]; then \
+	$(V) if [ -d ${LOCAL_BOARD_PATH}/filesystem.patch ]; then \
         $(ECHO) "${MSG_INFO}  Remove filesystem patches${MSG_END}" ; \
         $(RM) ${PRJ_ROOT_PATH}/filesystem/patches ; \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_DIR}/libraries.patch ]; then \
+	$(V) if [ -d ${LOCAL_BOARD_PATH}/libraries.patch ]; then \
         $(ECHO) "${MSG_INFO}  Remove libraries patches${MSG_END}" ; \
         $(RM) ${PRJ_ROOT_PATH}/libraries/patches ; \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_DIR}/applications.patch ]; then \
+	$(V) if [ -d ${LOCAL_BOARD_PATH}/applications.patch ]; then \
         $(ECHO) "${MSG_INFO}  Remove applications patches${MSG_END}" ; \
         $(RM) ${PRJ_ROOT_PATH}/applications/patches ; \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_DIR}/image.patch ]; then \
+	$(V) if [ -d ${LOCAL_BOARD_PATH}/image.patch ]; then \
         $(ECHO) "${MSG_INFO}  Remove image patches${MSG_END}" ; \
         $(RM) ${PRJ_ROOT_PATH}/image/patches ; \
     fi
 	$(RM) board-install
-	$(RM) $(LOCAL_BOARD_DIR)/board_dependency
+	$(RM) $(LOCAL_BOARD_PATH)/board_tools
 
-$(LOCAL_BOARD_DIR)/board_dependency:
-	$(V) $(ECHO) "${MSG_INFO}  Check ${BOARD_NAME} dependencies${MSG_END}"
-	$(call COMMON_RECIPE_DEPENDENCY,$(LOCAL_BOARD_DIR)/$(BOARD_DEPENDENCY_PKG_FILE))
+$(LOCAL_BOARD_PATH)/board_tools:
+	$(V) $(ECHO) "${MSG_INFO}  Check ${BOARD_NAME} dependency tools${MSG_END}"
+	$(call COMMON_RECIPE_DEPENDENCY,$(BOARD_PRJ_TOOLS_PATH))
 	$(V) touch $@
 
-board-install: $(LOCAL_BOARD_DIR)/board_dependency
+board-install: $(LOCAL_BOARD_PATH)/board_tools
 # Create default directories
 	$(MKDIR) $(BOARD_PRJ_COMMON_PATH)
 	$(MKDIR) $(BOARD_PRJ_DOWNLOAD_PATH)
 # Install patches
-	$(V) if [ -d ${LOCAL_BOARD_DIR}/toolchain.patch ]; then \
+	$(V) if [ -d ${LOCAL_BOARD_PATH}/toolchain.patch ]; then \
         $(ECHO) "${MSG_INFO}  Install toolchain patches${MSG_END}" ; \
-        ln -s ${LOCAL_BOARD_DIR}/toolchain.patch ${PRJ_ROOT_PATH}/toolchain/patches ; \
+        ln -s ${LOCAL_BOARD_PATH}/toolchain.patch ${PRJ_ROOT_PATH}/toolchain/patches ; \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_DIR}/bootloader.patch ]; then \
+	$(V) if [ -d ${LOCAL_BOARD_PATH}/bootloader.patch ]; then \
         $(ECHO) "${MSG_INFO}  Install bootloader patches${MSG_END}" ; \
-        ln -s ${LOCAL_BOARD_DIR}/bootloader.patch ${PRJ_ROOT_PATH}/bootloader/patches ; \
+        ln -s ${LOCAL_BOARD_PATH}/bootloader.patch ${PRJ_ROOT_PATH}/bootloader/patches ; \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_DIR}/linux.patch ]; then \
+	$(V) if [ -d ${LOCAL_BOARD_PATH}/linux.patch ]; then \
         $(ECHO) "${MSG_INFO}  Install linux patches${MSG_END}" ; \
-        ln -s ${LOCAL_BOARD_DIR}/linux.patch ${PRJ_ROOT_PATH}/linux/patches ; \
+        ln -s ${LOCAL_BOARD_PATH}/linux.patch ${PRJ_ROOT_PATH}/linux/patches ; \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_DIR}/filesystem.patch ]; then \
+	$(V) if [ -d ${LOCAL_BOARD_PATH}/filesystem.patch ]; then \
         $(ECHO) "${MSG_INFO}  Install filesystem patches${MSG_END}" ; \
-        ln -s ${LOCAL_BOARD_DIR}/filesystem.patch ${PRJ_ROOT_PATH}/filesystem/patches ; \
+        ln -s ${LOCAL_BOARD_PATH}/filesystem.patch ${PRJ_ROOT_PATH}/filesystem/patches ; \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_DIR}/libraries.patch ]; then \
+	$(V) if [ -d ${LOCAL_BOARD_PATH}/libraries.patch ]; then \
         $(ECHO) "${MSG_INFO}  Install libraries patches${MSG_END}" ; \
-        ln -s ${LOCAL_BOARD_DIR}/libraries.patch ${PRJ_ROOT_PATH}/libraries/patches ; \
+        ln -s ${LOCAL_BOARD_PATH}/libraries.patch ${PRJ_ROOT_PATH}/libraries/patches ; \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_DIR}/applications.patch ]; then \
+	$(V) if [ -d ${LOCAL_BOARD_PATH}/applications.patch ]; then \
         $(ECHO) "${MSG_INFO}  Install applications patches${MSG_END}" ; \
-        ln -s ${LOCAL_BOARD_DIR}/applications.patch ${PRJ_ROOT_PATH}/applications/patches ; \
+        ln -s ${LOCAL_BOARD_PATH}/applications.patch ${PRJ_ROOT_PATH}/applications/patches ; \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_DIR}/image.patch ]; then \
+	$(V) if [ -d ${LOCAL_BOARD_PATH}/image.patch ]; then \
         $(ECHO) "${MSG_INFO}  Install image patches${MSG_END}" ; \
-        ln -s ${LOCAL_BOARD_DIR}/image.patch ${PRJ_ROOT_PATH}/image/patches ; \
+        ln -s ${LOCAL_BOARD_PATH}/image.patch ${PRJ_ROOT_PATH}/image/patches ; \
     fi
 	touch $@
 
+board-debug-var:

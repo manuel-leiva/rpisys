@@ -82,16 +82,16 @@ image-sd:
 image-file:
 	$(V) $(MAKE) image file
 
-dependency: $(SYSTEM_BUILD_PATH)/common_dependency
+tools: $(SYSTEM_BUILD_PATH)/common_tools
 
-dependency-clean:
-	$(V) $(RM) $(SYSTEM_BUILD_PATH)/common_dependency
+tools-clean:
+	$(V) $(RM) $(SYSTEM_BUILD_PATH)/common_tools
 
-board: dependency
+board: tools
 	$(V) $(MAKE) system-build/boards
 
 board-clean:
-	$(V) $(MAKE) system-build/boards clean
+	$(V) $(MAKE) $(SYSTEM_BUILD_PATH)/boards clean
 
 board-info:
 	@$(ECHO) "${MSG_INFO}  Name: ${BOARD_NAME}${MSG_END}"
@@ -101,8 +101,8 @@ board-info:
 
 # Private targets ##############################################################
 
-$(SYSTEM_BUILD_PATH)/common_dependency:
-	$(V) $(ECHO) "${MSG_INFO}Check system dependencies${MSG_END}"
+$(SYSTEM_BUILD_PATH)/common_tools:
+	$(V) $(ECHO) "${MSG_INFO}Check system dependency tools${MSG_END}"
 	$(call COMMON_RECIPE_DEPENDENCY,$(SYSTEM_BUILD_PATH)/dependency.txt)
 	$(V) touch $@
 
