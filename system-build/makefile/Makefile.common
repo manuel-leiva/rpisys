@@ -110,7 +110,7 @@ endef
 # 1: Makefile hook path
 # 2: Target
 define COMMON_RECIPE_HOOK
-	@ $(MAKE_F) $(1) -q $(2) 2> /dev/null ; \
+	$(V) $(MAKE_F) $(1) -q $(2) 2> /dev/null ; \
 if [ $$? -le 1 ] ; then \
     $(MAKE_F) $(1) $(2) ; \
 fi
