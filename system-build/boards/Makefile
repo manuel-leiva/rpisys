@@ -55,12 +55,12 @@ clean: header
 	$(RM) board-install
 	$(RM) $(LOCAL_BOARD_PATH)/board_dependency
 
-$(LOCAL_BOARD_PATH)/board_dependency:
-	$(V) $(ECHO) "${MSG_INFO}  Check ${BOARD_NAME} dependencies${MSG_END}"
+$(LOCAL_BOARD_PATH)/board_tools:
+	$(V) $(ECHO) "${MSG_INFO}  Check ${BOARD_NAME} dependency tools${MSG_END}"
 	$(call COMMON_RECIPE_DEPENDENCY,$(BOARD_PRJ_TOOLS_PATH))
 	$(V) touch $@
 
-board-install: $(LOCAL_BOARD_PATH)/board_dependency
+board-install: $(LOCAL_BOARD_PATH)/board_tools
 # Create default directories
 	$(MKDIR) $(BOARD_PRJ_COMMON_PATH)
 	$(MKDIR) $(BOARD_PRJ_DOWNLOAD_PATH)
