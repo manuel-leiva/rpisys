@@ -34,7 +34,7 @@ endif
 
 ## Local definitions ##
 
-LINUX_PATH:=${PRJ_ROOT_PATH}/linux
+
 # Installation directories
 LINUX_MOD_INSTALLDIR:=modules
 LINUX_KERNEL_INSTALLDIR:=kernel
@@ -44,6 +44,7 @@ KERNEL_FLAGS:=CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX) $(
 
 ## Exported variables
 # Linux instalation paths
+export LINUX_PATH:=${PRJ_ROOT_PATH}/linux
 export LINUX_PKG_DIR_NAME:=$(BOARD_LINUX_PKG_NAME)
 export LINUX_KERNEL_INSTALL_PATH:=$(LINUX_PATH)/$(LINUX_KERNEL_INSTALLDIR)
 export LINUX_MOD_INSTALL_PATH   :=$(LINUX_PATH)/$(LINUX_MOD_INSTALLDIR)
@@ -93,6 +94,8 @@ linux-download:
     --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
     --dl-url ${BOARD_LINUX_DL_URL} \
     --sha1sum ${BOARD_LINUX_SHA1SUM}
+# Call post-download hook
+	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),$@-post)
 	$(V) touch $@
 
 
@@ -130,9 +133,6 @@ linux-dtbs: linux-zimage
 	$(V) $(CP) ${BOARD_LINUX_PKG_NAME}/arch/$(BOARD_PRJ_ARCH)/boot/dts/*.dtb $(LINUX_KERNEL_INSTALL_PATH)
 # Call post-dtbs recipe
 	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),linux-dtbs-post)
-	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)/overlays
-	$(V) $(CP) ${BOARD_LINUX_PKG_NAME}/arch/$(BOARD_PRJ_ARCH)/boot/dts/overlays/*.dtb* $(LINUX_KERNEL_INSTALL_PATH)/overlays
-	$(V) $(CP) ${BOARD_LINUX_PKG_NAME}/arch/$(BOARD_PRJ_ARCH)/boot/dts/overlays/README $(LINUX_KERNEL_INSTALL_PATH)/overlays
 	$(V) touch $@
 
 linux-modules: linux-zimage
