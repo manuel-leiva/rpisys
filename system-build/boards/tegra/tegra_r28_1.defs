@@ -1,0 +1,110 @@
+
+BOARD_NAME:="Tegra_X2"
+
+# The files and steps used to create tegra-x2 are based on the guide
+# https://developer.nvidia.com/embedded/downloads
+# * L4T Documentation  28.1 2017/07/24
+# wget http://developer2.download.nvidia.com/embedded/L4T/r28_Release_v1.0/Docs/NVIDIA_Tegra_Linux_Driver_Package.tar
+
+# COMMON VARIABLES #############################################################
+
+# This directory is used to share files between projects as the toolchain
+BOARD_PRJ_COMMON_PATH:=/home/${USER}/tegra_x2_toolchain
+
+# Destination directory to download packages
+BOARD_PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/tegra_x2
+
+# Percentage used to compute the number of recipes to execute at once.
+# The number of recipes is computed with this formula:
+# JOBS=HOST_CORES*BOARD_PRJ_MAKE_JOBS_PER_CORE/100
+# If BOARD_PRJ_MAKE_JOBS_PER_CORE is not defined JOBS=1
+BOARD_PRJ_MAKE_JOBS_PER_CORE:=75
+# ARM Architecture
+BOARD_PRJ_ARCH=arm64
+
+# CONFIGURATION FILES ##########################################################
+
+# This file contains the list of packages needed to build the board image
+BOARD_PRJ_TOOLS_PATH=$(LOCAL_BOARD_PATH)/board_tools.txt
+
+BOARD_PRJ_MAKEFILE_HOOKS_PATH=$(LOCAL_BOARD_PATH)/Makefile.hook
+
+
+# TOOLCHAIN ####################################################################
+
+BOARD_TOOLCHAIN_TAR_NAME:=l4t-gcc-toolchain-64-bit-28-1
+BOARD_TOOLCHAIN_DL_URL:=http://developer.nvidia.com/embedded/dlc/
+BOARD_TOOLCHAIN_SHA1SUM:=37d69372208b8a3b6c2e10194d19aff615b71f6a
+BOARD_TOOLCHAIN_PKG_NAME:=install
+BOARD_TOOLCHAIN_PATH:=$(BOARD_PRJ_COMMON_PATH)/install/bin/
+BOARD_TOOLCHAIN_PREFIX:=aarch64-unknown-linux-gnu-
+
+# BOOTLOADER ##################################################################
+
+BOARD_BOOTLOADER_TAR_NAME:=rpi-boot-2017-03-02.tar.gz
+BOARD_BOOTLOADER_DL_URL:=https://www.dropbox.com/s/brgw0r3kucwks6n/
+BOARD_BOOTLOADER_SHA1SUM:=5c1340a93d6cefdae6c95235b531c23c49913232
+BOARD_BOOTLOADER_PKG_NAME:=boot
+
+
+# LINUX #######################################################################
+
+BOARD_LINUX_NAMETAR:=source_release.tbz2
+BOARD_LINUX_DL_URL:=http://developer2.download.nvidia.com/embedded/L4T/r28_Release_v1.0/BSP/
+BOARD_LINUX_SHA1SUM:=651066d1306efddeeaa276692cc0e4eab0bade24
+BOARD_LINUX_PKG_NAME:=sources/kernel/kernel-4.4/
+
+# By default are added the kernel flags CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX)
+# This variable allows add some extra flag
+BOARD_LINUX_KERNEL_EXTRAFLAGS:=
+# Kernel configuration file
+BOARD_LINUX_DEFCONFIG:=tegra21_defconfig
+
+
+
+# FILESYSTEM ###################################################################
+
+BOARD_FILESYSTEM_PKG_NAME_TAR:=rpi-fs-2017_03_02.tar.gz
+BOARD_FILESYSTEM_DL_URL:=https://www.dropbox.com/s/39wtb79wl8o60h2/
+BOARD_FILESYSTEM_SHA1SUM:=e04320f1d463585dcb7d74d096b2c1778ede9416
+BOARD_FILESYSTEM_PKG_NAME:=filesystem
+# BOARD_FILESYSTEM_SU: Force to use super user permissions to decompress and manage the
+# filesystem. Options: "y" or "n".
+BOARD_FILESYSTEM_SU:=y
+
+# LIBRARIES ####################################################################
+
+BOARD_LIBRARY_HOST=arm-none-linux
+# Library directory for the normal user-programs installation
+BOARD_LIBRARY_BOARD_INSTALLDIR:=/usr/lib/arm-linux-gnueabihf
+# List of library to build
+BOARD_LIBRARY_NAME_LIST := \
+readline-6.3 \
+libffi-3.2.1 \
+pcre-8.40 \
+zlib-1.2.11 \
+glib-2.50.3 \
+libsoup-2.57.1 \
+libxml2-2.9.4 \
+sqlite-autoconf-3170000 ncurses-6.0 \
+gstreamer-1.10.5 \
+gst-plugins-base-1.10.5 \
+gst-plugins-good-1.10.5 \
+gst-plugins-bad-1.10.5 \
+gst-plugins-ugly-1.10.5 \
+gst-rtsp-server-1.10.5 \
+gst-libav-1.10.5 \
+gst-omx-1.10.5 \
+gst-rpicamsrc-4fc608e \
+x264-snapshot-20170811-2245-stable
+
+
+# APPLICATIONS #################################################################
+
+# List of applications to build
+BOARD_APPLICATION_NAME_LIST:=""
+
+# IMAGE ########################################################################
+
+# BOARD_IMAGE_EXT_SD_DEVICE: external sd card device used to install the image built
+BOARD_IMAGE_EXT_SD_DEVICE:=/dev/mmcblk0

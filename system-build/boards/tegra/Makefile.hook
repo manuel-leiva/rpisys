@@ -1,0 +1,3 @@
+
+linux-download-post:
+	cd ${LINUX_PATH}/sources; tar -xjf kernel_src-tx1.tbz2

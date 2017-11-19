@@ -1,0 +1,72 @@
+---
+ kernel/kernel-4.4/drivers/devfreq/governor_pod_scaling.c             |    2 +-
+ kernel/kernel-4.4/drivers/devfreq/governor_wmark_active.c            |    2 +-
+ kernel/kernel-4.4/drivers/media/platform/tegra/mipical/vmipi/vmipi.c |    2 +-
+ kernel/nvgpu/drivers/gpu/nvgpu/Makefile.nvgpu                        |    1 +
+ kernel/nvgpu/drivers/gpu/nvgpu/common/linux/kmem.c                   |    2 +-
+ 5 files changed, 5 insertions(+), 4 deletions(-)
+
+Index: framegrabber_kernel/sources/kernel/kernel-4.4/drivers/devfreq/governor_pod_scaling.c
+===================================================================
+--- framegrabber_kernel.orig/sources/kernel/kernel-4.4/drivers/devfreq/governor_pod_scaling.c
++++ framegrabber_kernel/sources/kernel/kernel-4.4/drivers/devfreq/governor_pod_scaling.c
+@@ -51,7 +51,7 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/nvhost_podgov.h>
+ 
+-#include <governor.h>
++#include "governor.h"
+ 
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+Index: framegrabber_kernel/sources/kernel/kernel-4.4/drivers/devfreq/governor_wmark_active.c
+===================================================================
+--- framegrabber_kernel.orig/sources/kernel/kernel-4.4/drivers/devfreq/governor_wmark_active.c
++++ framegrabber_kernel/sources/kernel/kernel-4.4/drivers/devfreq/governor_wmark_active.c
+@@ -23,7 +23,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/module.h>
+ 
+-#include <governor.h>
++#include "governor.h"
+ 
+ struct wmark_gov_info {
+ 	/* probed from the devfreq */
+Index: framegrabber_kernel/sources/kernel/nvgpu/drivers/gpu/nvgpu/Makefile.nvgpu
+===================================================================
+--- framegrabber_kernel.orig/sources/kernel/nvgpu/drivers/gpu/nvgpu/Makefile.nvgpu
++++ framegrabber_kernel/sources/kernel/nvgpu/drivers/gpu/nvgpu/Makefile.nvgpu
+@@ -1,5 +1,6 @@
+ GCOV_PROFILE := y
+ 
++ccflags-y += -I$(srctree)/../nvgpu/drivers/gpu/nvgpu/
+ ccflags-y += -Idrivers/gpu/nvgpu/include
+ ccflags-y += -Idrivers/video/tegra/host
+ ccflags-y += -Idrivers/devfreq
+Index: framegrabber_kernel/sources/kernel/nvgpu/drivers/gpu/nvgpu/common/linux/kmem.c
+===================================================================
+--- framegrabber_kernel.orig/sources/kernel/nvgpu/drivers/gpu/nvgpu/common/linux/kmem.c
++++ framegrabber_kernel/sources/kernel/nvgpu/drivers/gpu/nvgpu/common/linux/kmem.c
+@@ -27,7 +27,7 @@
+ 
+ #include <nvgpu/kmem.h>
+ 
+-#include "gk20a/gk20a.h"
++#include <gk20a/gk20a.h>
+ 
+ #include "kmem_priv.h"
+ 
+Index: framegrabber_kernel/sources/kernel/kernel-4.4/drivers/media/platform/tegra/mipical/vmipi/vmipi.c
+===================================================================
+--- framegrabber_kernel.orig/sources/kernel/kernel-4.4/drivers/media/platform/tegra/mipical/vmipi/vmipi.c
++++ framegrabber_kernel/sources/kernel/kernel-4.4/drivers/media/platform/tegra/mipical/vmipi/vmipi.c
+@@ -24,7 +24,7 @@
+ #include <linux/wait.h>
+ #include <linux/tegra-ivc.h>
+ 
+-#include "mipi_cal.h"
++#include "../mipi_cal.h"
+ #include "vmipi.h"
+ 
+ const char *tegra_vmipi_cmd[] = {
+
