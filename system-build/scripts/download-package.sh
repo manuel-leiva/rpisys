@@ -70,8 +70,22 @@ do
     shift
 done
 
-# Download tarball package
-function DownloadTar
+# Verify if the file is a tarball
+function TarVerify
+{
+    FileDownload
+
+    OUT=$(tar -tzf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME})
+
+    if [  -n "$OUT" ]; then
+        return 0
+    fi
+    return 1
+
+}
+
+# Download package
+function FileDownload
 {
     # Verify if the package was already downloaded
     if [ ! -f ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} ]; then
@@ -88,7 +102,10 @@ function DownloadTar
     else
         echo -e "${WARNCOLOR}Warn:${ENDCOLOR} ${PKG_TARGET_NAME} is not verified"
     fi
+}
 
+function TarDescompres
+{
     # Descompres Package
     # Check file owner
     OWNER=$(ls ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -l | awk '{print $3 }')
@@ -102,17 +119,35 @@ function DownloadTar
     fi
 }
 
+# Download tarball package
+function TarProcess
+{
+    FileDownload
+    TarDescompres
+
+}
+
 # Verify the type of target
 
 case ${PKG_TARGET_NAME} in
     *.tar.*) # tar command recognizes the format by itself
-        DownloadTar
+        TarProcess
+        ;;
+    *.tbz2) # tar command recognizes the format by itself
+        TarProcess
         ;;
     *.git)
         # TODO
         echo -e "${ERRORCOLOR}ERROR: Target ${PKG_TARGET_NAME} is not supported${ENDCOLOR}"
         ;;
     *)
+        echo -e "${WARNCOLOR}WARN: Target ${PKG_TARGET_NAME} format is not identified${ENDCOLOR}"
+        echo -e "${INFOCOLOR}  Check if ${PKG_TARGET_NAME} is a tarball${ENDCOLOR}"
+        TarVerify
+        if [ $? -eq 0 ] ; then
+            TarProcess
+            exit 0
+        fi
         echo -e "${ERRORCOLOR}ERROR: Target ${PKG_TARGET_NAME} is not supported${ENDCOLOR}"
         exit 1
 esac
