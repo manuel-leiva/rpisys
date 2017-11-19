@@ -24,12 +24,14 @@ clean:
 	$(V) $(MAKE) applications clean
 	$(V) $(MAKE) image clean
 
-clean-all: clean
+toolchain-clean:
 	$(V) $(MAKE) toolchain clean
+
+clean-all: clean tools-clean board-clean
 
 help:
 	@$(ECHO) "  Targets:"
-	@$(ECHO) "    check-dependency: Check system dependecies"
+	@$(ECHO) "    tools:            Install system dependecies"
 	@$(ECHO) "    board:            Configure system for selected board profile"
 	@$(ECHO) "    clean:            Clean all the modules built"
 	@$(ECHO) "    toolchain:        Build toolchain"
