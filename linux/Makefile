@@ -85,6 +85,8 @@ linux-clean: linux-revpatch
 	$(V) $(RM) ${BOARD_LINUX_PKG_NAME}
 # Remove linux modules
 	$(V) $(RM) $(LINUX_MOD_INSTALL_PATH) $(LINUX_KERNEL_INSTALL_PATH)
+# Remove linux patches
+	$(call COMMON_RECIPE_RM_PATCH,$(LINUX_PATH))
 
 
 linux-download:
