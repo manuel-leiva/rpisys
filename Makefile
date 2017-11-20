@@ -47,22 +47,22 @@ help:
 toolchain: board
 	$(V) $(MAKE) $@
 
-bootloader: board toolchain
+bootloader: toolchain
 	$(V) $(MAKE) $@
 
-linux: bootloader
+linux: toolchain
 	$(V) $(MAKE) $@
 
-filesystem:
+filesystem: board
 	$(V) $(MAKE) $@
 
-libraries: linux filesystem
+libraries: filesystem linux
 	$(V) $(MAKE) $@
 
-applications: libraries
+applications:
 	$(V) $(MAKE) $@
 
-image: applications
+image:  bootloader libraries
 	$(V)$(MAKE) ${PRJ_ROOT_PATH}/bootloader install
 	$(V)$(MAKE) ${PRJ_ROOT_PATH}/linux install
 	$(V)$(MAKE) ${PRJ_ROOT_PATH}/libraries install
