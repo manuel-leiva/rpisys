@@ -69,6 +69,21 @@ endef
 
 # Apply patch
 # Verify if patches directory exists, if it exists, apply the patches
+# 1: patches where is located the patches
+# 2: Message
+define COMMON_RECIPE_PATCH
+	$(V) if [ -d $(1)/patches ]; then \
+        $(ECHO) "${MSG_INFO}  Patch $(2) ${MSG_END}" ; \
+        quilt push -a ; \
+    fi
+endef
+
+# Apply patch (deprecated)
+# Verify if patches directory exists, if it exists, apply the patches
+# 1: target_prefix
+# 2: dependecies
+# 3: patches where is located the patches
+# 4: Message
 define COMMON_TARGET_PATCH
 $(1)-patch: $(2)
 	$(V) if [ -d $(3)/patches ]; then \
