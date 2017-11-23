@@ -60,7 +60,11 @@ export LINUX_ROOTFS_INSTALL_PATH:=$(COMMON_IMAGE_ROOTFS_PATH)
 
 all: linux-header linux-modules linux-dtbs
 
+menuconfig: linux-header linux-menuconfig
+
 zimage: linux-header linux-zimage
+
+image: linux-header linux-image
 
 modules: linux-header linux-modules
 
@@ -117,17 +121,22 @@ linux-config: linux-patch
 linux-menuconfig: linux-config
 	@    $(ECHO) "${MSG_INFO}  Menuconfig $(BOARD_LINUX_DEFCONFIG)${MSG_END}"
 	$(V) $(MAKE) ${BOARD_LINUX_PKG_NAME} $(KERNEL_FLAGS) menuconfig
-	$(V) touch $@
 
 linux-zimage: linux-config
-	@    $(ECHO) "${MSG_INFO}  Build linux${MSG_END}"
+	@    $(ECHO) "${MSG_INFO}  Build linux zImage${MSG_END}"
 	$(V) $(MAKE) ${BOARD_LINUX_PKG_NAME} -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) zImage
 # Install Kernel files
 	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)
 	$(V) $(CP) ${BOARD_LINUX_PKG_NAME}/arch/$(BOARD_PRJ_ARCH)/boot/zImage $(LINUX_KERNEL_INSTALL_PATH)
-	$(V) touch $@
 
-linux-dtbs: linux-zimage
+linux-image: linux-config
+	@    $(ECHO) "${MSG_INFO}  Build linux Image${MSG_END}"
+	$(V) $(MAKE) ${BOARD_LINUX_PKG_NAME} -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) Image
+# Install Kernel files
+	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)
+	$(V) $(CP) ${BOARD_LINUX_PKG_NAME}/arch/$(BOARD_PRJ_ARCH)/boot/Image $(LINUX_KERNEL_INSTALL_PATH)
+
+linux-dtbs: linux-config
 	@    $(ECHO) "${MSG_INFO}  Build dtbs${MSG_END}"
 	$(V) $(MAKE) ${BOARD_LINUX_PKG_NAME} -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) dtbs
 # Install device tree files
@@ -135,7 +144,7 @@ linux-dtbs: linux-zimage
 	$(V) $(CP) ${BOARD_LINUX_PKG_NAME}/arch/$(BOARD_PRJ_ARCH)/boot/dts/*.dtb $(LINUX_KERNEL_INSTALL_PATH)
 # Call post-dtbs recipe
 	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),linux-dtbs-post)
-	$(V) touch $@
+
 
 linux-modules: linux-zimage
 	@    $(ECHO) "${MSG_INFO}  Build linux modules ${MSG_END}"
