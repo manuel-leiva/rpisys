@@ -90,7 +90,7 @@ function FileDownload
     # Verify if the package was already downloaded
     if [ ! -f ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} ]; then
         echo -e "${INFOCOLOR}  Download ${PKG_TARGET_NAME}${ENDCOLOR}"
-        wget ${DOWNLOAD_URL}/${PKG_TARGET_NAME} -P ${DOWNLOAD_PATH}
+        wget ${DOWNLOAD_URL}${PKG_TARGET_NAME} -P ${DOWNLOAD_PATH}
     fi ;
     # Check hash
     if [ ! -z ${SHA1SUM} ]; then
@@ -107,14 +107,15 @@ function FileDownload
 function TarDescompres
 {
     # Descompres Package
+    mkdir ${DESTINATION_PATH}
     # Check file owner
     OWNER=$(ls ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -l | awk '{print $3 }')
+    echo -e "${INFOCOLOR}  Decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
     if [ "root" == ${OWNER} ]  || [ "y" == ${SUPER_USER} ] ; then
         echo -e "${MSGCOLOR}You need to be logged in as root you to decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
         sudo \
         tar -xf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -C ${DESTINATION_PATH}
     else
-        echo -e "${INFOCOLOR}  Decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
         tar -xf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -C ${DESTINATION_PATH}
     fi
 }
