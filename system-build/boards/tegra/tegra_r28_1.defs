@@ -1,5 +1,5 @@
 
-BOARD_NAME:="Tegra_X2"
+BOARD_NAME:="Tegra_X1"
 
 # The files and steps used to create tegra-x2 are based on the guide
 # https://developer.nvidia.com/embedded/downloads
@@ -9,10 +9,10 @@ BOARD_NAME:="Tegra_X2"
 # COMMON VARIABLES #############################################################
 
 # This directory is used to share files between projects as the toolchain
-BOARD_PRJ_COMMON_PATH:=/home/${USER}/tegra_x2_toolchain
+BOARD_PRJ_COMMON_PATH:=/home/${USER}/tegra_toolchain
 
 # Destination directory to download packages
-BOARD_PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/tegra_x2
+BOARD_PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/tegra
 
 # Percentage used to compute the number of recipes to execute at once.
 # The number of recipes is computed with this formula:
@@ -64,13 +64,15 @@ BOARD_LINUX_DEFCONFIG:=tegra21_defconfig
 
 # FILESYSTEM ###################################################################
 
-BOARD_FILESYSTEM_PKG_NAME_TAR:=rpi-fs-2017_03_02.tar.gz
-BOARD_FILESYSTEM_DL_URL:=https://www.dropbox.com/s/39wtb79wl8o60h2/
-BOARD_FILESYSTEM_SHA1SUM:=e04320f1d463585dcb7d74d096b2c1778ede9416
+BOARD_FILESYSTEM_PKG_NAME_TAR:=Tegra_Linux_Sample-Root-Filesystem_R28.1.0_aarch64.tbz2
+BOARD_FILESYSTEM_DL_URL:=http://developer2.download.nvidia.com/embedded/L4T/r28_Release_v1.0/BSP/
+BOARD_FILESYSTEM_SHA1SUM:=a0d419e702b3d535601dc41b6be97026ce20416e
 BOARD_FILESYSTEM_PKG_NAME:=filesystem
+# Directory where all other files and subdirectories will be saved
+BOARD_FILESYSTEM_DEST_DIR:=filesystem
 # BOARD_FILESYSTEM_SU: Force to use super user permissions to decompress and manage the
 # filesystem. Options: "y" or "n".
-BOARD_FILESYSTEM_SU:=y
+BOARD_FILESYSTEM_SU:=n
 
 # LIBRARIES ####################################################################
 
