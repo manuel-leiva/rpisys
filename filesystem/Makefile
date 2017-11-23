@@ -20,6 +20,7 @@ endif
 ifndef BOARD_FILESYSTEM_SHA1SUM
 $(error ERROR: BOARD_FILESYSTEM_SHA1SUM not defined)
 endif
+BOARD_FILESYSTEM_DEST_DIR?=./
 
 ## Local definitions ##
 FILESYSTEM_PATH:=${PRJ_ROOT_PATH}/filesystem
@@ -67,7 +68,8 @@ filesystem-download:
     --sha1sum ${BOARD_FILESYSTEM_SHA1SUM} \
     --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
     --dl-url ${BOARD_FILESYSTEM_DL_URL} \
-    --su ${BOARD_FILESYSTEM_SU}
+    --su ${BOARD_FILESYSTEM_SU} \
+    --dest ${FILESYSTEM_PATH}/${BOARD_FILESYSTEM_DEST_DIR}
 	$(V) touch $@
 
 filesystem-patch: filesystem-download
