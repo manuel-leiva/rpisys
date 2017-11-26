@@ -106,16 +106,18 @@ function FileDownload
 
 function TarDescompres
 {
-    # Descompres Package
-    mkdir ${DESTINATION_PATH}
+    # Create destination path
+    mkdir -p ${DESTINATION_PATH}
     # Check file owner
     OWNER=$(ls ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -l | awk '{print $3 }')
     echo -e "${INFOCOLOR}  Decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
     if [ "root" == ${OWNER} ]  || [ "y" == ${SUPER_USER} ] ; then
         echo -e "${MSGCOLOR}You need to be logged in as root you to decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
+        # Descompres Package
         sudo \
         tar -xf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -C ${DESTINATION_PATH}
     else
+        # Descompres Package
         tar -xf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -C ${DESTINATION_PATH}
     fi
 }

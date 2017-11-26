@@ -60,6 +60,8 @@ export LINUX_ROOTFS_INSTALL_PATH:=$(COMMON_IMAGE_ROOTFS_PATH)
 
 all: linux-header linux-modules linux-dtbs
 
+download: linux-header linux-download
+
 menuconfig: linux-header linux-menuconfig
 
 zimage: linux-header linux-zimage
@@ -91,6 +93,8 @@ linux-clean: linux-revpatch
 	$(V) $(RM) $(LINUX_MOD_INSTALL_PATH) $(LINUX_KERNEL_INSTALL_PATH)
 # Remove linux patches
 	$(call COMMON_RECIPE_RM_PATCH,$(LINUX_PATH))
+# Call post-clean hook
+	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),$@-post)
 
 
 linux-download:
