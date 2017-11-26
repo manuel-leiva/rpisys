@@ -1,5 +1,10 @@
 
-BOARD_NAME:="Tegra_X1"
+export BOARD_NAME="Tegra_X2"
+# export BOARD_NAME:="Tegra_X1"
+
+ifndef BOARD_NAME
+$(error ERROR: BOARD_NAME not defined)
+endif
 
 # The files and steps used to create tegra-x2 are based on the guide
 # https://developer.nvidia.com/embedded/downloads
@@ -58,7 +63,11 @@ BOARD_LINUX_PKG_NAME:=sources/kernel/kernel-4.4/
 # This variable allows add some extra flag
 BOARD_LINUX_KERNEL_EXTRAFLAGS:=
 # Kernel configuration file
-BOARD_LINUX_DEFCONFIG:=tegra21_defconfig
+ifeq ($(BOARD_NAME),"Tegra_X2")
+    BOARD_LINUX_DEFCONFIG:=tegra18_defconfig
+else
+    BOARD_LINUX_DEFCONFIG:=tegra21_defconfig
+endif
 
 
 

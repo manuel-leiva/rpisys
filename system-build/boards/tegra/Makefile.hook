@@ -1,3 +1,12 @@
 
 linux-download-post:
+ifeq ($(BOARD_NAME),"Tegra_X2")
+	echo "Decompress $(BOARD_NAME) kernel tx2"
+	cd ${LINUX_PATH}/sources; tar -xjf kernel_src-tx2.tbz2
+else
+	echo "Decompress $(BOARD_NAME) kernel tx1"
 	cd ${LINUX_PATH}/sources; tar -xjf kernel_src-tx1.tbz2
+endif
+
+linux-clean-post:
+	rm -rf ${LINUX_PATH}/sources

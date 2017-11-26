@@ -6,10 +6,10 @@
  kernel/nvgpu/drivers/gpu/nvgpu/common/linux/kmem.c                   |    2 +-
  5 files changed, 5 insertions(+), 4 deletions(-)
 
-Index: framegrabber_kernel/sources/kernel/kernel-4.4/drivers/devfreq/governor_pod_scaling.c
+Index: linux/sources/kernel/kernel-4.4/drivers/devfreq/governor_pod_scaling.c
 ===================================================================
---- framegrabber_kernel.orig/sources/kernel/kernel-4.4/drivers/devfreq/governor_pod_scaling.c
-+++ framegrabber_kernel/sources/kernel/kernel-4.4/drivers/devfreq/governor_pod_scaling.c
+--- linux.orig/sources/kernel/kernel-4.4/drivers/devfreq/governor_pod_scaling.c
++++ linux/sources/kernel/kernel-4.4/drivers/devfreq/governor_pod_scaling.c
 @@ -51,7 +51,7 @@
  #define CREATE_TRACE_POINTS
  #include <trace/events/nvhost_podgov.h>
@@ -19,10 +19,10 @@ Index: framegrabber_kernel/sources/kernel/kernel-4.4/drivers/devfreq/governor_po
  
  #include <linux/platform_device.h>
  #include <linux/pm_runtime.h>
-Index: framegrabber_kernel/sources/kernel/kernel-4.4/drivers/devfreq/governor_wmark_active.c
+Index: linux/sources/kernel/kernel-4.4/drivers/devfreq/governor_wmark_active.c
 ===================================================================
---- framegrabber_kernel.orig/sources/kernel/kernel-4.4/drivers/devfreq/governor_wmark_active.c
-+++ framegrabber_kernel/sources/kernel/kernel-4.4/drivers/devfreq/governor_wmark_active.c
+--- linux.orig/sources/kernel/kernel-4.4/drivers/devfreq/governor_wmark_active.c
++++ linux/sources/kernel/kernel-4.4/drivers/devfreq/governor_wmark_active.c
 @@ -23,7 +23,7 @@
  #include <linux/platform_device.h>
  #include <linux/module.h>
@@ -32,10 +32,10 @@ Index: framegrabber_kernel/sources/kernel/kernel-4.4/drivers/devfreq/governor_wm
  
  struct wmark_gov_info {
  	/* probed from the devfreq */
-Index: framegrabber_kernel/sources/kernel/nvgpu/drivers/gpu/nvgpu/Makefile.nvgpu
+Index: linux/sources/kernel/nvgpu/drivers/gpu/nvgpu/Makefile.nvgpu
 ===================================================================
---- framegrabber_kernel.orig/sources/kernel/nvgpu/drivers/gpu/nvgpu/Makefile.nvgpu
-+++ framegrabber_kernel/sources/kernel/nvgpu/drivers/gpu/nvgpu/Makefile.nvgpu
+--- linux.orig/sources/kernel/nvgpu/drivers/gpu/nvgpu/Makefile.nvgpu
++++ linux/sources/kernel/nvgpu/drivers/gpu/nvgpu/Makefile.nvgpu
 @@ -1,5 +1,6 @@
  GCOV_PROFILE := y
  
@@ -43,10 +43,10 @@ Index: framegrabber_kernel/sources/kernel/nvgpu/drivers/gpu/nvgpu/Makefile.nvgpu
  ccflags-y += -Idrivers/gpu/nvgpu/include
  ccflags-y += -Idrivers/video/tegra/host
  ccflags-y += -Idrivers/devfreq
-Index: framegrabber_kernel/sources/kernel/nvgpu/drivers/gpu/nvgpu/common/linux/kmem.c
+Index: linux/sources/kernel/nvgpu/drivers/gpu/nvgpu/common/linux/kmem.c
 ===================================================================
---- framegrabber_kernel.orig/sources/kernel/nvgpu/drivers/gpu/nvgpu/common/linux/kmem.c
-+++ framegrabber_kernel/sources/kernel/nvgpu/drivers/gpu/nvgpu/common/linux/kmem.c
+--- linux.orig/sources/kernel/nvgpu/drivers/gpu/nvgpu/common/linux/kmem.c
++++ linux/sources/kernel/nvgpu/drivers/gpu/nvgpu/common/linux/kmem.c
 @@ -27,7 +27,7 @@
  
  #include <nvgpu/kmem.h>
@@ -56,10 +56,10 @@ Index: framegrabber_kernel/sources/kernel/nvgpu/drivers/gpu/nvgpu/common/linux/k
  
  #include "kmem_priv.h"
  
-Index: framegrabber_kernel/sources/kernel/kernel-4.4/drivers/media/platform/tegra/mipical/vmipi/vmipi.c
+Index: linux/sources/kernel/kernel-4.4/drivers/media/platform/tegra/mipical/vmipi/vmipi.c
 ===================================================================
---- framegrabber_kernel.orig/sources/kernel/kernel-4.4/drivers/media/platform/tegra/mipical/vmipi/vmipi.c
-+++ framegrabber_kernel/sources/kernel/kernel-4.4/drivers/media/platform/tegra/mipical/vmipi/vmipi.c
+--- linux.orig/sources/kernel/kernel-4.4/drivers/media/platform/tegra/mipical/vmipi/vmipi.c
++++ linux/sources/kernel/kernel-4.4/drivers/media/platform/tegra/mipical/vmipi/vmipi.c
 @@ -24,7 +24,7 @@
  #include <linux/wait.h>
  #include <linux/tegra-ivc.h>
@@ -69,4 +69,16 @@ Index: framegrabber_kernel/sources/kernel/kernel-4.4/drivers/media/platform/tegr
  #include "vmipi.h"
  
  const char *tegra_vmipi_cmd[] = {
-
+Index: linux/sources/kernel/t18x/include/sound/tegra_audio.h
+===================================================================
+--- linux.orig/sources/kernel/t18x/include/sound/tegra_audio.h
++++ linux/sources/kernel/t18x/include/sound/tegra_audio.h
+@@ -21,7 +21,7 @@
+ 
+ #include <linux/platform_device.h>
+ #include <sound/soc.h>
+-#include "tegra210_xbar_alt.h"
++/* #include "tegra210_xbar_alt.h" */
+ #include "tegra210_afc_alt.h"
+ #include "ahub_unit_fpga_clock.h"
+ #include "sound/soc/tegra-alt/ahub_unit_fpga_clock_t18x.h"
