@@ -79,10 +79,10 @@ board-install: $(LOCAL_BOARD_PATH)/board_tools
             ln -s ${BOARD_BOOTLOADER_PATCHES_PATH} ${PRJ_ROOT_PATH}/bootloader/patches ; \
         fi \
     fi
-	$(V) if [ -n "${BOARD_LINUX_PATCHES_PATH}" ]; then \
+	$(V) set -x; if [ -n "${BOARD_LINUX_PATCHES_PATH}" ]; then \
         if [ -d "${BOARD_LINUX_PATCHES_PATH}" ]; then \
             $(ECHO) "${MSG_INFO}  Install linux patches${MSG_END}" ; \
-            ln -s ${BOARD_TOOLCHAIN_PATCHES_PATH} ${PRJ_ROOT_PATH}/linux/patches ; \
+            ln -s ${BOARD_LINUX_PATCHES_PATH} ${PRJ_ROOT_PATH}/linux/patches ; \
         fi \
     fi
 	$(V) if [ -n "${BOARD_FILESYSTEM_PATCHES_PATH}" ]; then \
