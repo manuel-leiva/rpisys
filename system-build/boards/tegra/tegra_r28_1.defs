@@ -65,8 +65,10 @@ BOARD_LINUX_KERNEL_EXTRAFLAGS:=
 # Kernel configuration file
 ifeq ($(BOARD_NAME),"Tegra_X2")
     BOARD_LINUX_DEFCONFIG:=tegra18_defconfig
+    BOARD_LINUX_PATCHES_PATH=$(LOCAL_BOARD_PATH)/tx2_linux_patches
 else
     BOARD_LINUX_DEFCONFIG:=tegra21_defconfig
+    BOARD_LINUX_PATCHES_PATH=$(LOCAL_BOARD_PATH)/tx1_linux_patches
 endif
 
 
