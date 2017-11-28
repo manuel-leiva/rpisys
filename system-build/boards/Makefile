@@ -19,7 +19,7 @@ endif
 all: header install
 
 header:
-	$(ECHO) "${MSG_INFO}Board${MSG_END}"
+	$(V) $(ECHO) "${MSG_INFO}Board${MSG_END}"
 
 install: header board-install
 
@@ -60,39 +60,55 @@ $(LOCAL_BOARD_PATH)/board_tools:
 	$(call COMMON_RECIPE_DEPENDENCY,$(BOARD_PRJ_TOOLS_PATH))
 	$(V) touch $@
 
+
 board-install: $(LOCAL_BOARD_PATH)/board_tools
 # Create default directories
-	$(MKDIR) $(BOARD_PRJ_COMMON_PATH)
-	$(MKDIR) $(BOARD_PRJ_DOWNLOAD_PATH)
+	$(V) $(ECHO) "${MSG_INFO}  Install external directories${MSG_END}"
+	$(V) $(MKDIR) $(BOARD_PRJ_COMMON_PATH)
+	$(V) $(MKDIR) $(BOARD_PRJ_DOWNLOAD_PATH)
 # Install patches
-	$(V) if [ -d ${LOCAL_BOARD_PATH}/toolchain.patch ]; then \
-        $(ECHO) "${MSG_INFO}  Install toolchain patches${MSG_END}" ; \
-        ln -s ${LOCAL_BOARD_PATH}/toolchain.patch ${PRJ_ROOT_PATH}/toolchain/patches ; \
+	$(V) if [ -n "$BOARD_TOOLCHAIN_PATCHES_PATH}" ]; then \
+        if [ -d "$BOARD_TOOLCHAIN_PATCHES_PATH}" ]; then \
+            $(ECHO) "${MSG_INFO}  Install toolchain patches${MSG_END}" ; \
+            ln -s ${BOARD_TOOLCHAIN_PATCHES_PATH} ${PRJ_ROOT_PATH}/toolchain/patches ; \
+        fi \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_PATH}/bootloader.patch ]; then \
-        $(ECHO) "${MSG_INFO}  Install bootloader patches${MSG_END}" ; \
-        ln -s ${LOCAL_BOARD_PATH}/bootloader.patch ${PRJ_ROOT_PATH}/bootloader/patches ; \
+	$(V) if [ -n "${BOARD_BOOTLOADER_PATCHES_PATH}" ]; then \
+        if [ -d "${BOARD_BOOTLOADER_PATCHES_PATH}" ]; then \
+            $(ECHO) "${MSG_INFO}  Install bootloader patches${MSG_END}" ; \
+            ln -s ${BOARD_BOOTLOADER_PATCHES_PATH} ${PRJ_ROOT_PATH}/bootloader/patches ; \
+        fi \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_PATH}/linux.patch ]; then \
-        $(ECHO) "${MSG_INFO}  Install linux patches${MSG_END}" ; \
-        ln -s ${LOCAL_BOARD_PATH}/linux.patch ${PRJ_ROOT_PATH}/linux/patches ; \
+	$(V) if [ -n "${BOARD_LINUX_PATCHES_PATH}" ]; then \
+        if [ -d "${BOARD_LINUX_PATCHES_PATH}" ]; then \
+            $(ECHO) "${MSG_INFO}  Install linux patches${MSG_END}" ; \
+            ln -s ${BOARD_TOOLCHAIN_PATCHES_PATH} ${PRJ_ROOT_PATH}/linux/patches ; \
+        fi \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_PATH}/filesystem.patch ]; then \
-        $(ECHO) "${MSG_INFO}  Install filesystem patches${MSG_END}" ; \
-        ln -s ${LOCAL_BOARD_PATH}/filesystem.patch ${PRJ_ROOT_PATH}/filesystem/patches ; \
+	$(V) if [ -n "${BOARD_FILESYSTEM_PATCHES_PATH}" ]; then \
+        if [ -d "${BOARD_FILESYSTEM_PATCHES_PATH}" ]; then \
+            $(ECHO) "${MSG_INFO}  Install filesystem patches${MSG_END}" ; \
+            ln -s ${BOARD_FILESYSTEM_PATCHES_PATH} ${PRJ_ROOT_PATH}/filesystem/patches ; \
+        fi \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_PATH}/libraries.patch ]; then \
-        $(ECHO) "${MSG_INFO}  Install libraries patches${MSG_END}" ; \
-        ln -s ${LOCAL_BOARD_PATH}/libraries.patch ${PRJ_ROOT_PATH}/libraries/patches ; \
+	$(V) if [ -n "${BOARD_LIBRARIES_PATCHES_PATH}" ]; then \
+        if [ -d "${BOARD_LIBRARIES_PATCHES_PATH}" ]; then \
+            $(ECHO) "${MSG_INFO}  Install libraries patches${MSG_END}" ; \
+            ln -s ${BOARD_LIBRARIES_PATCHES_PATH} ${PRJ_ROOT_PATH}/libraries/patches ; \
+        fi \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_PATH}/applications.patch ]; then \
-        $(ECHO) "${MSG_INFO}  Install applications patches${MSG_END}" ; \
-        ln -s ${LOCAL_BOARD_PATH}/applications.patch ${PRJ_ROOT_PATH}/applications/patches ; \
+	$(V) if [ -n "${BOARD_APPLICATIONS_PATCHES_PATH}" ]; then \
+        if [ -d "${BOARD_APPLICATIONS_PATCHES_PATH}" ]; then \
+            $(ECHO) "${MSG_INFO}  Install applications patches${MSG_END}" ; \
+            ln -s ${BOARD_APPLICATIONS_PATCHES_PATH} ${PRJ_ROOT_PATH}/applications/patches ; \
+        fi \
     fi
-	$(V) if [ -d ${LOCAL_BOARD_PATH}/image.patch ]; then \
-        $(ECHO) "${MSG_INFO}  Install image patches${MSG_END}" ; \
-        ln -s ${LOCAL_BOARD_PATH}/image.patch ${PRJ_ROOT_PATH}/image/patches ; \
+	$(V) if [ -n "${BOARD_IMAGE_PATCHES_PATH}" ]; then \
+        if [ -d "${BOARD_IMAGE_PATCHES_PATH}" ]; then \
+            $(ECHO) "${MSG_INFO}  Install image patches${MSG_END}" ; \
+            ln -s ${BOARD_IMAGE_PATCHES_PATH} ${PRJ_ROOT_PATH}/image/patches ; \
+        fi \
     fi
-	touch $@
+	$(V) touch $@
 
 board-debug-var:
