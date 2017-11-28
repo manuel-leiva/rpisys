@@ -1,0 +1,17 @@
+Index: linux/sources/kernel/t18x/include/sound/tegra_audio.h
+===================================================================
+--- linux.orig/sources/kernel/t18x/include/sound/tegra_audio.h
++++ linux/sources/kernel/t18x/include/sound/tegra_audio.h
+@@ -21,9 +21,9 @@
+ 
+ #include <linux/platform_device.h>
+ #include <sound/soc.h>
+-#include "tegra210_xbar_alt.h"
+-#include "tegra210_afc_alt.h"
+-#include "ahub_unit_fpga_clock.h"
++#include "sound/soc/tegra-alt/tegra210_xbar_alt.h"
++#include "sound/soc/tegra-alt/tegra210_afc_alt.h"
++#include "sound/soc/tegra-alt/ahub_unit_fpga_clock.h"
+ #include "sound/soc/tegra-alt/ahub_unit_fpga_clock_t18x.h"
+ #include "sound/soc/tegra-alt/tegra186_admaif_alt.h"
+ #include "sound/soc/tegra-alt/tegra186_afc_alt.h"

@@ -69,16 +69,3 @@ Index: linux/sources/kernel/kernel-4.4/drivers/media/platform/tegra/mipical/vmip
  #include "vmipi.h"
  
  const char *tegra_vmipi_cmd[] = {
-Index: linux/sources/kernel/t18x/include/sound/tegra_audio.h
-===================================================================
---- linux.orig/sources/kernel/t18x/include/sound/tegra_audio.h
-+++ linux/sources/kernel/t18x/include/sound/tegra_audio.h
-@@ -21,7 +21,7 @@
- 
- #include <linux/platform_device.h>
- #include <sound/soc.h>
--#include "tegra210_xbar_alt.h"
-+/* #include "tegra210_xbar_alt.h" */
- #include "tegra210_afc_alt.h"
- #include "ahub_unit_fpga_clock.h"
- #include "sound/soc/tegra-alt/ahub_unit_fpga_clock_t18x.h"
