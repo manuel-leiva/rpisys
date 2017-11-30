@@ -97,11 +97,13 @@ BOARD_APPLICATION_NAME_LIST:=""
 
 ifeq ($(BOARD_NAME),"Tegra_X2")
     BOARD_IMAGE_TAR_NAME:=Tegra186_Linux_R28.1.0_aarch64.tbz2
+    BOARD_IMAGE_SHA1SUM:=e7508c4fa0a2e1c73ce9ac671d38ea32804912d5
 else
     BOARD_IMAGE_TAR_NAME:=Tegra210_Linux_R28.1.0_aarch64.tbz2
+    BOARD_IMAGE_SHA1SUM:=a6d2d74043365d4c4e116b95c8534259d40b7589
 endif
 BOARD_IMAGE_DL_URL:=http://developer2.download.nvidia.com/embedded/L4T/r28_Release_v1.0/BSP/
-BOARD_IMAGE_SHA1SUM:=e7508c4fa0a2e1c73ce9ac671d38ea32804912d5
-BOARD_IMAGE_PKG_NAME:=install
+
+BOARD_IMAGE_PKG_NAME:=Linux_for_Tegra
 # BOARD_IMAGE_EXT_SD_DEVICE: external sd card device used to install the image built
 BOARD_IMAGE_EXT_SD_DEVICE:=/dev/mmcblk0
