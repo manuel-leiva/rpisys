@@ -8,8 +8,8 @@ include ../system-build/makefile/Makefile.common
 # Definitions ##################################################################
 
 ## Verify external variables ##
-ifndef BOARD_FILESYSTEM_PKG_NAME_TAR
-$(error ERROR: BOARD_FILESYSTEM_PKG_NAME_TAR not defined)
+ifndef BOARD_FILESYSTEM_TAR_NAME
+$(error ERROR: BOARD_FILESYSTEM_TAR_NAME not defined)
 endif
 ifndef BOARD_FILESYSTEM_DL_URL
 $(error ERROR: BOARD_FILESYSTEM_DL_URL not defined)
@@ -64,7 +64,7 @@ filesystem-download:
 	@    $(ECHO) "${MSG_INFO}  Download filesystem${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name filesystem \
-    --pkg-target-name ${BOARD_FILESYSTEM_PKG_NAME_TAR} \
+    --pkg-target-name ${BOARD_FILESYSTEM_TAR_NAME} \
     --sha1sum ${BOARD_FILESYSTEM_SHA1SUM} \
     --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
     --dl-url ${BOARD_FILESYSTEM_DL_URL} \

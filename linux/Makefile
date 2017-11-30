@@ -100,7 +100,7 @@ linux-clean: linux-revpatch
 linux-download:
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name ${BOARD_LINUX_PKG_NAME} \
-    --pkg-target-name ${BOARD_LINUX_NAMETAR} \
+    --pkg-target-name ${BOARD_LINUX_TAR_NAME} \
     --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
     --dl-url ${BOARD_LINUX_DL_URL} \
     --sha1sum ${BOARD_LINUX_SHA1SUM}

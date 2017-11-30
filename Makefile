@@ -97,7 +97,7 @@ board-clean:
 
 board-info:
 	@$(ECHO) "${MSG_INFO}  Name: ${BOARD_NAME}${MSG_END}"
-	@$(ECHO) "  Linux:      ${BOARD_LINUX_NAMETAR}"
+	@$(ECHO) "  Linux:      ${BOARD_LINUX_TAR_NAME}"
 	@$(ECHO) "  Filesystem: ${FILESYSTEM_NAMETAR}"
 	@$(ECHO)
 
