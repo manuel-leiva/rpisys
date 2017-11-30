@@ -8,8 +8,12 @@ include ../system-build/makefile/Makefile.common
 # Definitions ##################################################################
 
 ## Verify external variables ##
+ifdef BOARD_BOOTLOADER_TAR_NAME
+
 ifndef BOARD_BOOTLOADER_SHA1SUM
 $(error ERROR: BOARD_BOOTLOADER_SHA1SUM not defined)
+endif
+
 endif
 
 # Private definitions ##########################################################
@@ -48,6 +52,7 @@ bootloader-header:
 	@$(ECHO) "${MSG_INFO}Bootloader${MSG_END} "
 
 bootloader-download:
+ifdef BOARD_BOOTLOADER_TAR_NAME
 	@$(ECHO) "${MSG_INFO}  Download bootloader${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name bootloader \
@@ -55,6 +60,7 @@ bootloader-download:
     --sha1sum ${BOARD_BOOTLOADER_SHA1SUM} \
     --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
     --dl-url ${BOARD_BOOTLOADER_DL_URL}
+endif
 	$(V) touch $@
 
 # bootloader-patch:
