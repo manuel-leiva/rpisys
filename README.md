@@ -21,14 +21,6 @@ Build system
 #!bash
 make
 ```
- ## Dependecies packages
-
-```
-#!bash
-sudo apt-get install autoconf
-sudo apt-get install libtool
-sudo apt-get install quilt
-```
 
 ## Clean project
 
@@ -107,4 +99,19 @@ touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/dependency.txt
 ```
 #!Makefile
 BOARD_LIBRARY_NAME_LIST := libsoup-2.57.1
+```
+# Image
+
+By default the filesystem is installed in $RPISYS/image/image/rootfs.
+if you want to define a custom location you can define BOARD_FILESYSTEM_INSTALLATION_PATH, in this case the installation path is $RPISYS/image/$BOARD_FILESYSTEM_INSTALLATION_PATH.
+
+By default the Bootloader Linux image and device tree is installed in $RPISYS/image/image/boot.
+if you want to define a custom location you can define BOARD_BOOTLOADER_INSTALLATION_PATH or BOARD_LINUX_INSTALLATION_PATH, in this case the installation path is $RPISYS/image/$BOARD_BOOTLOADER_INSTALLATION_PATH and $RPISYS/image/$BOARD_LINUX_INSTALLATION_PATH.
+
+If is defined a custom path for linux image, device tree, bootloader or  filesystem you have to define the partition path, For example:
+
+```
+#!Makefile
+BOARD_IMAGE_P0_PATH:=${BOARD_BOOTLOADER_INSTALLATION_PATH}
+BOARD_IMAGE_P1_PATH:=${BOARD_FILESYSTEM_INSTALLATION_PATH}
 ```
