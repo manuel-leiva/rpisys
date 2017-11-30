@@ -46,15 +46,10 @@ BOARD_TOOLCHAIN_PREFIX:=aarch64-unknown-linux-gnu-
 
 # BOOTLOADER ##################################################################
 
-BOARD_BOOTLOADER_TAR_NAME:=rpi-boot-2017-03-02.tar.gz
-BOARD_BOOTLOADER_DL_URL:=https://www.dropbox.com/s/brgw0r3kucwks6n/
-BOARD_BOOTLOADER_SHA1SUM:=5c1340a93d6cefdae6c95235b531c23c49913232
-BOARD_BOOTLOADER_PKG_NAME:=boot
-
 
 # LINUX #######################################################################
 
-BOARD_LINUX_NAMETAR:=source_release.tbz2
+BOARD_LINUX_TAR_NAME:=source_release.tbz2
 BOARD_LINUX_DL_URL:=http://developer2.download.nvidia.com/embedded/L4T/r28_Release_v1.0/BSP/
 BOARD_LINUX_SHA1SUM:=651066d1306efddeeaa276692cc0e4eab0bade24
 BOARD_LINUX_PKG_NAME:=sources/kernel/kernel-4.4/
@@ -71,11 +66,9 @@ else
     BOARD_LINUX_PATCHES_PATH=$(LOCAL_BOARD_PATH)/tx1_linux_patches
 endif
 
-
-
 # FILESYSTEM ###################################################################
 
-BOARD_FILESYSTEM_PKG_NAME_TAR:=Tegra_Linux_Sample-Root-Filesystem_R28.1.0_aarch64.tbz2
+BOARD_FILESYSTEM_TAR_NAME:=Tegra_Linux_Sample-Root-Filesystem_R28.1.0_aarch64.tbz2
 BOARD_FILESYSTEM_DL_URL:=http://developer2.download.nvidia.com/embedded/L4T/r28_Release_v1.0/BSP/
 BOARD_FILESYSTEM_SHA1SUM:=a0d419e702b3d535601dc41b6be97026ce20416e
 BOARD_FILESYSTEM_PKG_NAME:=filesystem
@@ -92,24 +85,7 @@ BOARD_LIBRARY_HOST=arm-none-linux
 BOARD_LIBRARY_BOARD_INSTALLDIR:=/usr/lib/arm-linux-gnueabihf
 # List of library to build
 BOARD_LIBRARY_NAME_LIST := \
-readline-6.3 \
-libffi-3.2.1 \
-pcre-8.40 \
-zlib-1.2.11 \
-glib-2.50.3 \
-libsoup-2.57.1 \
-libxml2-2.9.4 \
-sqlite-autoconf-3170000 ncurses-6.0 \
-gstreamer-1.10.5 \
-gst-plugins-base-1.10.5 \
-gst-plugins-good-1.10.5 \
-gst-plugins-bad-1.10.5 \
-gst-plugins-ugly-1.10.5 \
-gst-rtsp-server-1.10.5 \
-gst-libav-1.10.5 \
-gst-omx-1.10.5 \
-gst-rpicamsrc-4fc608e \
-x264-snapshot-20170811-2245-stable
+readline-6.3
 
 
 # APPLICATIONS #################################################################
@@ -119,5 +95,13 @@ BOARD_APPLICATION_NAME_LIST:=""
 
 # IMAGE ########################################################################
 
+ifeq ($(BOARD_NAME),"Tegra_X2")
+    BOARD_IMAGE_TAR_NAME:=Tegra186_Linux_R28.1.0_aarch64.tbz2
+else
+    BOARD_IMAGE_TAR_NAME:=Tegra210_Linux_R28.1.0_aarch64.tbz2
+endif
+BOARD_IMAGE_DL_URL:=http://developer2.download.nvidia.com/embedded/L4T/r28_Release_v1.0/BSP/
+BOARD_IMAGE_SHA1SUM:=e7508c4fa0a2e1c73ce9ac671d38ea32804912d5
+BOARD_IMAGE_PKG_NAME:=install
 # BOARD_IMAGE_EXT_SD_DEVICE: external sd card device used to install the image built
 BOARD_IMAGE_EXT_SD_DEVICE:=/dev/mmcblk0
