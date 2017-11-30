@@ -100,7 +100,7 @@ linux-clean: linux-revpatch
 linux-download:
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     --pkg-name ${BOARD_LINUX_PKG_NAME} \
-    --pkg-target-name ${BOARD_LINUX_NAMETAR} \
+    --pkg-target-name ${BOARD_LINUX_TAR_NAME} \
     --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
     --dl-url ${BOARD_LINUX_DL_URL} \
     --sha1sum ${BOARD_LINUX_SHA1SUM}
@@ -126,19 +126,19 @@ linux-menuconfig: linux-config
 	@    $(ECHO) "${MSG_INFO}  Menuconfig $(BOARD_LINUX_DEFCONFIG)${MSG_END}"
 	$(V) $(MAKE) ${BOARD_LINUX_PKG_NAME} $(KERNEL_FLAGS) menuconfig
 
-linux-zimage: linux-config
-	@    $(ECHO) "${MSG_INFO}  Build linux zImage${MSG_END}"
-	$(V) $(MAKE) ${BOARD_LINUX_PKG_NAME} -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) zImage
-# Install Kernel files
-	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)
-	$(V) $(CP) ${BOARD_LINUX_PKG_NAME}/arch/$(BOARD_PRJ_ARCH)/boot/zImage $(LINUX_KERNEL_INSTALL_PATH)
-
 linux-image: linux-config
 	@    $(ECHO) "${MSG_INFO}  Build linux Image${MSG_END}"
 	$(V) $(MAKE) ${BOARD_LINUX_PKG_NAME} -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) Image
 # Install Kernel files
 	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)
 	$(V) $(CP) ${BOARD_LINUX_PKG_NAME}/arch/$(BOARD_PRJ_ARCH)/boot/Image $(LINUX_KERNEL_INSTALL_PATH)
+
+linux-zimage: linux-image
+	@    $(ECHO) "${MSG_INFO}  Build linux zImage${MSG_END}"
+	$(V) $(MAKE) ${BOARD_LINUX_PKG_NAME} -j $(COMMON_MAKE_JOBS) $(KERNEL_FLAGS) zImage
+# Install Kernel files
+	$(V) $(MKDIR) $(LINUX_KERNEL_INSTALL_PATH)
+	$(V) $(CP) ${BOARD_LINUX_PKG_NAME}/arch/$(BOARD_PRJ_ARCH)/boot/zImage $(LINUX_KERNEL_INSTALL_PATH)
 
 linux-dtbs: linux-config
 	@    $(ECHO) "${MSG_INFO}  Build dtbs${MSG_END}"
