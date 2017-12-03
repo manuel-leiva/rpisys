@@ -16,6 +16,12 @@ endif
 
 endif
 
+ifndef BOARD_BOOTLOADER_INSTALLATION_DIR
+BOOTLOADER_INSTALLATION_PATH=${COMMON_IMAGE_BOOT_PATH}
+else
+BOOTLOADER_INSTALLATION_PATH=${PRJ_ROOT_PATH}/image/$(BOARD_BOOTLOADER_INSTALLATION_DIR)
+endif
+
 # Private definitions ##########################################################
 BOOTLOADER_PKG_PATH = $(PRJ_ROOT_PATH)/bootloader/${BOARD_BOOTLOADER_PKG_NAME}
 BOOTLOADER_PATH = $(PRJ_ROOT_PATH)/bootloader
@@ -73,7 +79,7 @@ bootloader-make: bootloader-patch
 
 bootloader-install: bootloader-make
 	@$(ECHO) "${MSG_INFO}  Install bootloader${MSG_END}"
-	$(V) cd boot; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/boot
+	$(V) cd boot; find . | cpio -pdum ${BOOTLOADER_INSTALLATION_PATH}
 	$(V) touch $@
 
 bootloader-uninstall:

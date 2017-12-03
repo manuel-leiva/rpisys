@@ -26,8 +26,15 @@ BOARD_FILESYSTEM_DEST_DIR?=./
 FILESYSTEM_PATH:=${PRJ_ROOT_PATH}/filesystem
 BOARD_FILESYSTEM_SU?=n
 
+ifndef BOARD_FILESYSTEM_INSTALLATION_DIR
+FILESYSTEM_INSTALLATION_PATH=${COMMON_IMAGE_ROOTFS_PATH}
+else
+FILESYSTEM_INSTALLATION_PATH=${PRJ_ROOT_PATH}/image/$(BOARD_FILESYSTEM_INSTALLATION_DIR)
+endif
+
 ## Exported definitions
 export FILESYSTEM_PKG_PATH:=${PRJ_ROOT_PATH}/filesystem/${BOARD_FILESYSTEM_PKG_NAME}
+
 
 # Public targets ###############################################################
 
@@ -96,12 +103,12 @@ filesystem-revpatch:
 
 filesystem-install: filesystem-patch
 	@$(ECHO) "${MSG_INFO}  Install filesystem${MSG_END}"
-	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/rootfs
+	$(V) $(MKDIR) ${FILESYSTEM_INSTALLATION_PATH}
 ifeq ($(BOARD_FILESYSTEM_SU),y)
 	@$(ECHO) "${MSG_REQ}You need to be logged in as root you to install filesystem${MSG_END}"
-	$(V) cd filesystem; sudo find . | sudo cpio -pdum ${PRJ_ROOT_PATH}/image/image/rootfs/
+	$(V) cd filesystem; sudo find . | sudo cpio -pdum ${FILESYSTEM_INSTALLATION_PATH}
 else
-	$(V) cd filesystem; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/rootfs/
+	$(V) cd filesystem; find . | cpio -pdum ${FILESYSTEM_INSTALLATION_PATH}
 endif
 	$(V) touch $@
 

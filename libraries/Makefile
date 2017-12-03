@@ -8,6 +8,13 @@ include ../system-build/makefile/Makefile.common
 .PHONY: $(BOARD_LIBRARY_NAME_LIST)
 
 
+# Install kernel modules in the filesystem by default
+ifndef BOARD_LIBRARY_INSTALLATION_DIR
+LIBRARY_INSTALLATION_PATH=${COMMON_IMAGE_ROOTFS_PATH}
+else
+LIBRARY_INSTALLATION_PATH=${PRJ_ROOT_PATH}/image/$(BOARD_LIBRARY_INSTALLATION_DIR)
+endif
+
 define BUILD_RECIPE
 $(1): $(2)
 	$(V)$(MAKE) $(1)
@@ -41,7 +48,7 @@ libraries-header:
 
 libraries-install:
 	@$(ECHO) "${MSG_INFO}  Libraries install${MSG_END}"
-	$(V) cd board-libs; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/rootfs/
+	$(V) cd board-libs; find . | cpio -pdum ${LIBRARY_INSTALLATION_PATH}
 	$(V) touch $@
 
 # Alias target to install linux
