@@ -66,6 +66,9 @@ else
     BOARD_LINUX_PATCHES_PATH=$(LOCAL_BOARD_PATH)/tx1_linux_patches
 endif
 
+BOARD_LINUX_KERNEL_INSTALLATION_DIR:=Linux_for_Tegra/kernel
+BOARD_LINUX_MODULES_INSTALLATION_DIR:=Linux_for_Tegra/rootfs/
+
 # FILESYSTEM ###################################################################
 
 BOARD_FILESYSTEM_TAR_NAME:=Tegra_Linux_Sample-Root-Filesystem_R28.1.0_aarch64.tbz2
@@ -78,15 +81,17 @@ BOARD_FILESYSTEM_DEST_DIR:=filesystem
 # filesystem. Options: "y" or "n".
 BOARD_FILESYSTEM_SU:=n
 
+BOARD_FILESYSTEM_INSTALLATION_DIR:=Linux_for_Tegra/rootfs/
+
 # LIBRARIES ####################################################################
 
 BOARD_LIBRARY_HOST=arm-none-linux
 # Library directory for the normal user-programs installation
-BOARD_LIBRARY_BOARD_INSTALLDIR:=usr/lib/aarch64-linux-gnu
+BOARD_LIBRARY_BOARD_INSTALLDIR:=/usr/lib/aarch64-linux-gnu
 # List of library to build
 BOARD_LIBRARY_NAME_LIST := \
 readline-6.3
-
+BOARD_LIBRARY_INSTALLATION_DIR:=Linux_for_Tegra/rootfs/
 
 # APPLICATIONS #################################################################
 
