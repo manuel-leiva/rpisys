@@ -42,6 +42,20 @@ LINUX_KERNEL_INSTALLDIR:=kernel
 # Create kernel compilation flags
 KERNEL_FLAGS:=CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX) $(BOARD_LINUX_KERNEL_EXTRAFLAGS) ARCH=$(BOARD_PRJ_ARCH)
 
+# Install kernel in the boot directory by default
+ifndef BOARD_LINUX_KERNEL_INSTALLATION_DIR
+LINUX_KERNEL_INSTALLATION_PATH=${COMMON_IMAGE_BOOT_PATH}
+else
+LINUX_KERNEL_INSTALLATION_PATH=${PRJ_ROOT_PATH}/image/$(BOARD_LINUX_KERNEL_INSTALLATION_DIR)
+endif
+# Install kernel modules in the filesystem by default
+ifndef BOARD_LINUX_MODULES_INSTALLATION_DIR
+LINUX_MODULES_INSTALLATION_PATH=${COMMON_IMAGE_ROOTFS_PATH}
+else
+LINUX_MODULES_INSTALLATION_PATH=${PRJ_ROOT_PATH}/image/$(BOARD_LINUX_MODULES_INSTALLATION_DIR)
+endif
+
+
 ## Exported variables
 # Linux instalation paths
 export LINUX_PATH:=${PRJ_ROOT_PATH}/linux
@@ -165,11 +179,11 @@ linux-install: linux-modules linux-dtbs
 # Install kernel image, device tree and overlays
 	@$(ECHO) "${MSG_INFO}    Install kernel${MSG_END}"
 	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/boot
-	$(V) cd kernel; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/boot
+	$(V) cd kernel; find . | cpio -pdum ${LINUX_KERNEL_INSTALLATION_PATH}
 # Install kernel modules
 	@$(ECHO) "${MSG_INFO}    Install modules${MSG_END}"
 	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/rootfs/
-	$(V) cd modules; find . | cpio -pdum ${PRJ_ROOT_PATH}/image/image/rootfs
+	$(V) cd modules; find . | cpio -pdum ${LINUX_MODULES_INSTALLATION_PATH}
 # Call post-install recipe
 	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),linux-install-post)
 	$(V) touch $@

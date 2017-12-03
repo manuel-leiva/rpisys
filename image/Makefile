@@ -9,6 +9,18 @@ include ../system-build/makefile/Makefile.common
 ## Local definitions ##
 IMAGE_PATH:=${PRJ_ROOT_PATH}/image
 
+ifndef BOARD_IMAGE_PARTITION0_DIR
+IMAGE_PARTITION0_PATH=${COMMON_IMAGE_BOOT_PATH}
+else
+IMAGE_PARTITION0_PATH=${PRJ_ROOT_PATH}/image/$(BOARD_IMAGE_PARTITION0_DIR)
+endif
+
+ifndef BOARD_IMAGE_PARTITION1_DIR
+IMAGE_PARTITION1_PATH=${COMMON_IMAGE_ROOTFS_PATH}
+else
+IMAGE_PARTITION1_PATH=${PRJ_ROOT_PATH}/image/$(BOARD_IMAGE_PARTITION1_DIR)
+endif
+
 # Public targets ###############################################################
 all: image-header image-make
 
@@ -50,7 +62,7 @@ image-make: image-patch
 
 image-make-sd:
 	@$(ECHO) "${MSG_INFO}  Build SD image${MSG_END}"
-	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/make-image.sh -d /dev/mmcblk0 -f image/rootfs -b image/boot
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/make-image.sh -d ${BOARD_IMAGE_EXT_SD_DEVICE} -f ${IMAGE_PARTITION1_PATH} -b ${IMAGE_PARTITION0_PATH}
 
 image-clean:
 	@$(ECHO) "${MSG_INFO}  Remove image${MSG_END}"
