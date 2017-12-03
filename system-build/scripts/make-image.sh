@@ -93,12 +93,9 @@ fi
 
 # Define partition name
 PARTITION_BOOT=${DEVICE_FILE}1;
+PARTITION_ROOTFS=${DEVICE_FILE}2;
 if [ ! -b ${PARTITION_BOOT} ]; then
     PARTITION_BOOT=${DEVICE_FILE}p1
-fi
-
-PARTITION_ROOTFS=${DEVICE_FILE}2;
-if [ ! -b ${PARTITION_ROOTFS} ]; then
     PARTITION_ROOTFS=${DEVICE_FILE}p2
 fi
 
@@ -113,9 +110,9 @@ echo -e "${INFOCOLOR}  Defining partition${ENDCOLOR}\n"
 sleep 2
 sudo partprobe $DEVICE_FILE
 # Give format for each partition
-echo -e "${INFOCOLOR}  Creating BOOT partition${ENDCOLOR}\n"
+echo -e "${INFOCOLOR}  Creating BOOT partition: ${PARTITION_BOOT}${ENDCOLOR}\n"
 sudo mkfs.vfat -F 32 -n ${BOOT_NAME} ${PARTITION_BOOT}
-echo -e "${INFOCOLOR}  Creating rootfs partition${ENDCOLOR}\n"
+echo -e "${INFOCOLOR}  Creating rootfs partition: ${PARTITION_ROOTFS}${ENDCOLOR}\n"
 sudo mkfs.ext4 -L ${ROOTFS_NAME} ${PARTITION_ROOTFS}
 
 
