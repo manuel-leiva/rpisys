@@ -104,7 +104,7 @@ function FileDownload
     fi
 }
 
-function TarDescompres
+function TarDecompress
 {
     # Create destination path
     mkdir -p ${DESTINATION_PATH}
@@ -112,12 +112,12 @@ function TarDescompres
     OWNER=$(ls ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -l | awk '{print $3 }')
     echo -e "${INFOCOLOR}  Decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
     if [ "root" == ${OWNER} ]  || [ "y" == ${SUPER_USER} ] ; then
-        echo -e "${MSGCOLOR}You need to be logged in as root you to decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
-        # Descompres Package
+        echo -e "${MSGCOLOR}You need root permissions to decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
+        # Decompress Package
         sudo \
-        tar -xf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -C ${DESTINATION_PATH}
+        tar -xpf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -C ${DESTINATION_PATH}
     else
-        # Descompres Package
+        # Decompress Package
         tar -xf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -C ${DESTINATION_PATH}
     fi
 }
@@ -126,7 +126,7 @@ function TarDescompres
 function TarProcess
 {
     FileDownload
-    TarDescompres
+    TarDecompress
 
 }
 
