@@ -79,7 +79,7 @@ BOARD_FILESYSTEM_PKG_NAME:=filesystem
 BOARD_FILESYSTEM_DEST_DIR:=filesystem
 # BOARD_FILESYSTEM_SU: Force to use super user permissions to decompress and manage the
 # filesystem. Options: "y" or "n".
-BOARD_FILESYSTEM_SU:=n
+BOARD_FILESYSTEM_SU:=y
 
 BOARD_FILESYSTEM_INSTALLATION_DIR:=Linux_for_Tegra/rootfs/
 
