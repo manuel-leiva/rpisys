@@ -10,3 +10,8 @@ endif
 
 linux-clean-post:
 	rm -rf ${LINUX_PATH}/sources
+
+image-make:
+	cd ${IMAGE_PATH}/Linux_for_Tegra ; \
+	echo "You need root permissions to execute apply_binaries.sh" ; \
+	sudo ./apply_binaries.sh
