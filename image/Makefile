@@ -6,8 +6,8 @@ include ../system-build/makefile/Makefile.local
 include ../system-build/makefile/Makefile.common
 
 # Definitions ##################################################################
+
 ## Local definitions ##
-IMAGE_PATH:=${PRJ_ROOT_PATH}/image
 
 ifndef BOARD_IMAGE_PARTITION0_DIR
 IMAGE_PARTITION0_PATH=${COMMON_IMAGE_BOOT_PATH}
@@ -20,6 +20,10 @@ IMAGE_PARTITION1_PATH=${COMMON_IMAGE_ROOTFS_PATH}
 else
 IMAGE_PARTITION1_PATH=${PRJ_ROOT_PATH}/image/$(BOARD_IMAGE_PARTITION1_DIR)
 endif
+
+## Exported variables ##
+# Linux instalation paths
+export IMAGE_PATH:=${PRJ_ROOT_PATH}/image
 
 # Public targets ###############################################################
 all: image-header image-make
@@ -58,6 +62,7 @@ image-patch: image-download
 
 image-make: image-patch
 	@$(ECHO) "${MSG_INFO}  Build image${MSG_END}"
+	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),$@)
 	$(V) touch $@
 
 image-make-sd:
