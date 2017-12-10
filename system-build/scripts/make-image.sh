@@ -11,16 +11,43 @@ MOUNT_BOOT_DIR="mount-boot"
 MOUNT_ROOTFS_DIR="mount-rootfs"
 # Messages color
 ERRORCOLOR="\033[1;31m"
+WARNCOLOR="\033[0;33m"
 INFOCOLOR="\033[0;36m"
 MSGCOLOR="\033[1;33m"
 ENDCOLOR="\033[0m"
 
+
+function ImagePartitionFile
+{
+   sfdisk $DEVICE_FILE < $PARTITION_FILE
+
+}
+function ImagePartitionDefault
+{
+    {
+        echo '8192,63MiB,0x0C,*'
+        echo '137216,4GiB,,-'
+    } | sudo sfdisk $DEVICE_FILE
+    # Update the kernel's information about the current status of disk partitions
+    # asking it to re-read the partition table.
+    sleep 2
+    sudo partprobe $DEVICE_FILE
+    # Give format for each partition
+    echo -e "${INFOCOLOR}  Creating BOOT partition: ${PARTITION_BOOT}${ENDCOLOR}\n"
+    sudo mkfs.vfat -F 32 -n ${BOOT_NAME} ${PARTITION_BOOT}
+    echo -e "${INFOCOLOR}  Creating rootfs partition: ${PARTITION_ROOTFS}${ENDCOLOR}\n"
+    sudo mkfs.ext4 -L ${ROOTFS_NAME} ${PARTITION_ROOTFS}
+}
+
+
 function help
 {
     echo "help"
-    echo "-d, --device"
-    echo "-f, --rootfs-path"
-    echo "-b, --boot-path"
+    echo "-d, --device             Memory device"
+    echo "-a, --partition0-path    Partition 0 information path"
+    echo "-b, --partition1-path    Partition 1 information path"
+    echo "-c, --partition2-path    Partition 2 information path"
+    echo "-f, --partition-file     Describe the partitions of a device in a format that  is  usable  as input  to  sfdisk."
     echo "-h, --help"
 }
 
@@ -32,12 +59,16 @@ do
         DEVICE_FILE="$2"
         shift
         ;;
-        -f|--rootfs-path)
+        -b|--partition1-path)
         FS_PATH="$2"
         shift
         ;;
-        -b|--boot-path)
+        -a|--partition0-path)
         BOOT_PATH="$2"
+        shift
+        ;;
+        -f|--partition-file)
+        PARTITION_FILE="$2"
         shift
         ;;
         -h|--help)
@@ -63,6 +94,17 @@ else
         exit
     fi
 fi
+
+# Check if the device was defined
+if [ ! -z ${PARTITION_FILE} ]; then
+   echo -e ${WARNCOLOR}Warn:${ENDCOLOR} Partition file not defined
+else
+    # Check if the device is available
+    if [ ! -a ${PARTITION_FILE} ]; then
+        echo -e "${ERRORCOLOR}Error:${ENDCOLOR} File \"${PARTITION_FILE}\" does not exist.\n"
+    fi
+fi
+
 
 if [ "$DEVICE_FILE" = "/dev/sda" ]; then
     echo -e "${ERRORCOLOR}Error: ${ENDCOLOR}\"${DEVICE_FILE}\" is a PC driver.\n"
@@ -101,20 +143,13 @@ fi
 
 echo -e "${INFOCOLOR}  Defining partition${ENDCOLOR}\n"
 # Create partitions
-{
-    echo '8192,63MiB,0x0C,*'
-    echo '137216,4GiB,,-'
-} | sudo sfdisk $DEVICE_FILE
-# Update the kernel's information about the current status of disk partitions
-# asking it to re-read the partition table.
-sleep 2
-sudo partprobe $DEVICE_FILE
-# Give format for each partition
-echo -e "${INFOCOLOR}  Creating BOOT partition: ${PARTITION_BOOT}${ENDCOLOR}\n"
-sudo mkfs.vfat -F 32 -n ${BOOT_NAME} ${PARTITION_BOOT}
-echo -e "${INFOCOLOR}  Creating rootfs partition: ${PARTITION_ROOTFS}${ENDCOLOR}\n"
-sudo mkfs.ext4 -L ${ROOTFS_NAME} ${PARTITION_ROOTFS}
-
+# Check if a partition file was defined
+if [ -z ${PARTITION_FILE} ]; then
+    # Apply default partition
+    ImagePartitionDefault
+else
+    ImagePartitionFile
+fi
 
 # Check if the boot path was defined, if it is not defined,
 # no data is copied and this step is skipped

@@ -67,7 +67,14 @@ image-make: image-patch
 
 image-make-sd:
 	@$(ECHO) "${MSG_INFO}  Build SD image${MSG_END}"
-	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/make-image.sh -d ${BOARD_IMAGE_EXT_SD_DEVICE} -f ${IMAGE_PARTITION1_PATH} -b ${IMAGE_PARTITION0_PATH}
+ifdef BOARD_IMAGE_DISK_PARTITION_PATH
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/make-image.sh -d ${BOARD_IMAGE_EXT_SD_DEVICE} \
+    -a ${IMAGE_PARTITION0_PATH} -b ${IMAGE_PARTITION1_PATH} \
+    -f ${BOARD_IMAGE_DISK_PARTITION_PATH}
+else
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/make-image.sh -d ${BOARD_IMAGE_EXT_SD_DEVICE} \
+    -a ${IMAGE_PARTITION0_PATH} -b ${IMAGE_PARTITION1_PATH}
+endif
 
 image-clean:
 	@$(ECHO) "${MSG_INFO}  Remove image${MSG_END}"
