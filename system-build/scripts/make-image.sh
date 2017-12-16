@@ -173,8 +173,8 @@ else
     fi
 fi
 
-#~ # Check if the filesystem path was defined, if it is not defined,
-#~ # no data is copied and this step is skipped
+# Check if the filesystem path was defined, if it is not defined,
+# no data is copied and this step is skipped
 if [ -z ${FS_PATH} ]; then
    echo -e ${ERRORCOLOR}Error:${ENDCOLOR} Filesystem source path not defined.
 else
