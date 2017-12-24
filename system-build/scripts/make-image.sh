@@ -29,7 +29,7 @@ PARTITION_FORMAT_LIST=("PARTITION_0_FORMAT" "PARTITION_1_FORMAT" "PARTITION_3_FO
 
 # Functions ####################################################################
 
-# Copy the source data into each partition
+# Copy the source data into each partition.
 function ImageCopyData
 {
     echo -e "${INFOCOLOR}Coping partition information${ENDCOLOR}\n"
@@ -73,7 +73,7 @@ function ImageCopyData
     done
 }
 
-
+# Use a file usable as input to sfdisk to describe the partitions of a device.
 function ImagePartitionFile
 {
     echo -e "${INFOCOLOR}Creating partition${ENDCOLOR}\n"
@@ -116,7 +116,7 @@ function ImagePartitionFile
     done
 }
 
-
+# Use sfdisk to describe the partitions of a device.
 function ImagePartitionDefault
 {
     echo -e "${INFOCOLOR}Creating partition${ENDCOLOR}\n"
@@ -143,7 +143,7 @@ function help
     echo "-a, --partition0-path    Partition 0 information path"
     echo "-b, --partition1-path    Partition 1 information path"
     echo "-c, --partition2-path    Partition 2 information path"
-    echo "-f, --partition-file     Describe the partitions of a device in a format that  is  usable  as input  to  sfdisk."
+    echo "-f, --partition-file     Describe the partitions of a device in a format that is usable as input to sfdisk."
     echo "-h, --help"
 }
 
@@ -199,7 +199,7 @@ if [ -z ${PARTITION_FILE} ]; then
 else
     # Check if the device is available
     if [ ! -f ${PARTITION_FILE} ]; then
-        echo -e "${ERRORCOLOR}Error:${ENDCOLOR} File \"${PARTITION_FILE}\" does not exist.\n"
+        echo -e "${ERRORCOLOR}Error:${ENDCOLOR} File \"${PARTITION_FILE}\" does not exist. Using default configuration\n"
     fi
 fi
 
@@ -248,51 +248,6 @@ if [ -z ${PARTITION_FILE} ]; then
     ImagePartitionDefault
 else
     ImagePartitionFile
-    ImageCopyData
-    exit
 fi
-
-# Check if the boot path was defined, if it is not defined,
-# no data is copied and this step is skipped
-if [ -z ${PARTITION_0_PATH} ]; then
-   echo -e ${ERRORCOLOR}Error:${ENDCOLOR} Boot source path not defined.
-else
-    # Check if the boot path exists
-    if [ ! -d ${PARTITION_0_PATH} ]; then
-        echo -e ${ERRORCOLOR}Error:${ENDCOLOR} Directory does not exist.
-        exit
-    else
-        echo -e "${INFOCOLOR}Add ${PARTITION_0_PATH} content in ${PARTITION_0_NAME} partition ${ENDCOLOR}."
-        # Remove file if it exists previously
-        rm -rf ${PARTITION_0_MOUNT_DIR}
-        # Create directory to mount partitions
-        mkdir ${PARTITION_0_MOUNT_DIR}
-        sudo mount ${PARTITION_0} ${PARTITION_0_MOUNT_DIR}
-        sudo cp -r ${PARTITION_0_PATH}/* ${PARTITION_0_MOUNT_DIR}
-        sudo umount ${PARTITION_0_MOUNT_DIR}
-        rm -r ${PARTITION_0_MOUNT_DIR}
-    fi
-fi
-
-# Check if the filesystem path was defined, if it is not defined,
-# no data is copied and this step is skipped
-if [ -z ${PARTITION_1_PATH} ]; then
-   echo -e ${ERRORCOLOR}Error:${ENDCOLOR} Filesystem source path not defined.
-else
-    # Check if the filesystem exists
-    if [ ! -d ${PARTITION_1_PATH} ]; then
-       echo -e ${ERRORCOLOR}Error:${ENDCOLOR} Directory does not exist.
-       exit
-    else
-        echo -e "${INFOCOLOR}Add ${PARTITION_1_PATH} content in ${PARTITION_1_NAME} partition${ENDCOLOR}."
-        # Remove file if it exists previously
-        rm -rf ${PARTITION_1_MOUNT_DIR}
-        # Create directory to mount partition
-        mkdir ${PARTITION_1_MOUNT_DIR}
-        sudo mount ${PARTITION_1} ${PARTITION_1_MOUNT_DIR}
-        sudo cp -a ${PARTITION_1_PATH}/* ${PARTITION_1_MOUNT_DIR}
-        sudo umount ${PARTITION_1_MOUNT_DIR}
-        rm -r ${PARTITION_1_MOUNT_DIR}
-    fi
-fi
-
+# Copy the data into each partition
+ImageCopyData
