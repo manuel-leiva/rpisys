@@ -15,3 +15,6 @@ image-make:
 	cd ${IMAGE_PATH}/Linux_for_Tegra ; \
 	echo "You need root permissions to execute apply_binaries.sh" ; \
 	sudo ./apply_binaries.sh
+
+image-clean-post:
+	sudo rm -rf Linux_for_Tegra
