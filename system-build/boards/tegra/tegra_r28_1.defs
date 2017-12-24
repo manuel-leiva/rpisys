@@ -112,3 +112,6 @@ BOARD_IMAGE_DL_URL:=http://developer2.download.nvidia.com/embedded/L4T/r28_Relea
 BOARD_IMAGE_PKG_NAME:=Linux_for_Tegra
 # BOARD_IMAGE_EXT_SD_DEVICE: external sd card device used to install the image built
 BOARD_IMAGE_EXT_SD_DEVICE:=/dev/mmcblk0
+
+BOARD_IMAGE_PARTITION0_DIR:=Linux_for_Tegra/rootfs/
+BOARD_IMAGE_DISK_PARTITION_PATH=$(LOCAL_BOARD_PATH)/tegra_partition_table
