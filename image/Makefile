@@ -25,6 +25,21 @@ endif
 # Linux instalation paths
 export IMAGE_PATH:=${PRJ_ROOT_PATH}/image
 
+# Create parameter list
+ifdef BOARD_IMAGE_EXT_SD_DEVICE
+IMAGE_MAKE_SCRIPT_PARAMS=-d ${BOARD_IMAGE_EXT_SD_DEVICE}
+endif
+ifdef IMAGE_PARTITION0_PATH
+IMAGE_MAKE_SCRIPT_PARAMS+=-a ${IMAGE_PARTITION0_PATH}
+endif
+ifdef IMAGE_PARTITION1_PATH
+IMAGE_MAKE_SCRIPT_PARAMS+=-b ${IMAGE_PARTITION1_PATH}
+endif
+ifdef BOARD_IMAGE_DISK_PARTITION_PATH
+IMAGE_MAKE_SCRIPT_PARAMS+=-f ${BOARD_IMAGE_DISK_PARTITION_PATH}
+endif
+
+
 # Public targets ###############################################################
 all: image-header image-make
 
@@ -65,19 +80,17 @@ image-make: image-patch
 	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),$@)
 	$(V) touch $@
 
+
 image-make-sd:
 	@$(ECHO) "${MSG_INFO}  Build SD image${MSG_END}"
-ifdef BOARD_IMAGE_DISK_PARTITION_PATH
-	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/make-image.sh -d ${BOARD_IMAGE_EXT_SD_DEVICE} \
-    -a ${IMAGE_PARTITION0_PATH} -b ${IMAGE_PARTITION1_PATH} \
-    -f ${BOARD_IMAGE_DISK_PARTITION_PATH}
-else
-	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/make-image.sh -d ${BOARD_IMAGE_EXT_SD_DEVICE} \
-    -a ${IMAGE_PARTITION0_PATH} -b ${IMAGE_PARTITION1_PATH}
-endif
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/make-image.sh ${IMAGE_MAKE_SCRIPT_PARAMS}
+
 
 image-clean:
 	@$(ECHO) "${MSG_INFO}  Remove image${MSG_END}"
 	@$(ECHO) "${MSG_REQ}You need to be logged in as root you to remove the image${MSG_END}"
 	$(V) sudo $(RM) image
 	$(V) sudo $(RM) image-download image-patch image-make
+
+image-debug-var:
+	@$(ECHO) "IMAGE_MAKE_SCRIPT_PARAMS=${IMAGE_MAKE_SCRIPT_PARAMS}"
