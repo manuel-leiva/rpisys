@@ -160,6 +160,14 @@ do
         DEVICE_FILE="$2"
         shift
         ;;
+        -x|--partition0-name)
+        PARTITION_0_NAME="$2"
+        shift
+        ;;
+        -y|--partition1-name)
+        PARTITION_1_NAME="$2"
+        shift
+        ;;
         -b|--partition1-path)
         PARTITION_1_PATH="$2"
         shift

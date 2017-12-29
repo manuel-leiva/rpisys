@@ -38,7 +38,12 @@ endif
 ifdef BOARD_IMAGE_DISK_PARTITION_PATH
 IMAGE_MAKE_SCRIPT_PARAMS+=-f ${BOARD_IMAGE_DISK_PARTITION_PATH}
 endif
-
+ifdef BOARD_IMAGE_PARTITION0_NAME
+IMAGE_MAKE_SCRIPT_PARAMS+=--partition0-name ${BOARD_IMAGE_PARTITION0_NAME}
+endif
+ifdef BOARD_IMAGE_PARTITION1_NAME
+IMAGE_MAKE_SCRIPT_PARAMS+=--partition1-name ${BOARD_IMAGE_PARTITION1_NAME}
+endif
 
 # Public targets ###############################################################
 all: image-header image-make
