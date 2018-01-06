@@ -40,7 +40,7 @@ function ImageCopyData
         if [ ! -z ${!PARTITION_PATH_LIST[$IDX]} ]; then
             # Check if the source exists
             if [ ! -d ${!PARTITION_PATH_LIST[$IDX]} ]; then
-               echo -e ${ERRORCOLOR}Error:${ENDCOLOR} Directory does not exist.
+               echo -e ${ERRORCOLOR}Error:${ENDCOLOR} Directory ${!PARTITION_PATH_LIST[$IDX]} does not exist.
                exit
             else
                 echo "  Partition: ${!PARTITION_LIST[$IDX]}"
