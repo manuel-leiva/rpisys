@@ -32,43 +32,46 @@ PARTITION_FORMAT_LIST=("PARTITION_0_FORMAT" "PARTITION_1_FORMAT" "PARTITION_3_FO
 # Copy the source data into each partition.
 function ImageCopyData
 {
-    echo -e "${INFOCOLOR}Coping partition information${ENDCOLOR}\n"
+    echo -e "${INFOCOLOR}Copy data into partition${ENDCOLOR}\n"
     for IDX in $(seq 0 $PARTITION_MAX )
     do
         # Check if the filesystem path was defined, if it is not defined,
         # no data is copied and this step is skipped
         if [ ! -z ${!PARTITION_PATH_LIST[$IDX]} ]; then
-            # Check if the source exists
+            # Check if the partition exists
+            if [ ! -b ${!PARTITION_LIST[$IDX]} ]; then
+                return
+            fi
+            # Check if data source directory exists
             if [ ! -d ${!PARTITION_PATH_LIST[$IDX]} ]; then
                echo -e ${ERRORCOLOR}Error:${ENDCOLOR} Directory ${!PARTITION_PATH_LIST[$IDX]} does not exist.
                exit
-            else
-                echo "  Partition: ${!PARTITION_LIST[$IDX]}"
-                echo "  Name: ${!PARTITION_NAME_LIST[$IDX]}"
-                echo "  Mount: ${!PARTITION_MOUNT_DIR_LIST[$IDX]}"
-                echo "  Data: ${!PARTITION_PATH_LIST[$IDX]}"
-                echo -e "${INFOCOLOR}Add ${PARTITION_1_PATH} content in ${PARTITION_1_NAME} partition${ENDCOLOR}."
-                # Remove file if it exists previously
-                rm -rf ${!PARTITION_MOUNT_DIR_LIST[$IDX]}
-                # Create directory to mount partition
-                mkdir ${!PARTITION_MOUNT_DIR_LIST[$IDX]}
-                sudo mount ${!PARTITION_LIST[$IDX]} ${!PARTITION_MOUNT_DIR_LIST[$IDX]}
-                case ${!PARTITION_FORMAT_LIST[$IDX]} in
-                    "FAT32")
-                        echo "  Format: FAT32"
-                        sudo cp -r ${!PARTITION_PATH_LIST[$IDX]}/* ${!PARTITION_MOUNT_DIR_LIST[$IDX]}
-                        ;;
-                    "EXT4")
-                        echo "  Format: EXT4"
-                        sudo cp -a ${!PARTITION_PATH_LIST[$IDX]}/* ${!PARTITION_MOUNT_DIR_LIST[$IDX]}
-                        ;;
-                    *)
-                        echo -e "${ERRORCOLOR}Error:${ENDCOLOR} unknown partition format ${!PARTITION_FORMAT_LIST[$IDX]}"
-                        exit 1
-                esac
-                sudo umount ${!PARTITION_MOUNT_DIR_LIST[$IDX]}
-                rm -r ${!PARTITION_MOUNT_DIR_LIST[$IDX]}
             fi
+            echo -e "  ${INFOCOLOR}Partition:${ENDCOLOR} ${!PARTITION_LIST[$IDX]}"
+            echo -e "  ${INFOCOLOR}Name:${ENDCOLOR}      ${!PARTITION_NAME_LIST[$IDX]}"
+            echo -e "  ${INFOCOLOR}Mount:${ENDCOLOR}     ${!PARTITION_MOUNT_DIR_LIST[$IDX]}"
+            echo -e "  ${INFOCOLOR}Data:${ENDCOLOR}      ${!PARTITION_PATH_LIST[$IDX]}"
+            # Remove file if it exists previously
+            rm -rf ${!PARTITION_MOUNT_DIR_LIST[$IDX]}
+            # Create directory to mount partition
+            mkdir ${!PARTITION_MOUNT_DIR_LIST[$IDX]}
+            sudo mount ${!PARTITION_LIST[$IDX]} ${!PARTITION_MOUNT_DIR_LIST[$IDX]}
+            case ${!PARTITION_FORMAT_LIST[$IDX]} in
+                "FAT32")
+                    echo -e "  ${INFOCOLOR}Format:${ENDCOLOR}    FAT32"
+                    sudo cp -r ${!PARTITION_PATH_LIST[$IDX]}/* ${!PARTITION_MOUNT_DIR_LIST[$IDX]}
+                    ;;
+                "EXT4")
+                    echo -e "  ${INFOCOLOR}Format:${ENDCOLOR}    EXT4"
+                    sudo cp -a ${!PARTITION_PATH_LIST[$IDX]}/* ${!PARTITION_MOUNT_DIR_LIST[$IDX]}
+                    ;;
+                *)
+                    echo -e "${ERRORCOLOR}Error:${ENDCOLOR} unknown partition format ${!PARTITION_FORMAT_LIST[$IDX]}"
+                    exit 1
+            esac
+            sudo umount ${!PARTITION_MOUNT_DIR_LIST[$IDX]}
+            rm -r ${!PARTITION_MOUNT_DIR_LIST[$IDX]}
+
         fi
     done
 }
@@ -76,7 +79,7 @@ function ImageCopyData
 # Use a file usable as input to sfdisk to describe the partitions of a device.
 function ImagePartitionFile
 {
-    echo -e "${INFOCOLOR}Creating partition${ENDCOLOR}\n"
+    echo -e "${INFOCOLOR}Create partitions${ENDCOLOR}\n"
     sudo sfdisk $DEVICE_FILE < $PARTITION_FILE
     # Update the kernel's information about the current status of disk partitions
     # asking it to re-read the partition table.
@@ -93,17 +96,17 @@ function ImagePartitionFile
     for IDX in $(seq 0 $PARTITION_MAX )
     do
         if [ -n "${FORMAT_LIST_ARRAY[$IDX]}" ]; then
-            echo "  Partition: ${!PARTITION_LIST[$IDX]}"
-            echo "  Name: ${!PARTITION_NAME_LIST[$IDX]}"
+            echo -e "  ${INFOCOLOR}Partition:${ENDCOLOR} ${!PARTITION_LIST[$IDX]}"
+            echo -e "  ${INFOCOLOR}Name:${ENDCOLOR}      ${!PARTITION_NAME_LIST[$IDX]}"
             case ${FORMAT_LIST_ARRAY[$IDX]} in
                 c)
-                    echo "  Format: FAT32 [${FORMAT_LIST_ARRAY[$IDX]}]"
+                    echo -e "  ${INFOCOLOR}Format:${ENDCOLOR}    FAT32 [${FORMAT_LIST_ARRAY[$IDX]}]"
                     # Save format detected
                     eval ${PARTITION_FORMAT_LIST[$IDX]}="FAT32"
                     sudo mkfs.vfat -F 32 -n ${!PARTITION_NAME_LIST[$IDX]} ${!PARTITION_LIST[$IDX]}
                     ;;
                 83)
-                    echo "  Format: EXT4 [${FORMAT_LIST_ARRAY[$IDX]}]"
+                    echo -e "  ${INFOCOLOR}Format:${ENDCOLOR}    EXT4 [${FORMAT_LIST_ARRAY[$IDX]}]"
                     # Save format detected
                     eval ${PARTITION_FORMAT_LIST[$IDX]}="EXT4"
                     sudo mkfs.ext4 -L ${!PARTITION_NAME_LIST[$IDX]} ${!PARTITION_LIST[$IDX]}
@@ -155,6 +158,14 @@ do
     case $key in
         -d|--device)
         DEVICE_FILE="$2"
+        shift
+        ;;
+        -x|--partition0-name)
+        PARTITION_0_NAME="$2"
+        shift
+        ;;
+        -y|--partition1-name)
+        PARTITION_1_NAME="$2"
         shift
         ;;
         -b|--partition1-path)
