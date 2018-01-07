@@ -7,7 +7,7 @@ linux-dtbs-post:
 
 linux-install-post:
 	echo "  Linux post install"
-	cp $(LINUX_BOOT_INSTALL_PATH)/zImage $(LINUX_BOOT_INSTALL_PATH)/kernel7.img
+	$(V) cp $(LINUX_KERNEL_INSTALLATION_PATH)/zImage $(LINUX_KERNEL_INSTALLATION_PATH)/kernel7.img
 
 filesystem-patch-pre:
 # Change owner
