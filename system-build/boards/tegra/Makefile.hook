@@ -1,4 +1,6 @@
 
+SHELL=/bin/bash
+
 linux-download-post:
 ifeq ($(BOARD_NAME),"Tegra_X2")
 	echo "Decompress $(BOARD_NAME) kernel tx2"
@@ -11,6 +13,11 @@ endif
 linux-clean-post:
 	rm -rf ${LINUX_PATH}/sources
 
+linux-dtbs-post:
+# Copy the device tree in the filesystem
+	mkdir -p ${LINUX_KERNEL_INSTALL_PATH}/../rootfs/boot/
+	cp ${LINUX_KERNEL_INSTALL_PATH}/tegra186-quill-p3310-1000-c03-00-base.dtb ${LINUX_KERNEL_INSTALL_PATH}/../rootfs/boot/
+
 image-make:
 	cd ${IMAGE_PATH}/Linux_for_Tegra ; \
 	echo "You need root permissions to execute apply_binaries.sh" ; \
@@ -18,3 +25,52 @@ image-make:
 
 image-clean-post:
 	sudo rm -rf Linux_for_Tegra
+
+image-make-custom:
+	echo "1. Power down the device. If connected, remove the AC adapter from the device. The device must be powered OFF, and not in a suspend or sleep state."
+	echo "2. Connect the Micro-B plug on the USB cable to the Recovery (USB Micro-B) Port on the device and the other end to an available USB port on the host PC."
+	echo "3. Connect the power adapter to the device."
+	echo "4. Press POWER button."
+	echo "5. Press and hold the RECOVERY FORCE (REC) button."
+	echo "6. While pressing the RECOVERY FORCE button, press and release the RESET button."
+	echo "7. Wait 2 seconds and release the RECOVERY FORCE button."
+	echo "Do you want to continue? [y/N]"
+ifeq ($(IMAGE_PARAM),EMMC)
+ifeq ($(BOARD_NAME),"Tegra_X2")
+	read -n 1 -r ; \
+    echo ; \
+    if [[ $${REPLY} == [yY] ]]; then \
+        cd ${IMAGE_PATH}/Linux_for_Tegra ; \
+        echo "You need root permissions to create EMMC image" ; \
+        echo sudo ./flash.sh jetson-tx2 mmcblk0p1 ; \
+    fi
+else
+	read -n 1 -r ; \
+    echo ; \
+    if [[ $${REPLY} == [yY] ]]; then \
+        cd ${IMAGE_PATH}/Linux_for_Tegra ; \
+        echo "You need root permissions to create EMMC image" ; \
+        echo sudo ./flash.sh jetson-tx1 mmcblk0p1 ; \
+    fi
+endif
+endif
+# See https://elinux.org/Jetson/TX2_DTB#R28.1
+ifeq ($(IMAGE_PARAM),DTB)
+ifeq ($(BOARD_NAME),"Tegra_X2")
+	read -n 1 -r ; \
+    echo ; \
+    if [[ $${REPLY} == [yY] ]]; then \
+        cd ${IMAGE_PATH}/Linux_for_Tegra ; \
+        echo "You need root permissions to create EMMC image" ; \
+        echo sudo ./flash -r -k kernel-dtb jetson-tx2 mmcblk0p1 ; \
+    fi
+else
+	read -n 1 -r ; \
+    echo ; \
+    if [[ $${REPLY} == [yY] ]]; then \
+        cd ${IMAGE_PATH}/Linux_for_Tegra ; \
+        echo "You need root permissions to create EMMC image" ; \
+        echo sudo ./flash -r -k DTB jetson-tx1 mmcblk0p1 ; \
+    fi
+endif
+endif
