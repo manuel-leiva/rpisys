@@ -13,10 +13,11 @@ endif
 linux-clean-post:
 	rm -rf ${LINUX_PATH}/sources
 
-linux-dtbs-post:
+linux-install-post:
 # Copy the device tree in the filesystem
-	mkdir -p ${LINUX_KERNEL_INSTALL_PATH}/../rootfs/boot/
-	cp ${LINUX_KERNEL_INSTALL_PATH}/tegra186-quill-p3310-1000-c03-00-base.dtb ${LINUX_KERNEL_INSTALL_PATH}/../rootfs/boot/
+	mkdir -p ${LINUX_KERNEL_INSTALLATION_PATH}/../rootfs/boot/
+	cp ${LINUX_KERNEL_INSTALLATION_PATH}/tegra186-quill-p3310-1000-c03-00-base.dtb ${LINUX_KERNEL_INSTALLATION_PATH}/../rootfs/boot/
+	cp ${LINUX_KERNEL_INSTALLATION_PATH}/Image ${LINUX_KERNEL_INSTALLATION_PATH}/../rootfs/boot/
 
 image-make:
 	cd ${IMAGE_PATH}/Linux_for_Tegra ; \
@@ -61,7 +62,7 @@ ifeq ($(BOARD_NAME),"Tegra_X2")
     echo ; \
     if [[ $${REPLY} == [yY] ]]; then \
         cd ${IMAGE_PATH}/Linux_for_Tegra ; \
-        echo "You need root permissions to create EMMC image" ; \
+        echo "You need root permissions to create DTB partition" ; \
         echo sudo ./flash -r -k kernel-dtb jetson-tx2 mmcblk0p1 ; \
     fi
 else
@@ -69,7 +70,7 @@ else
     echo ; \
     if [[ $${REPLY} == [yY] ]]; then \
         cd ${IMAGE_PATH}/Linux_for_Tegra ; \
-        echo "You need root permissions to create EMMC image" ; \
+        echo "You need root permissions to create EMMC partition" ; \
         echo sudo ./flash -r -k DTB jetson-tx1 mmcblk0p1 ; \
     fi
 endif

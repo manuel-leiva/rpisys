@@ -77,8 +77,8 @@ BOARD_FILESYSTEM_SHA1SUM:=a0d419e702b3d535601dc41b6be97026ce20416e
 BOARD_FILESYSTEM_PKG_NAME:=filesystem
 # Directory where all other files and subdirectories will be saved
 BOARD_FILESYSTEM_DEST_DIR:=filesystem
-# BOARD_FILESYSTEM_SU: Force to use super user permissions to decompress and manage the
-# filesystem. Options: "y" or "n".
+# The root filesystem, provided with Tegra186_Linux_R28.1.0_aarch64,
+# has to be extracted with 'sudo'
 BOARD_FILESYSTEM_SU:=y
 
 BOARD_FILESYSTEM_INSTALLATION_DIR:=Linux_for_Tegra/rootfs/
