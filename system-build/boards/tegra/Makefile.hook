@@ -13,11 +13,21 @@ endif
 linux-clean-post:
 	rm -rf ${LINUX_PATH}/sources
 
-linux-install-post:
-# Copy the device tree in the filesystem
-	mkdir -p ${LINUX_KERNEL_INSTALLATION_PATH}/../rootfs/boot/
-	cp ${LINUX_KERNEL_INSTALLATION_PATH}/tegra186-quill-p3310-1000-c03-00-base.dtb ${LINUX_KERNEL_INSTALLATION_PATH}/../rootfs/boot/
-	cp ${LINUX_KERNEL_INSTALLATION_PATH}/Image ${LINUX_KERNEL_INSTALLATION_PATH}/../rootfs/boot/
+image-download-pre:
+# When is downloaded the Linux_for_Tegra, all the packages installed
+# (Linux Image, device tree, kernel modules and libraries) are overwritten
+# Then the current files are moved into a backup directory and are restored
+# into the original location after download Linux_for_Tegra
+	sudo cp -a ${IMAGE_PATH}/Linux_for_Tegra ${IMAGE_PATH}/Linux_for_Tegra_bkp
+
+image-download-post:
+# Restore files built into the original location after download Linux_for_Tegra
+	sudo cp -a ${IMAGE_PATH}/Linux_for_Tegra_bkp/kernel/Image ${IMAGE_PATH}/Linux_for_Tegra/kernel/
+	sudo cp -a ${IMAGE_PATH}/Linux_for_Tegra_bkp/kernel/Image ${IMAGE_PATH}/Linux_for_Tegra/rootfs/boot/
+	sudo cp -a ${IMAGE_PATH}/Linux_for_Tegra_bkp/kernel/tegra186-quill-p3310-1000-c03-00-base.dtb ${IMAGE_PATH}/Linux_for_Tegra/kernel/dtb
+	sudo cp -a ${IMAGE_PATH}/Linux_for_Tegra_bkp/kernel/tegra186-quill-p3310-1000-c03-00-base.dtb ${IMAGE_PATH}/Linux_for_Tegra/rootfs
+	sudo cp -a ${IMAGE_PATH}/Linux_for_Tegra_bkp/rootfs/lib/* ${IMAGE_PATH}/Linux_for_Tegra/rootfs/lib/
+	sudo rm -rf ${IMAGE_PATH}/Linux_for_Tegra_bkp
 
 image-make:
 	cd ${IMAGE_PATH}/Linux_for_Tegra ; \
@@ -27,7 +37,67 @@ image-make:
 image-clean-post:
 	sudo rm -rf Linux_for_Tegra
 
-image-make-custom:
+image-make-custom: image-message
+ifeq ($(IMAGE),EMMC)
+ifeq ($(BOARD_NAME),"Tegra_X2")
+	read -n 1 -r ; \
+    echo ; \
+    if [[ $${REPLY} == [yY] ]]; then \
+        cd ${IMAGE_PATH}/Linux_for_Tegra ; \
+        echo "You need root permissions to create EMMC image" ; \
+        sudo ./flash.sh jetson-tx2 mmcblk0p1 ; \
+    fi
+else
+	read -n 1 -r ; \
+    echo ; \
+    if [[ $${REPLY} == [yY] ]]; then \
+        cd ${IMAGE_PATH}/Linux_for_Tegra ; \
+        echo "You need root permissions to create EMMC image" ; \
+        sudo ./flash.sh jetson-tx1 mmcblk0p1 ; \
+    fi
+endif
+endif
+# See https://elinux.org/Jetson/TX2_DTB#R28.1
+ifeq ($(IMAGE),DTB)
+ifeq ($(BOARD_NAME),"Tegra_X2")
+	read -n 1 -r ; \
+    echo ; \
+    if [[ $${REPLY} == [yY] ]]; then \
+        cd ${IMAGE_PATH}/Linux_for_Tegra ; \
+        echo "You need root permissions to create DTB partition" ; \
+        sudo ./flash -r -k kernel-dtb jetson-tx2 mmcblk0p1 ; \
+    fi
+else
+	read -n 1 -r ; \
+    echo ; \
+    if [[ $${REPLY} == [yY] ]]; then \
+        cd ${IMAGE_PATH}/Linux_for_Tegra ; \
+        echo "You need root permissions to create EMMC partition" ; \
+        sudo ./flash -r -k DTB jetson-tx1 mmcblk0p1 ; \
+    fi
+endif
+endif
+
+image-make-sd-pre: image-message
+ifeq ($(BOARD),"Tegra_X2")
+	read -n 1 -r ; \
+    echo ; \
+    if [[ $${REPLY} == [yY] ]]; then \
+        cd ${IMAGE_PATH}/Linux_for_Tegra ; \
+        echo "You need root permissions to create EMMC image" ; \
+        sudo ./flash.sh jetson-tx2 mmcblk1p1 ; \
+    fi
+else
+	read -n 1 -r ; \
+    echo ; \
+    if [[ $${REPLY} == [yY] ]]; then \
+        cd ${IMAGE_PATH}/Linux_for_Tegra ; \
+        echo "You need root permissions to create EMMC image" ; \
+        sudo ./flash.sh jetson-tx1 mmcblk1p1  ; \
+    fi
+endif
+
+image-message:
 	echo "1. Power down the device. If connected, remove the AC adapter from the device. The device must be powered OFF, and not in a suspend or sleep state."
 	echo "2. Connect the Micro-B plug on the USB cable to the Recovery (USB Micro-B) Port on the device and the other end to an available USB port on the host PC."
 	echo "3. Connect the power adapter to the device."
@@ -36,42 +106,4 @@ image-make-custom:
 	echo "6. While pressing the RECOVERY FORCE button, press and release the RESET button."
 	echo "7. Wait 2 seconds and release the RECOVERY FORCE button."
 	echo "Do you want to continue? [y/N]"
-ifeq ($(IMAGE_PARAM),EMMC)
-ifeq ($(BOARD_NAME),"Tegra_X2")
-	read -n 1 -r ; \
-    echo ; \
-    if [[ $${REPLY} == [yY] ]]; then \
-        cd ${IMAGE_PATH}/Linux_for_Tegra ; \
-        echo "You need root permissions to create EMMC image" ; \
-        echo sudo ./flash.sh jetson-tx2 mmcblk0p1 ; \
-    fi
-else
-	read -n 1 -r ; \
-    echo ; \
-    if [[ $${REPLY} == [yY] ]]; then \
-        cd ${IMAGE_PATH}/Linux_for_Tegra ; \
-        echo "You need root permissions to create EMMC image" ; \
-        echo sudo ./flash.sh jetson-tx1 mmcblk0p1 ; \
-    fi
-endif
-endif
-# See https://elinux.org/Jetson/TX2_DTB#R28.1
-ifeq ($(IMAGE_PARAM),DTB)
-ifeq ($(BOARD_NAME),"Tegra_X2")
-	read -n 1 -r ; \
-    echo ; \
-    if [[ $${REPLY} == [yY] ]]; then \
-        cd ${IMAGE_PATH}/Linux_for_Tegra ; \
-        echo "You need root permissions to create DTB partition" ; \
-        echo sudo ./flash -r -k kernel-dtb jetson-tx2 mmcblk0p1 ; \
-    fi
-else
-	read -n 1 -r ; \
-    echo ; \
-    if [[ $${REPLY} == [yY] ]]; then \
-        cd ${IMAGE_PATH}/Linux_for_Tegra ; \
-        echo "You need root permissions to create EMMC partition" ; \
-        echo sudo ./flash -r -k DTB jetson-tx1 mmcblk0p1 ; \
-    fi
-endif
-endif
+
