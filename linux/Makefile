@@ -175,11 +175,11 @@ linux-install: linux-modules linux-dtbs
 	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),linux-install-pre)
 # Install kernel image, device tree and overlays
 	@$(ECHO) "${MSG_INFO}    Install kernel${MSG_END}"
-	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/boot
+	$(V) $(MKDIR) ${LINUX_KERNEL_INSTALLATION_PATH}
 	$(V) cd kernel; find . | cpio -pdum ${LINUX_KERNEL_INSTALLATION_PATH}
 # Install kernel modules
 	@$(ECHO) "${MSG_INFO}    Install modules${MSG_END}"
-	$(V) $(MKDIR) ${PRJ_ROOT_PATH}/image/image/rootfs/
+	$(V) $(MKDIR) ${LINUX_MODULES_INSTALLATION_PATH}
 	$(V) cd modules; find . | cpio -pdum ${LINUX_MODULES_INSTALLATION_PATH}
 # Call post-install recipe
 	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),linux-install-post)
