@@ -25,7 +25,7 @@ endif
 # Linux instalation paths
 export IMAGE_PATH:=${PRJ_ROOT_PATH}/image
 
-# Create parameter list
+# Create parameter list to create image
 ifdef BOARD_IMAGE_EXT_SD_DEVICE
 IMAGE_MAKE_SCRIPT_PARAMS=-d ${BOARD_IMAGE_EXT_SD_DEVICE}
 endif
@@ -45,6 +45,21 @@ ifdef BOARD_IMAGE_PARTITION1_NAME
 IMAGE_MAKE_SCRIPT_PARAMS+=--partition1-name ${BOARD_IMAGE_PARTITION1_NAME}
 endif
 
+
+# Create parameter list to download image
+IMAGE_DL_PKG_PARAMS=--pkg-name ${BOARD_IMAGE_PKG_NAME} \
+    --pkg-target-name ${BOARD_IMAGE_TAR_NAME} \
+    --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
+    --dl-url ${BOARD_IMAGE_DL_URL} \
+    --sha1sum ${BOARD_IMAGE_SHA1SUM}
+ifeq ($(BOARD_IMAGE_SU),y)
+IMAGE_DL_PKG_PARAMS+=--su y
+endif
+
+ifeq ($(IMAGE),)
+IMAGE_CUSTOM := $(IMAGE)
+endif
+
 # Public targets ###############################################################
 all: image-header image-make
 
@@ -52,6 +67,7 @@ clean: image-header image-clean
 
 sd: image-header image-make-sd
 
+custom: image-header image-make-custom
 # Private targets ##############################################################
 
 image-header:
@@ -61,11 +77,7 @@ image-download:
 ifdef BOARD_IMAGE_TAR_NAME
 	@$(ECHO) "${MSG_INFO}  Download${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
-    --pkg-name ${BOARD_IMAGE_PKG_NAME} \
-    --pkg-target-name ${BOARD_IMAGE_TAR_NAME} \
-    --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
-    --dl-url ${BOARD_IMAGE_DL_URL} \
-    --sha1sum ${BOARD_IMAGE_SHA1SUM}
+    ${IMAGE_DL_PKG_PARAMS}
 endif
 	$(V) touch $@
 
@@ -91,6 +103,10 @@ image-make-sd:
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/make-image.sh ${IMAGE_MAKE_SCRIPT_PARAMS}
 
 
+image-make-custom:
+	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),$@)
+
+
 image-clean:
 	@$(ECHO) "${MSG_INFO}  Remove image${MSG_END}"
 	@$(ECHO) "${MSG_REQ}You need to be logged in as root you to remove the image${MSG_END}"
@@ -100,3 +116,4 @@ image-clean:
 
 image-debug-var:
 	@$(ECHO) "IMAGE_MAKE_SCRIPT_PARAMS=${IMAGE_MAKE_SCRIPT_PARAMS}"
+	@$(ECHO) "IMAGE_DL_PKG_PARAMS=${IMAGE_DL_PKG_PARAMS}"
