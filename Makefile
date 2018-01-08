@@ -81,6 +81,9 @@ image-clean:
 image-sd:
 	$(V) $(MAKE) image sd
 
+image-custom:
+	$(V) $(MAKE) image custom
+
 image-file:
 	$(V) $(MAKE) image file
 

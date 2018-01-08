@@ -56,10 +56,6 @@ ifeq ($(BOARD_IMAGE_SU),y)
 IMAGE_DL_PKG_PARAMS+=--su y
 endif
 
-ifeq ($(IMAGE),)
-IMAGE_CUSTOM := $(IMAGE)
-endif
-
 # Public targets ###############################################################
 all: image-header image-make
 
@@ -74,11 +70,13 @@ image-header:
 	@$(ECHO) "${MSG_INFO}Image${MSG_END}"
 
 image-download:
+	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),$@-pre)
 ifdef BOARD_IMAGE_TAR_NAME
 	@$(ECHO) "${MSG_INFO}  Download${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     ${IMAGE_DL_PKG_PARAMS}
 endif
+	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),$@-post)
 	$(V) touch $@
 
 
@@ -100,7 +98,9 @@ image-make: image-patch
 
 image-make-sd:
 	@$(ECHO) "${MSG_INFO}  Build SD image${MSG_END}"
+	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),$@-pre)
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/make-image.sh ${IMAGE_MAKE_SCRIPT_PARAMS}
+	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),$@-post)
 
 
 image-make-custom:
