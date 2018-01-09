@@ -100,8 +100,9 @@ board-clean:
 
 board-info:
 	@$(ECHO) "${MSG_INFO}  Name: ${BOARD_NAME}${MSG_END}"
-	@$(ECHO) "  Linux:      ${BOARD_LINUX_TAR_NAME}"
-	@$(ECHO) "  Filesystem: ${FILESYSTEM_NAMETAR}"
+	@$(ECHO) "  Linux:      ${BOARD_LINUX_DL_URL}${BOARD_LINUX_TAR_NAME}"
+	@$(ECHO) "  Filesystem: ${BOARD_FILESYSTEM_DL_URL}${BOARD_FILESYSTEM_TAR_NAME}"
+	@$(ECHO) "  Toolchain:  ${BOARD_TOOLCHAIN_DL_URL}${BOARD_TOOLCHAIN_TAR_NAME}"
 	@$(ECHO)
 
 # Private targets ##############################################################
