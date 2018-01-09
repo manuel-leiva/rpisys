@@ -152,3 +152,22 @@ BOARD_IMAGE_P1_PATH:=${BOARD_FILESYSTEM_INSTALLATION_PATH}
 ## Custom images
 
 The target image-custom was defined to add a hook and make custom images configurations if it's required.
+
+# Known issues
+## Sometimes the colors in the messages are not displayed.
+
+In this case, apply this change:
+
+system-build/makefile/Makefile.local:line 5:
+```
+- ECHO:=echo
++ ECHO:=echo -e
+```
+## If you see the character 'e' before each message.
+Apply this change:
+
+system-build/makefile/Makefile.local:line 5:
+```
+- ECHO:=echo -e
++ ECHO:=echo
+```
