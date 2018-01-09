@@ -4,7 +4,7 @@ BOARD_NAME:="Raspberry_Pi_3"
 # COMMON VARIABLES #############################################################
 
 # This directory is used to share files between projects as the toolchain
-BOARD_PRJ_COMMON_PATH:=/home/${USER}/rpisys
+BOARD_PRJ_COMMON_PATH:=/home/${USER}/rpisys_toolchain
 
 # Destination directory to download packages
 BOARD_PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/rpisys
