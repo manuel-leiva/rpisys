@@ -12,14 +12,45 @@
 # Build project
 
 Apply configuration for a specific board.
+
+## Configure board
+
+### Tegra
+```
+#!bash
+./configure --board tegra/tegra_r28_1.defs
+```
+### Raspberry 
+
 ```
 #!bash
 ./configure --board raspberry_pi_3/raspberry_pi_3.defs
 ```
-Build system
+## Build system
 ```
 #!bash
 make
+```
+## Create image
+
+### Tegra
+
+Create EMMC image
+```
+#!bash
+make image-custom IMAGE=EMMC
+```
+Create SD image
+```
+#!bash
+make image-sd
+```
+
+### Raspberry 
+Create SD image
+```
+#!bash
+make image-sd
 ```
 
 ## Clean project
@@ -34,7 +65,7 @@ make board-clean
 
 ## Variables Naming
 
-### Board Sufix description
+### Board Prefix description
 
 * BOARD_PRJ_: Board variables realated to the general project configuration.
 * BOARD_TOOLCHAIN_: Board toolchain configuration.
@@ -44,7 +75,7 @@ make board-clean
 * BOARD_LIBRARY_: Board filesystem libraries configuration.
 * BOARD_IMAGE_: Board image configuration.
 
-### Modules sufix
+### Modules Prefix
 
 * BOARD_: Variables specific for board configuration.
 * BOOTLOADER_: Bootloader variables configuration.
@@ -56,7 +87,7 @@ make board-clean
 * COMMON_RECIPE_: Makefile common recipe
 * COMMON_TARGET_: Makefile common target and recipe
 
-### Prefix description
+### Sufix description
 
 * _DL_URL: Download URL.
 * _TAR_NAME: Tarball name.
@@ -109,7 +140,6 @@ By default the Bootloader Linux image and device tree is installed in $RPISYS/im
 if you want to define a custom location you can define BOARD_BOOTLOADER_INSTALLATION_PATH or BOARD_LINUX_INSTALLATION_PATH, in this case the installation path is $RPISYS/image/$BOARD_BOOTLOADER_INSTALLATION_PATH and $RPISYS/image/$BOARD_LINUX_INSTALLATION_PATH.
 
 If is defined a custom path for linux image, device tree, bootloader or  filesystem you have to define the partition path, For example:
-
 ```
 #!Makefile
 BOARD_IMAGE_P0_PATH:=${BOARD_BOOTLOADER_INSTALLATION_PATH}
