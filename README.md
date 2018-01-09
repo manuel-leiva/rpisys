@@ -113,7 +113,8 @@ touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/Makefile
 #!Makefile
 AUTOTOOLS_DL_URL := http://ftp.gnome.org/pub/GNOME/sources/libsoup/2.57/
 AUTOTOOLS_TAR_NAME := libsoup-2.57.1.tar.xz
-AUTOTOOLS_FLAGS += --prefix=/usr --libdir=/usr/lib/arm-linux-gnueabihf/ --host=arm
+AUTOTOOLS_SHA1SUM:=a855a98c1d002a4e2bfb7562135265a8df4dad65
+AUTOTOOLS_FLAGS += --prefix=/usr --libdir=$(BOARD_LIBRARY_BOARD_INSTALLDIR) --host=$(BOARD_LIBRARY_HOST)
 ```
 4.Include Makefile. Since libsoup is an autotools project then Makefile.autotools file must be included
 ```
@@ -133,6 +134,8 @@ BOARD_LIBRARY_NAME_LIST := libsoup-2.57.1
 ```
 # Image
 
+## Configuration
+
 By default the filesystem is installed in $RPISYS/image/image/rootfs.
 if you want to define a custom location you can define BOARD_FILESYSTEM_INSTALLATION_PATH, in this case the installation path is $RPISYS/image/$BOARD_FILESYSTEM_INSTALLATION_PATH.
 
@@ -145,3 +148,7 @@ If is defined a custom path for linux image, device tree, bootloader or  filesys
 BOARD_IMAGE_P0_PATH:=${BOARD_BOOTLOADER_INSTALLATION_PATH}
 BOARD_IMAGE_P1_PATH:=${BOARD_FILESYSTEM_INSTALLATION_PATH}
 ```
+
+## Custom images
+
+The target image-custom was defined to add a hook and make custom images configurations if it's required.
