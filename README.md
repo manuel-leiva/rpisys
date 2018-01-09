@@ -12,14 +12,45 @@
 # Build project
 
 Apply configuration for a specific board.
+
+## Configure board
+
+### Tegra
+```
+#!bash
+./configure --board tegra/tegra_r28_1.defs
+```
+### Raspberry 
+
 ```
 #!bash
 ./configure --board raspberry_pi_3/raspberry_pi_3.defs
 ```
-Build system
+## Build system
 ```
 #!bash
 make
+```
+## Create image
+
+### Tegra
+
+Create EMMC image
+```
+#!bash
+make image-custom IMAGE=EMMC
+```
+Create SD image
+```
+#!bash
+make image-sd
+```
+
+### Raspberry 
+Create SD image
+```
+#!bash
+make image-sd
 ```
 
 ## Clean project
@@ -34,7 +65,7 @@ make board-clean
 
 ## Variables Naming
 
-### Board Sufix description
+### Board Prefix description
 
 * BOARD_PRJ_: Board variables realated to the general project configuration.
 * BOARD_TOOLCHAIN_: Board toolchain configuration.
@@ -44,7 +75,7 @@ make board-clean
 * BOARD_LIBRARY_: Board filesystem libraries configuration.
 * BOARD_IMAGE_: Board image configuration.
 
-### Modules sufix
+### Modules Prefix
 
 * BOARD_: Variables specific for board configuration.
 * BOOTLOADER_: Bootloader variables configuration.
@@ -56,7 +87,7 @@ make board-clean
 * COMMON_RECIPE_: Makefile common recipe
 * COMMON_TARGET_: Makefile common target and recipe
 
-### Prefix description
+### Sufix description
 
 * _DL_URL: Download URL.
 * _TAR_NAME: Tarball name.
@@ -82,7 +113,8 @@ touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/Makefile
 #!Makefile
 AUTOTOOLS_DL_URL := http://ftp.gnome.org/pub/GNOME/sources/libsoup/2.57/
 AUTOTOOLS_TAR_NAME := libsoup-2.57.1.tar.xz
-AUTOTOOLS_FLAGS += --prefix=/usr --libdir=/usr/lib/arm-linux-gnueabihf/ --host=arm
+AUTOTOOLS_SHA1SUM:=a855a98c1d002a4e2bfb7562135265a8df4dad65
+AUTOTOOLS_FLAGS += --prefix=/usr --libdir=$(BOARD_LIBRARY_BOARD_INSTALLDIR) --host=$(BOARD_LIBRARY_HOST)
 ```
 4.Include Makefile. Since libsoup is an autotools project then Makefile.autotools file must be included
 ```
@@ -102,6 +134,8 @@ BOARD_LIBRARY_NAME_LIST := libsoup-2.57.1
 ```
 # Image
 
+## Configuration
+
 By default the filesystem is installed in $RPISYS/image/image/rootfs.
 if you want to define a custom location you can define BOARD_FILESYSTEM_INSTALLATION_PATH, in this case the installation path is $RPISYS/image/$BOARD_FILESYSTEM_INSTALLATION_PATH.
 
@@ -109,9 +143,31 @@ By default the Bootloader Linux image and device tree is installed in $RPISYS/im
 if you want to define a custom location you can define BOARD_BOOTLOADER_INSTALLATION_PATH or BOARD_LINUX_INSTALLATION_PATH, in this case the installation path is $RPISYS/image/$BOARD_BOOTLOADER_INSTALLATION_PATH and $RPISYS/image/$BOARD_LINUX_INSTALLATION_PATH.
 
 If is defined a custom path for linux image, device tree, bootloader or  filesystem you have to define the partition path, For example:
-
 ```
 #!Makefile
 BOARD_IMAGE_P0_PATH:=${BOARD_BOOTLOADER_INSTALLATION_PATH}
 BOARD_IMAGE_P1_PATH:=${BOARD_FILESYSTEM_INSTALLATION_PATH}
+```
+
+## Custom images
+
+The target image-custom was defined to add a hook and make custom images configurations if it's required.
+
+# Known issues
+## Sometimes the colors in the messages are not displayed.
+
+In this case, apply this change:
+
+system-build/makefile/Makefile.local:line 5:
+```
+- ECHO:=echo
++ ECHO:=echo -e
+```
+## If you see the character 'e' before each message.
+Apply this change:
+
+system-build/makefile/Makefile.local:line 5:
+```
+- ECHO:=echo -e
++ ECHO:=echo
 ```
