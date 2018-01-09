@@ -1,0 +1,14 @@
+Index: readline-6.3/readline-6.3/Makefile.in
+===================================================================
+--- readline-6.3.orig/readline-6.3/Makefile.in
++++ readline-6.3/readline-6.3/Makefile.in
+@@ -69,7 +69,8 @@ docdir = @docdir@
+ man3dir = $(mandir)/man3
+ 
+ # Support an alternate destination root directory for package building
+-DESTDIR =
++# Remove internal definition in order to use external enviroment variable
++# DESTDIR =
+ 
+ # Programs to make tags files.
+ ETAGS = etags

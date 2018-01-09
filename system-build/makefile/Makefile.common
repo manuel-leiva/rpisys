@@ -1,0 +1,132 @@
+
+# Definitions ##################################################################
+
+# Amount of cores in the host system
+COMMON_HOST_CORES:=$(shell cat /proc/cpuinfo | grep processor | wc -l)
+
+## Verify external variables ##
+
+
+ifndef BOARD_PRJ_MAKE_JOBS_PER_CORE
+# If BOARD_PRJ_MAKE_JOBS_PER_CORE is not defined LINUX_MAKE_JOBS=1
+COMMON_MAKE_JOBS:=1
+$(warning WARN: BOARD_PRJ_MAKE_JOBS_PER_CORE not defined)
+else
+COMMON_MAKE_JOBS:=$(shell echo ${BOARD_PRJ_MAKE_JOBS_PER_CORE}*${COMMON_HOST_CORES}/100 | bc )
+endif
+
+COMMON_IMAGE_BOOT_PATH:=${PRJ_ROOT_PATH}/image/image/boot
+COMMON_IMAGE_ROOTFS_PATH:=${PRJ_ROOT_PATH}/image/image/rootfs
+
+COMMON_LIB_BOARD_LIBS_DIR:=board-libs
+COMMON_LIB_HOST_LIBS_DIR:=host-libs
+
+# Message types
+MSG_ERROR := \033[1;31m
+MSG_WARN := \033[0;33m
+MSG_INFO := \033[0;34m
+MSG_REQ := \033[1;33m
+MSG_DEBUG := \033[0;34m
+MSG_END := \033[0m
+
+# Commands
+CP :=cp
+RM :=rm -rf
+MKDIR :=mkdir -p
+
+INCLUDE_MAKE_PATH:=$(PRJ_ROOT_PATH)/system-build/makefile
+SYSTEM_BUILD_PATH:=$(PRJ_ROOT_PATH)/system-build
+
+# Conditional ##################################################################
+
+ifeq ($(VERBOSE), 1)
+MAKE := make -C
+MAKE_F:= make -f
+else
+MAKE := make -s -C
+MAKE_F:= make -s -f
+V := @
+endif
+
+# Public targets ###############################################################
+
+# Common recipe
+# Remove patch metainformation
+# Parameters:
+# 1: Dependency file path
+define COMMON_RECIPE_DEPENDENCY
+	$(V) if [ -f $(1) ]; then \
+        for PACKAGE in $$(cat $(1)) ; do \
+             PKG_INSTALLED=$$(apt-cache policy $$PACKAGE  | grep Installed) ; \
+             $(ECHO) "    $$PACKAGE:$$PKG_INSTALLED" ; \
+             if [ -n "$$(echo $$PKG_INSTALLED | grep none )" ]; then \
+                 $(ECHO) "${MSG_REQ}You need root permissions to install $$PACKAGE${MSG_END}" ; \
+                 sudo apt-get install $$PACKAGE ; \
+             fi \
+        done \
+    fi
+endef
+
+# Apply patch
+# Verify if patches directory exists, if it exists, apply the patches
+# 1: patches where is located the patches
+# 2: Message
+define COMMON_RECIPE_PATCH
+	$(V) if [ -d $(1)/patches ]; then \
+        $(ECHO) "${MSG_INFO}  Patch $(2) ${MSG_END}" ; \
+        quilt push -a ; \
+    fi
+endef
+
+# Apply patch (deprecated)
+# Verify if patches directory exists, if it exists, apply the patches
+# 1: target_prefix
+# 2: dependecies
+# 3: patches where is located the patches
+# 4: Message
+define COMMON_TARGET_PATCH
+$(1)-patch: $(2)
+	$(V) if [ -d $(3)/patches ]; then \
+        $(ECHO) "${MSG_INFO}  Patch $(4) ${MSG_END}" ; \
+        quilt push -a ; \
+    fi
+	$(V) touch $(1)-patch ;
+endef
+
+
+# Revert patch
+# Verify if patches directory exists, if it exists, then verify if the
+# flag autotools-patch file exists, if it exists, then remove the
+# patches
+define COMMON_TARGET_REVPATCH
+$(1)-revpatch: $(2)
+	$(V) if [ -d $(3)/patches ]; then \
+        if [ -f $(3)/$(1)-patch ]; then \
+            $(ECHO) "${MSG_INFO}  Reverse patch $(4) ${MSG_END}" ; \
+            quilt pop -a ; \
+        fi \
+    fi
+	$(V) $(RM) $(1)-patch
+endef
+
+# Common recipe
+# Remove patch metainformation
+# Parameters:
+# 1: Patches path
+define COMMON_RECIPE_RM_PATCH
+	$(V) if [ -d $(1)/patches ]; then \
+        $(RM) $(1)/.pc; \
+    fi
+endef
+
+
+# Common hook recipe
+# Parameters:
+# 1: Makefile hook path
+# 2: Target
+define COMMON_RECIPE_HOOK
+	$(V) $(MAKE_F) $(1) -q $(2) 2> /dev/null ; \
+if [ $$? -le 1 ] ; then \
+    $(MAKE_F) $(1) $(2) ; \
+fi
+endef

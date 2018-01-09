@@ -1,0 +1,108 @@
+# Include board definitions
+include ../../board.defs
+# Include local configuration
+include ../system-build/makefile/Makefile.local
+# Include common recipes and definitions
+include ../../system-build/makefile/Makefile.common
+
+# Private definitions ##########################################################
+
+PKGNAME := $(notdir $(shell pwd))
+
+CROSS_COMPILE := $(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX)
+AUTOTOOLS_DL_URL_FILE = $(AUTOTOOLS_DL_URL)$(AUTOTOOLS_NAME_TAR)
+AUTOTOOLS_DL_TAR_PATH = $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
+AUTOTOOLS_PKG_PATH = $(PRJ_ROOT_PATH)/libraries/$(PKGNAME)
+
+AUTOTOOLS_BOARD_LIBS_DIR:=board-libs
+AUTOTOOLS_HOST_LIBS_DIR:=host-libs
+
+AUTOTOOLS_PREFIX_INC_DIR:=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)
+
+# Add standard include files and libraries location
+LIB_CFLAGS+="-I${AUTOTOOLS_PREFIX_INC_DIR}/usr/include"
+LIB_LDFLAGS+="-L$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)$(BOARD_LIBRARY_BOARD_INSTALLDIR)"
+
+
+export DESTDIR=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)/
+# PKG_CONFIG_LIBDIR: Replaces the default pkg-config search directory.
+export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/$(BOARD_LIBRARY_BOARD_INSTALLDIR)/pkgconfig
+
+.PHONY: all clean help download install
+
+# Public targets ###############################################################
+
+all: lib-make
+
+#~ clean: autotools-revpatch
+clean:
+	@$(ECHO) "${MSG_INFO}  Clean ${PKGNAME}${MSG_END} "
+# Remove flags files
+	$(V) $(RM) lib-decomp \
+	lib-patch \
+	lib-make \
+	lib-install
+	$(V) $(MAKE) ${PKGNAME} clean
+# Remove package directory
+#~ 	$(V) $(RM) $(PKGNAME)
+
+# Alias target to download the package
+download: lib-download
+
+# Private targets ##############################################################
+
+lib-download:
+	@$(ECHO) "${MSG_INFO}  Download ${PKGNAME}${MSG_END}"
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
+    --pkg-name ${PKGNAME} \
+    --pkg-target-name $(LIB_NAME_TAR) \
+    --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
+    --dl-url ${LIB_DL_URL}
+	$(V) touch $@
+
+
+lib-make:
+	@    $(ECHO) "${MSG_INFO}  Build ${PKGNAME}${MSG_END}"
+	$(V) $(MAKE) ${PKGNAME} CXX=${CROSS_COMPILE}g++ AR=${CROSS_COMPILE}ar CC=${CROSS_COMPILE}gcc RANLIB=${CROSS_COMPILE}ranlib \
+    CFLAGS="${LIB_CFLAGS}" LDFLAGS="${LIB_LDFLAGS}" $(LIB_MAKE_FLAGS)
+	$(V) touch $@
+
+generic-make-install: generic-make
+	@    $(ECHO) "${MSG_INFO}  Make install ${PKGNAME}${MSG_END}"
+	$(V) mkdir -p install
+	$(V) DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install $(MAKE) ${PKGNAME} install $(MAKE_FLAGS)
+	$(V) cp -ar $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/* $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)/
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-change-prefix.sh ${PKGNAME} $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR) ${BOARD_LIBRARY_BOARD_INSTALLDIR}
+	$(V) cp -ar $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/* $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/
+#~ 	$(V) $(RM) install
+	$(V) touch $@
+
+# Alias target to download the package
+install:
+	@    $(ECHO) "${MSG_WARN}  Make install not supported yet ${PKGNAME}${MSG_END}"
+
+help:
+	@$(ECHO) "  Targets:"
+	@$(ECHO) "    all:       Build autotools package"
+	@$(ECHO) "    install:   Install autotools package"
+	@$(ECHO) "    download:  Download autotools package"
+	@$(ECHO) "  Variables"
+	@$(ECHO) "    AUTOTOOLS_DL_URL    : URL address"
+	@$(ECHO) "    AUTOTOOLS_NAME_TAR  : Tar package name"
+	@$(ECHO) "    AUTOTOOLS_FLAGS     : configure script flags"
+
+help-debug:
+	@$(ECHO) "    autotools-debug-var:            Show variables used during build process"
+	@$(ECHO) "    autotools-debug-libs-installed: Show the list of libraries installed using: pkg-config --list-all"
+
+generic-debug-var:
+	@$(ECHO) PKGNAME: ${PKGNAME}
+	@$(ECHO) DESTDIR: ${DESTDIR}
+	@$(ECHO) PKG_CONFIG_LIBDIR: ${PKG_CONFIG_LIBDIR}
+	@$(ECHO) AUTOTOOLS_FLAGS: ${AUTOTOOLS_FLAGS}
+	@$(ECHO) AUTOTOOLS_DL_URL_FILE: ${AUTOTOOLS_DL_URL_FILE}
+	@$(ECHO) AUTOTOOLS_DL_TAR_PATH: ${AUTOTOOLS_DL_TAR_PATH}
+	@$(ECHO) AUTOTOOLS_PKG_PATH: ${AUTOTOOLS_PKG_PATH}
+
+generic-debug-libs-installed:
+	@pkg-config --list-all

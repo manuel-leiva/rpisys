@@ -1,0 +1,26 @@
+Index: glib-2.50.3/glib-2.50.3/configure
+===================================================================
+--- glib-2.50.3.orig/glib-2.50.3/configure
++++ glib-2.50.3/glib-2.50.3/configure
+@@ -419,13 +419,14 @@ fi # as_fn_arith
+ # script with STATUS, using 1 if that was 0.
+ as_fn_error ()
+ {
+-  as_status=$1; test $as_status -eq 0 && as_status=1
+-  if test "$4"; then
+-    as_lineno=${as_lineno-"$3"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+-    $as_echo "$as_me:${as_lineno-$LINENO}: error: $2" >&$4
+-  fi
+-  $as_echo "$as_me: error: $2" >&2
+-  as_fn_exit $as_status
++  # as_status=$1; test $as_status -eq 0 && as_status=1
++  # if test "$4"; then
++  #  as_lineno=${as_lineno-"$3"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
++  #  $as_echo "$as_me:${as_lineno-$LINENO}: error: $2" >&$4
++  #fi
++  #$as_echo "$as_me: error: $2" >&2
++  #as_fn_exit $as_status
++  echo "as_fn_error STATUS ERROR disabled"
+ } # as_fn_error
+ 
+ if expr a : '\(a\)' >/dev/null 2>&1 &&
