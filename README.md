@@ -1,6 +1,113 @@
 # RPISYS project
 
-# Directory description 
+RPISYS (**R**aspberry **Pi** **sys**tem) was created in order to build all the packages required to create a bootable image for Raspberry Pi. The project is based on Makefiles and bash scripts.
+
+The main goal of the project is to contain a set of recipes and scripts that perform generic tasks such build a kernel, compile libraries create an image etc, therefore you can use these generic recipes to build different systems. You can convert this generic task to a specific task through parameters that are defined in a configuration file that is called board definition.
+Since there are some tasks where you need specific procedures that are not covered by these generic recipes, The SDK allows adding hooks with customs procedures that can be called before and after certain recipe.
+Therefore all the specific configuration and specific procedures are used by the SDK but also can be easily removed and replaced with a new configuration.
+
+# Configuration files
+
+1. Raspberry Pi 3
+* Configuration file: raspberry_pi_3.defs
+2. Tegra X1/X2
+* Configuration file: tegra_r28_1.defs
+
+# Features
+
+## Raspberry Pi 3
+
+1. Kernel: Kernel source tree for Raspberry Pi Foundation 4.4.50 (https://github.com/raspberrypi/linux)
+2. Filesystem: Rasbian Lite (2017-03-02) https://www.raspberrypi.org/downloads/raspbian/
+3. Toolchain: gcc-linaro-arm-linux-gnueabihf-raspbian 4.8.3 (https://github.com/raspberrypi/tools)
+4. Libraries:
+  * glib 2.50.3
+  * gst-libav 1.10.5
+  * GStreamer 1.10.5 (plugins base, bad, good and ugly, gst-rtsp-server)
+  * gst rpicamsrc 4fc608e (https://github.com/thaytan/gst-rpicamsrc/commit/4fc608eb8196f45c591263e5d50fd3057ac380e5)
+  * libffi 3.2.1
+  * libsoup 2.57.1
+  * libxml2 2.9.4
+  * ncurses 6.0
+  * pcre 8.40
+  * readline 6.3
+  * sqlite-autoconf 3170000
+  * x264 snapshot 2017-08-11 2245 stable
+  * zlib 1.2.11
+3. Image: SD bootable image.
+
+## Tegra X1/X2
+
+1. Kernel: Kernel source tree for Tegra X1/X2 r28_Release_v1.0
+2. Filesystem: Tegra Linux Sample Root Filesystem R28.1.0 aarch64
+3. Toolchain: L4T gcc toolchain 64-bit v28.1
+3. Image:
+  *  SD bootable image.
+  *  EMMC image.
+
+# Build project
+
+1. Download project
+
+```make
+git clone https://manuelleiva@bitbucket.org/manuelleiva/rpisys.git
+```
+
+## Raspberry Pi 3
+
+2. Configure board
+
+```make
+./configure --board tegra/tegra_r28_1.defs
+```
+
+3. Build system
+```make
+make
+```
+
+4. Create a bootable image
+```make
+# Create SD image
+make image-sd
+```
+
+## Tegra X1/X2
+
+By default, the configuration file create an image for Tegra X2, if you want to create an image for Tegra X1 you have to apply this change:
+
+File: system-build/boards/tegra/tegra_r28_1.defs
+```
+- export BOARD_NAME="Tegra_X2"
+- # export BOARD_NAME:="Tegra_X1"
++ # export BOARD_NAME="Tegra_X2"
++ export BOARD_NAME:="Tegra_X1"
+```
+2. Configure board
+```
+./configure --board tegra/tegra_r28_1.defs
+```
+3.  Build system
+```make
+make
+```
+4. Create a bootable image
+```make
+# Create EMMC image
+make image-custom IMAGE=EMMC
+# Create SD image
+make image-sd
+```
+
+## Clean project
+
+```make
+make clean
+make board-clean
+./configure --clean
+```
+
+# Project directory description 
 
 * toolchain: Build toolchain
 * linux: Build Linux kernel
@@ -9,58 +116,6 @@
 * image: Build image
 * system-build: Collection of recipes and scripts used to build the system
 
-# Build project
-
-Apply configuration for a specific board.
-
-## Configure board
-
-### Tegra
-```
-#!bash
-./configure --board tegra/tegra_r28_1.defs
-```
-### Raspberry 
-
-```
-#!bash
-./configure --board raspberry_pi_3/raspberry_pi_3.defs
-```
-## Build system
-```
-#!bash
-make
-```
-## Create image
-
-### Tegra
-
-Create EMMC image
-```
-#!bash
-make image-custom IMAGE=EMMC
-```
-Create SD image
-```
-#!bash
-make image-sd
-```
-
-### Raspberry 
-Create SD image
-```
-#!bash
-make image-sd
-```
-
-## Clean project
-
-```
-#!bash
-make clean
-make board-clean
-./configure --clean
-```
 # Board configuration
 
 ## Variables Naming
