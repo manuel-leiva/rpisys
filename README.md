@@ -8,66 +8,66 @@ Therefore all the specific configuration and specific procedures are used by the
 
 # Configuration files
 
-1. Raspberry Pi 3
-* Configuration file: raspberry_pi_3.defs
+1.  Raspberry Pi 3
+*  Configuration file: raspberry_pi_3.defs
 2. Tegra X1/X2
-* Configuration file: tegra_r28_1.defs
+*  Configuration file: tegra_r28_1.defs
 
 # Features
 
 ## Raspberry Pi 3
 
-1. Kernel: Kernel source tree for Raspberry Pi Foundation 4.4.50 (https://github.com/raspberrypi/linux)
-2. Filesystem: Rasbian Lite (2017-03-02) https://www.raspberrypi.org/downloads/raspbian/
-3. Toolchain: gcc-linaro-arm-linux-gnueabihf-raspbian 4.8.3 (https://github.com/raspberrypi/tools)
-4. Libraries:
-  * glib 2.50.3
-  * gst-libav 1.10.5
-  * GStreamer 1.10.5 (plugins base, bad, good and ugly, gst-rtsp-server)
-  * gst rpicamsrc 4fc608e (https://github.com/thaytan/gst-rpicamsrc/commit/4fc608eb8196f45c591263e5d50fd3057ac380e5)
-  * libffi 3.2.1
-  * libsoup 2.57.1
-  * libxml2 2.9.4
-  * ncurses 6.0
-  * pcre 8.40
-  * readline 6.3
-  * sqlite-autoconf 3170000
-  * x264 snapshot 2017-08-11 2245 stable
-  * zlib 1.2.11
-3. Image: SD bootable image.
+1.  Kernel: Kernel source tree for Raspberry Pi Foundation 4.4.50 (https://github.com/raspberrypi/linux)
+2.  Filesystem: Rasbian Lite (2017-03-02) https://www.raspberrypi.org/downloads/raspbian/
+3.  Toolchain: gcc-linaro-arm-linux-gnueabihf-raspbian 4.8.3 (https://github.com/raspberrypi/tools)
+4.  Libraries:
+   *  glib 2.50.3
+   *  gst-libav 1.10.5
+   *  GStreamer 1.10.5 (plugins base, bad, good and ugly, gst-rtsp-server)
+   *  Gst rpicamsrc 4fc608e (https://github.com/thaytan/gst-rpicamsrc/commit/4fc608eb8196f45c591263e5d50fd3057ac380e5)
+   *  libffi 3.2.1
+   *  libsoup 2.57.1
+   *  libxml2 2.9.4
+   *  ncurses 6.0
+   *  pcre 8.40
+   *  readline 6.3
+   *  sqlite-autoconf 3170000
+   *  x264 snapshot 2017-08-11 2245 stable
+   *  zlib 1.2.11
+3.  Image: SD bootable image.
 
 ## Tegra X1/X2
 
-1. Kernel: Kernel source tree for Tegra X1/X2 r28_Release_v1.0
-2. Filesystem: Tegra Linux Sample Root Filesystem R28.1.0 aarch64
-3. Toolchain: L4T gcc toolchain 64-bit v28.1
-3. Image:
-  *  SD bootable image.
-  *  EMMC image.
+1.  Kernel: Kernel source tree for Tegra X1/X2 r28_Release_v1.0
+2.  Filesystem: Tegra Linux Sample Root Filesystem R28.1.0 aarch64
+3.  Toolchain: L4T gcc toolchain 64-bit v28.1
+4.  Image:
+   *  SD bootable image.
+   *  EMMC image.
 
 # Build project
 
 1. Download project
 
-```make
+```bash
 git clone https://manuelleiva@bitbucket.org/manuelleiva/rpisys.git
 ```
 
 ## Raspberry Pi 3
 
-2. Configure board
+2.  Configure board
 
-```make
+```bash
 ./configure --board tegra/tegra_r28_1.defs
 ```
 
-3. Build system
-```make
+3.  Build system
+```bash
 make
 ```
 
-4. Create a bootable image
-```make
+4.  Create a bootable image
+```bash
 # Create SD image
 make image-sd
 ```
@@ -83,16 +83,16 @@ File: system-build/boards/tegra/tegra_r28_1.defs
 + # export BOARD_NAME="Tegra_X2"
 + export BOARD_NAME:="Tegra_X1"
 ```
-2. Configure board
-```
+2.  Configure board
+```bash
 ./configure --board tegra/tegra_r28_1.defs
 ```
 3.  Build system
-```make
+```bash
 make
 ```
-4. Create a bootable image
-```make
+4.  Create a bootable image
+```bash
 # Create EMMC image
 make image-custom IMAGE=EMMC
 # Create SD image
@@ -107,28 +107,47 @@ make board-clean
 ./configure --clean
 ```
 
-# Project directory description 
+# Known issues
+## Sometimes the colors in the messages are not displayed.
 
-* toolchain: Build toolchain
-* linux: Build Linux kernel
-* filesystem: Build filesystem
-* Libraries: Build libraries
-* image: Build image
-* system-build: Collection of recipes and scripts used to build the system
+In this case, apply this change:
 
-# Board configuration
+system-build/makefile/Makefile.local:line 5:
+```
+- ECHO:=echo
++ ECHO:=echo -e
+```
+## If you see the character 'e' before each message.
+Apply this change:
+
+system-build/makefile/Makefile.local:line 5:
+```
+- ECHO:=echo -e
++ ECHO:=echo
+```
+
+# Development information
+
+## Project directory description 
+
+*  toolchain: Build toolchain
+*  linux: Build Linux kernel
+*  filesystem: Build filesystem
+*  Libraries: Build libraries
+*  image: Build image
+*  system-build: Collection of recipes and scripts used to build the system
 
 ## Variables Naming
 
 ### Board Prefix description
 
-* BOARD_PRJ_: Board variables realated to the general project configuration.
-* BOARD_TOOLCHAIN_: Board toolchain configuration.
-* BOARD_BOOTLOADER_: Board bootloader configuration.
-* BOARD_FILESYSTEM_: Board filesystem configuration.
-* BOARD_LINUX_: Board Linux kernel configuration.
-* BOARD_LIBRARY_: Board filesystem libraries configuration.
-* BOARD_IMAGE_: Board image configuration.
+*  BOARD_PRJ_: Board variables realated to the general project configuration.
+*  BOARD_TOOLCHAIN_: Board toolchain configuration.
+*  BOARD_BOOTLOADER_: Board bootloader configuration.
+*  BOARD_FILESYSTEM_: Board filesystem configuration.
+*  BOARD_LINUX_: Board Linux kernel configuration.
+*  BOARD_LIBRARY_: Board filesystem libraries configuration.
+*  BOARD_IMAGE_: Board image configuration.
 
 ### Modules Prefix
 
@@ -149,9 +168,9 @@ make board-clean
 * _SHA1SUM: SHA1SUM value for tarball file.
 * _PKG_NAME: Package name after decompress the tarball or clone the repository.
 
-# Libraries
+## Libraries
 
-## How to add a new library
+### How to add a new library
 
 1.Create a new directory with the name of the library at:
 ```
@@ -187,9 +206,11 @@ touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/dependency.txt
 #!Makefile
 BOARD_LIBRARY_NAME_LIST := libsoup-2.57.1
 ```
-# Image
+Note: You can apply one or more patches. You have to create a directory called patches with a file called series where you can add the list of the patches (quilt aproach). 
 
-## Configuration
+## Image
+
+### Configuration
 
 By default the filesystem is installed in $RPISYS/image/image/rootfs.
 if you want to define a custom location you can define BOARD_FILESYSTEM_INSTALLATION_PATH, in this case the installation path is $RPISYS/image/$BOARD_FILESYSTEM_INSTALLATION_PATH.
@@ -204,25 +225,7 @@ BOARD_IMAGE_P0_PATH:=${BOARD_BOOTLOADER_INSTALLATION_PATH}
 BOARD_IMAGE_P1_PATH:=${BOARD_FILESYSTEM_INSTALLATION_PATH}
 ```
 
-## Custom images
+### Custom images
 
 The target image-custom was defined to add a hook and make custom images configurations if it's required.
 
-# Known issues
-## Sometimes the colors in the messages are not displayed.
-
-In this case, apply this change:
-
-system-build/makefile/Makefile.local:line 5:
-```
-- ECHO:=echo
-+ ECHO:=echo -e
-```
-## If you see the character 'e' before each message.
-Apply this change:
-
-system-build/makefile/Makefile.local:line 5:
-```
-- ECHO:=echo -e
-+ ECHO:=echo
-```
