@@ -21,19 +21,19 @@ Therefore all the specific configuration and specific procedures are used by the
 2.  Filesystem: Rasbian Lite (2017-03-02) https://www.raspberrypi.org/downloads/raspbian/
 3.  Toolchain: gcc-linaro-arm-linux-gnueabihf-raspbian 4.8.3 (https://github.com/raspberrypi/tools)
 4.  Libraries:
-   *  glib 2.50.3
-   *  gst-libav 1.10.5
-   *  GStreamer 1.10.5 (plugins base, bad, good and ugly, gst-rtsp-server)
-   *  Gst rpicamsrc 4fc608e (https://github.com/thaytan/gst-rpicamsrc/commit/4fc608eb8196f45c591263e5d50fd3057ac380e5)
-   *  libffi 3.2.1
-   *  libsoup 2.57.1
-   *  libxml2 2.9.4
-   *  ncurses 6.0
-   *  pcre 8.40
-   *  readline 6.3
-   *  sqlite-autoconf 3170000
-   *  x264 snapshot 2017-08-11 2245 stable
-   *  zlib 1.2.11
+    *  glib 2.50.3
+    *  gst-libav 1.10.5
+    *  GStreamer 1.10.5 (plugins base, bad, good and ugly, gst-rtsp-server)
+    *  Gst rpicamsrc 4fc608e (https://github.com/thaytan/gst-rpicamsrc/commit/4fc608eb8196f45c591263e5d50fd3057ac380e5)
+    *  libffi 3.2.1
+    *  libsoup 2.57.1
+    *  libxml2 2.9.4
+    *  ncurses 6.0
+    *  pcre 8.40
+    *  readline 6.3
+    *  sqlite-autoconf 3170000
+    *  x264 snapshot 2017-08-11 2245 stable
+    *  zlib 1.2.11
 3.  Image: SD bootable image.
 
 ## Tegra X1/X2
@@ -42,8 +42,8 @@ Therefore all the specific configuration and specific procedures are used by the
 2.  Filesystem: Tegra Linux Sample Root Filesystem R28.1.0 aarch64
 3.  Toolchain: L4T gcc toolchain 64-bit v28.1
 4.  Image:
-   *  SD bootable image.
-   *  EMMC image.
+    *  SD bootable image.
+    *  EMMC image.
 
 # Build project
 
@@ -101,7 +101,7 @@ make image-sd
 
 ## Clean project
 
-```make
+```bash
 make clean
 make board-clean
 ./configure --clean
