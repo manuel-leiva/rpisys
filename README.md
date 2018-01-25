@@ -9,9 +9,9 @@ Therefore all the specific configuration and specific procedures are used by the
 # Configuration files
 
 1.  Raspberry Pi 3
-*  Configuration file: raspberry_pi_3.defs
-2. Tegra X1/X2
-*  Configuration file: tegra_r28_1.defs
+    *  Configuration file: raspberry_pi_3.defs
+2.  Tegra X1/X2
+    *  Configuration file: tegra_r28_1.defs
 
 # Features
 
