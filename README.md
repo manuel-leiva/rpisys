@@ -38,10 +38,13 @@ Therefore all the specific configuration and specific procedures are used by the
 
 ## Tegra X1/X2
 
-1.  Kernel: Kernel source tree for Tegra X1/X2 r28_Release_v1.0
-2.  Filesystem: Tegra Linux Sample Root Filesystem R28.1.0 aarch64
-3.  Toolchain: L4T gcc toolchain 64-bit v28.1
-4.  Image:
+1.  Based on Linux For Tegra 28.1 (https://developer.nvidia.com/embedded/linux-tegra-archive)
+2.  Jetpack installation is not required.
+3.  Flash tools: Tegra186_Linux_R28.1.0_aarch64 (TX2), Tegra210_Linux_R28.1.0_aarch64 (TX1)
+4.  Kernel: Kernel source tree for Tegra X1/X2 r28_Release_v1.0
+5.  Filesystem: Tegra Linux Sample Root Filesystem R28.1.0 aarch64
+6.  Toolchain: L4T gcc toolchain 64-bit v28.1
+7.  Image:
     *  SD bootable image.
     *  EMMC image.
 
