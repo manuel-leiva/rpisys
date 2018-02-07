@@ -61,7 +61,7 @@ git clone https://manuelleiva@bitbucket.org/manuelleiva/rpisys.git
 2.  Configure board
 
 ```bash
-./configure --board tegra/tegra_r28_1.defs
+./configure --board raspberry_pi_3/raspberry_pi_3.defs
 ```
 
 3.  Build system
