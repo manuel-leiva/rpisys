@@ -45,17 +45,31 @@ ifdef BOARD_IMAGE_PARTITION1_NAME
 IMAGE_MAKE_SCRIPT_PARAMS+=--partition1-name ${BOARD_IMAGE_PARTITION1_NAME}
 endif
 
-
-# Create parameter list to download image
-IMAGE_DL_PKG_PARAMS=--pkg-name ${BOARD_IMAGE_PKG_NAME} \
-    --pkg-target-name ${BOARD_IMAGE_TAR_NAME} \
-    --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
-    --dl-url ${BOARD_IMAGE_DL_URL} \
-    --sha1sum ${BOARD_IMAGE_SHA1SUM}
-ifeq ($(BOARD_IMAGE_SU),y)
-IMAGE_DL_PKG_PARAMS+=--su y
+# Create parameter list to download the package
+ifdef BOARD_IMAGE_PKG_NAME
+IMAGE_DOWNLOAD_SCRIPT_PARAMS=--pkg-name ${BOARD_IMAGE_PKG_NAME}
 endif
-
+ifdef BOARD_IMAGE_PKG_NAME
+IMAGE_DOWNLOAD_SCRIPT_PARAMS+=--pkg-target-name  ${BOARD_IMAGE_TAR_NAME}
+endif
+ifdef BOARD_PRJ_DOWNLOAD_PATH
+IMAGE_DOWNLOAD_SCRIPT_PARAMS+=--dl-path ${BOARD_PRJ_DOWNLOAD_PATH}
+endif
+ifdef BOARD_IMAGE_DL_URL
+IMAGE_DOWNLOAD_SCRIPT_PARAMS+=--dl-url ${BOARD_IMAGE_DL_URL}
+endif
+ifdef BOARD_IMAGE_SHA1SUM
+IMAGE_DOWNLOAD_SCRIPT_PARAMS+=--sha1sum ${BOARD_IMAGE_SHA1SUM}
+endif
+ifdef BOARD_IMAGE_BRANCH
+IMAGE_DOWNLOAD_SCRIPT_PARAMS+=--branch ${BOARD_IMAGE_BRANCH}
+endif
+ifdef BOARD_IMAGE_GIT_DEPTH
+IMAGE_DOWNLOAD_SCRIPT_PARAMS+=--git-depth ${BOARD_IMAGE_GIT_DEPTH}
+endif
+ifdef BOARD_IMAGE_SU
+IMAGE_DOWNLOAD_SCRIPT_PARAMS+=--su y
+endif
 # Public targets ###############################################################
 all: image-header image-make
 
@@ -74,7 +88,7 @@ image-download:
 ifdef BOARD_IMAGE_TAR_NAME
 	@$(ECHO) "${MSG_INFO}  Download${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
-    ${IMAGE_DL_PKG_PARAMS}
+    ${IMAGE_DOWNLOAD_SCRIPT_PARAMS}
 endif
 	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),$@-post)
 	$(V) touch $@

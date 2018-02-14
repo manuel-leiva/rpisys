@@ -54,6 +54,11 @@ do
         BRANCH="$2"
         shift
         ;;
+        # Repository depth
+        --git-depth)
+        GIT_DEPTH="$2"
+        shift
+        ;;
         -o|--dest)
         DESTINATION_PATH="$2"
         shift
@@ -141,12 +146,17 @@ function GitProcess
     if [ -z ${BRANCH} ]; then
         BRANCH=master
     fi
+    GIT_CLONE_PARAMETERS="-b ${BRANCH} "
+    if [ ! -z ${GIT_DEPTH} ]; then
+        GIT_CLONE_PARAMETERS+="--depth=${GIT_DEPTH} "
+    fi
+    GIT_CLONE_PARAMETERS+=${DOWNLOAD_URL}${PKG_TARGET_NAME}
     # Clone repository
-    git clone -b ${BRANCH} ${DOWNLOAD_URL}${PKG_TARGET_NAME}
+    git clone ${GIT_CLONE_PARAMETERS}
 }
 
 # Verify the type of target
-if [ z ${PKG_TARGET_NAME} ]; then
+if [ ! -z ${PKG_TARGET_NAME} ]; then
     case ${PKG_TARGET_NAME} in
         *.tar.*) # tar command recognizes the format by itself
             TarProcess
@@ -155,8 +165,8 @@ if [ z ${PKG_TARGET_NAME} ]; then
             TarProcess
             ;;
         *.git)
-            # TODO
-            echo -e "${ERRORCOLOR}ERROR: Target ${PKG_TARGET_NAME} is not supported${ENDCOLOR}"
+            # Clone GIT repository
+            GitProcess
             ;;
         *)
             echo -e "${WARNCOLOR}WARN: Target ${PKG_TARGET_NAME} format is not identified${ENDCOLOR}"

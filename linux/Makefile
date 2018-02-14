@@ -8,10 +8,6 @@ include ../system-build/makefile/Makefile.common
 # Definitions ##################################################################
 
 ## Verify external variables ##
-ifndef BOARD_LINUX_SHA1SUM
-$(error ERROR: BOARD_LINUX_SHA1SUM not defined)
-endif
-
 ifndef BOARD_PRJ_ARCH
 $(error ERROR: BOARD_PRJ_ARCH not defined)
 endif
@@ -66,6 +62,31 @@ export LINUX_MOD_INSTALL_PATH   :=$(LINUX_PATH)/$(LINUX_MOD_INSTALLDIR)
 export LINUX_KERNEL_INSTALLATION_PATH
 export LINUX_MODULES_INSTALLATION_PATH
 
+
+# Create parameter list to download the package
+ifdef BOARD_LINUX_PKG_NAME
+LINUX_DOWNLOAD_SCRIPT_PARAMS=--pkg-name ${BOARD_LINUX_PKG_NAME}
+endif
+ifdef BOARD_LINUX_PKG_NAME
+LINUX_DOWNLOAD_SCRIPT_PARAMS+=--pkg-target-name  ${BOARD_LINUX_TAR_NAME}
+endif
+ifdef BOARD_PRJ_DOWNLOAD_PATH
+LINUX_DOWNLOAD_SCRIPT_PARAMS+=--dl-path ${BOARD_PRJ_DOWNLOAD_PATH}
+endif
+ifdef BOARD_LINUX_DL_URL
+LINUX_DOWNLOAD_SCRIPT_PARAMS+=--dl-url ${BOARD_LINUX_DL_URL}
+endif
+ifdef BOARD_LINUX_SHA1SUM
+LINUX_DOWNLOAD_SCRIPT_PARAMS+=--sha1sum ${BOARD_LINUX_SHA1SUM}
+endif
+ifdef BOARD_LINUX_BRANCH
+LINUX_DOWNLOAD_SCRIPT_PARAMS+=--branch ${BOARD_LINUX_BRANCH}
+endif
+ifdef BOARD_LINUX_GIT_DEPTH
+LINUX_DOWNLOAD_SCRIPT_PARAMS+=--git-depth ${BOARD_LINUX_GIT_DEPTH}
+endif
+
+
 # Public targets ###############################################################
 .PHONY: all clean zimage modules dtbs install uninstall clean
 
@@ -110,11 +131,7 @@ linux-clean: linux-revpatch
 
 linux-download:
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
-    --pkg-name ${BOARD_LINUX_PKG_NAME} \
-    --pkg-target-name ${BOARD_LINUX_TAR_NAME} \
-    --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
-    --dl-url ${BOARD_LINUX_DL_URL} \
-    --sha1sum ${BOARD_LINUX_SHA1SUM}
+    ${LINUX_DOWNLOAD_SCRIPT_PARAMS}
 # Call post-download hook
 	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),$@-post)
 	$(V) touch $@
@@ -192,6 +209,7 @@ linux-uninstall:
 linux-debug-var:
 	@$(ECHO) COMMON_MAKE_JOBS: ${COMMON_MAKE_JOBS}
 	@$(ECHO) KERNEL_FLAGS: ${KERNEL_FLAGS}
+	@$(ECHO) LINUX_DOWNLOAD_SCRIPT_PARAMS: ${LINUX_DOWNLOAD_SCRIPT_PARAMS}
 
 linux-export-var:
 	@$(ECHO) LINUX_PKG_DIR_NAME: ${LINUX_PKG_DIR_NAME}

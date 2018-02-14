@@ -35,6 +35,29 @@ endif
 ## Exported variables
 export TOOLCHAIN_PKG_PATH:=$(BOARD_PRJ_COMMON_PATH)/$(BOARD_TOOLCHAIN_PKG_NAME)
 
+# Create parameter list to download the package
+ifdef BOARD_TOOLCHAIN_PKG_NAME
+TOOLCHAIN_DOWNLOAD_SCRIPT_PARAMS=--pkg-name ${BOARD_TOOLCHAIN_PKG_NAME}
+endif
+ifdef BOARD_TOOLCHAIN_PKG_NAME
+TOOLCHAIN_DOWNLOAD_SCRIPT_PARAMS+=--pkg-target-name  ${BOARD_TOOLCHAIN_TAR_NAME}
+endif
+ifdef BOARD_PRJ_DOWNLOAD_PATH
+TOOLCHAIN_DOWNLOAD_SCRIPT_PARAMS+=--dl-path ${BOARD_PRJ_DOWNLOAD_PATH}
+endif
+ifdef BOARD_TOOLCHAIN_DL_URL
+TOOLCHAIN_DOWNLOAD_SCRIPT_PARAMS+=--dl-url ${BOARD_TOOLCHAIN_DL_URL}
+endif
+ifdef BOARD_TOOLCHAIN_SHA1SUM
+TOOLCHAIN_DOWNLOAD_SCRIPT_PARAMS+=--sha1sum ${BOARD_TOOLCHAIN_SHA1SUM}
+endif
+ifdef BOARD_TOOLCHAIN_BRANCH
+TOOLCHAIN_DOWNLOAD_SCRIPT_PARAMS+=--branch ${BOARD_TOOLCHAIN_BRANCH}
+endif
+ifdef BOARD_TOOLCHAIN_GIT_DEPTH
+TOOLCHAIN_DOWNLOAD_SCRIPT_PARAMS+=--git-depth ${BOARD_TOOLCHAIN_GIT_DEPTH}
+endif
+
 # Public targets ###############################################################
 
 .PHONY: all clean
@@ -68,12 +91,7 @@ toolchain-clean:
 
 $(BOARD_PRJ_COMMON_PATH)/$(BOARD_TOOLCHAIN_PKG_NAME)/toolchain-download:
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
-    --pkg-name ${BOARD_TOOLCHAIN_PKG_NAME} \
-    --pkg-target-name ${BOARD_TOOLCHAIN_TAR_NAME} \
-    --sha1sum ${BOARD_TOOLCHAIN_SHA1SUM} \
-    --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
-    --dl-url ${BOARD_TOOLCHAIN_DL_URL} \
-    --dest ${BOARD_PRJ_COMMON_PATH}
+    ${TOOLCHAIN_DOWNLOAD_SCRIPT_PARAMS}
 # Call toolchain-download-post
 	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),toolchain-download-post)
 	$(V) touch $@
