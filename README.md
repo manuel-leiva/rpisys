@@ -87,8 +87,16 @@ File: system-build/boards/tegra/tegra_r28_1.defs
 + export BOARD_NAME:="Tegra_X1"
 ```
 2.  Configure board
+
+Using L4T r28.1
+
 ```bash
-./configure --board tegra/tegra_r28_1.defs
+./configure --board tegra_r28_1/tegra_r28_1.defs
+```
+
+Using L4T r28.2.1
+```bash
+./configure --board tegra_r28_2_1/tegra_r28_2_1.defs
 ```
 3.  Build system
 ```bash
@@ -131,7 +139,7 @@ system-build/makefile/Makefile.local:line 5:
 
 # Development information
 
-## Project directory description 
+## Project directory description
 
 *  toolchain: Build toolchain
 *  linux: Build Linux kernel
@@ -180,7 +188,7 @@ system-build/makefile/Makefile.local:line 5:
 #!bash
 mkdir ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/
 ```
-2.Create Makefile 
+2.Create Makefile
 ```
 #!bash
 touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/Makefile
@@ -209,7 +217,7 @@ touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/dependency.txt
 #!Makefile
 BOARD_LIBRARY_NAME_LIST := libsoup-2.57.1
 ```
-Note: You can apply one or more patches. You have to create a directory called patches with a file called series where you can add the list of the patches (quilt aproach). 
+Note: You can apply one or more patches. You have to create a directory called patches with a file called series where you can add the list of the patches (quilt aproach).
 
 ## Image
 
