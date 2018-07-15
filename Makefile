@@ -40,7 +40,7 @@ help:
 	@$(ECHO) "    filesystem:       Build filesystem"
 	@$(ECHO) "    libraries:        Build libraries"
 	@$(ECHO) "    applications:     Build applications"
-	@$(ECHO) "    image:            Build image"
+	@$(ECHO) "    image:            Install all the elements to build an image"
 	@$(ECHO) "    image-sd:         Install image generated into a SD card"
 	@$(ECHO) "    image-file:       Create image file"
 
@@ -63,12 +63,6 @@ applications:
 	$(V) $(MAKE) $@
 
 image:  bootloader libraries
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/bootloader install
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/linux install
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/libraries install
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/filesystem install
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/applications install
-	$(V)$(MAKE) $@
 
 image-clean:
 	$(V)$(MAKE) bootloader   uninstall
@@ -78,13 +72,13 @@ image-clean:
 	$(V)$(MAKE) applications uninstall
 	$(V)$(MAKE) image clean
 
-image-sd:
+image-sd: image
 	$(V) $(MAKE) image sd
 
-image-custom:
+image-custom: image
 	$(V) $(MAKE) image custom
 
-image-file:
+image-file: image
 	$(V) $(MAKE) image file
 
 tools: $(SYSTEM_BUILD_PATH)/common_tools
@@ -99,10 +93,10 @@ board-clean:
 	$(V) $(MAKE) $(SYSTEM_BUILD_PATH)/boards clean
 
 board-info:
-	@$(ECHO) "${MSG_INFO}  Name: ${BOARD_NAME}${MSG_END}"
-	@$(ECHO) "  Linux:      ${BOARD_LINUX_DL_URL}${BOARD_LINUX_TAR_NAME}"
-	@$(ECHO) "  Filesystem: ${BOARD_FILESYSTEM_DL_URL}${BOARD_FILESYSTEM_TAR_NAME}"
-	@$(ECHO) "  Toolchain:  ${BOARD_TOOLCHAIN_DL_URL}${BOARD_TOOLCHAIN_TAR_NAME}"
+	@$(ECHO) "  ${MSG_INFO}Name:${MSG_END}       ${BOARD_NAME}"
+	@$(ECHO) "  ${MSG_INFO}Linux:${MSG_END}      ${BOARD_LINUX_TAR_NAME}"
+	@$(ECHO) "  ${MSG_INFO}Filesystem:${MSG_END} ${BOARD_FILESYSTEM_TAR_NAME}"
+	@$(ECHO) "  ${MSG_INFO}Toolchain:${MSG_END}  ${BOARD_TOOLCHAIN_TAR_NAME}"
 	@$(ECHO)
 
 # Private targets ##############################################################
