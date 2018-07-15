@@ -1,0 +1,6 @@
+label: dos
+label-id: 0xcd6647c4
+device: /dev/mmcblk0
+unit: sectors
+
+/dev/mmcblk0p1 : start=        2048, size=    16777216, type=83
