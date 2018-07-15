@@ -11,7 +11,7 @@ else
 endif
 
 linux-clean-post:
-	rm -rf ${LINUX_PATH}/sources
+	rm -rf ${LINUX_PATH}/public_release/
 
 image-download-pre:
 # When is downloaded the Linux_for_Tegra, all the packages installed
