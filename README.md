@@ -34,6 +34,7 @@ Therefore all the specific configuration and specific procedures are used by the
     *  sqlite-autoconf 3170000
     *  x264 snapshot 2017-08-11 2245 stable
     *  zlib 1.2.11
+    *  xz-5.2.4 (https://tukaani.org/xz/)
 3.  Image: SD bootable image.
 
 ## Tegra X1/X2
@@ -131,7 +132,7 @@ system-build/makefile/Makefile.local:line 5:
 
 # Development information
 
-## Project directory description 
+## Project directory description
 
 *  toolchain: Build toolchain
 *  linux: Build Linux kernel
@@ -180,7 +181,7 @@ system-build/makefile/Makefile.local:line 5:
 #!bash
 mkdir ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/
 ```
-2.Create Makefile 
+2.Create Makefile
 ```
 #!bash
 touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/Makefile
@@ -209,7 +210,7 @@ touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/dependency.txt
 #!Makefile
 BOARD_LIBRARY_NAME_LIST := libsoup-2.57.1
 ```
-Note: You can apply one or more patches. You have to create a directory called patches with a file called series where you can add the list of the patches (quilt aproach). 
+Note: You can apply one or more patches. You have to create a directory called patches with a file called series where you can add the list of the patches (quilt aproach).
 
 ## Image
 
