@@ -40,6 +40,7 @@ Therefore all the specific configuration and specific procedures are used by the
     *  attr-2.4.47
     *  expat-2.1.0
     *  dbus-1.12.10
+    *  util-linux-2.33
     *  blueZ-5.50 (http://www.bluez.org/)
 
 3.  Image: SD bootable image.
