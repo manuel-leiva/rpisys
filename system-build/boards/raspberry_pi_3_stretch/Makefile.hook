@@ -1,5 +1,6 @@
 # Board hook recipe
 
+# https://www.raspberrypi.org/documentation/linux/kernel/building.md
 linux-dtbs-post:
 	$(V) mkdir -p $(LINUX_KERNEL_INSTALL_PATH)/overlays
 	$(V) cp ${LINUX_PKG_DIR_NAME}/arch/arm/boot/dts/overlays/*.dtb* $(LINUX_KERNEL_INSTALL_PATH)/overlays

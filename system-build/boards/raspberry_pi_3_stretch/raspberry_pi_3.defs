@@ -43,6 +43,7 @@ BOARD_BOOTLOADER_PATCHES_PATH=$(LOCAL_BOARD_PATH)/bootloader.patch
 
 
 # LINUX #######################################################################
+# https://www.raspberrypi.org/documentation/linux/kernel/building.md
 
 BOARD_LINUX_TAR_NAME:=rpi-linux-4.14.y.tar.gz
 BOARD_LINUX_DL_URL:=https://www.dropbox.com/s/pqdudsngje3ryoz/
