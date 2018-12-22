@@ -1,0 +1,11 @@
+Index: filesystem/filesystem/etc/wpa_supplicant/wpa_supplicant.conf
+===================================================================
+--- filesystem.orig/filesystem/etc/wpa_supplicant/wpa_supplicant.conf
++++ filesystem/filesystem/etc/wpa_supplicant/wpa_supplicant.conf
+@@ -1,2 +1,6 @@
+ ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+ update_config=1
++network={
++    ssid="red"
++    psk="password"
++}
