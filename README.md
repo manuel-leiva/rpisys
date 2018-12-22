@@ -35,6 +35,8 @@ Therefore all the specific configuration and specific procedures are used by the
     *  x264 snapshot 2017-08-11 2245 stable
     *  zlib 1.2.11
     *  xz-5.2.4 (https://tukaani.org/xz/)
+    *  libcap2-2.22
+
 3.  Image: SD bootable image.
 
 ## Tegra X1/X2
