@@ -34,14 +34,6 @@ Therefore all the specific configuration and specific procedures are used by the
     *  sqlite-autoconf 3170000
     *  x264 snapshot 2017-08-11 2245 stable
     *  zlib 1.2.11
-    *  xz-5.2.4 (https://tukaani.org/xz/)
-    *  libcap2-2.22
-    *  kmod-25
-    *  attr-2.4.47
-    *  expat-2.1.0
-    *  dbus-1.12.10
-    *  util-linux-2.33
-    *  blueZ-5.50 (http://www.bluez.org/)
 
 3.  Image: SD bootable image.
 
@@ -139,6 +131,31 @@ system-build/makefile/Makefile.local:line 5:
 ```
 
 # Development information
+
+## Libraries
+
+    *  glib 2.50.3
+    *  gst-libav 1.10.5
+    *  GStreamer 1.10.5 (plugins base, bad, good and ugly, gst-rtsp-server)
+    *  Gst rpicamsrc 4fc608e (https://github.com/thaytan/gst-rpicamsrc/commit/4fc608eb8196f45c591263e5d50fd3057ac380e5)
+    *  libffi 3.2.1
+    *  libsoup 2.57.1
+    *  libxml2 2.9.4
+    *  ncurses 6.0
+    *  pcre 8.40
+    *  readline 6.3
+    *  sqlite-autoconf 3170000
+    *  x264 snapshot 2017-08-11 2245 stable
+    *  zlib 1.2.11
+    *  xz-5.2.4 (https://tukaani.org/xz/)
+    *  libcap2-2.22
+    *  kmod-25
+    *  attr-2.4.47
+    *  expat-2.1.0
+    *  dbus-1.12.10
+    *  util-linux-2.33
+    *  blueZ-5.50 (http://www.bluez.org/)
+    *  libusb-1.0.22
 
 ## Project directory description
 
