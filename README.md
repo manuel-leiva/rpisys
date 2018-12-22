@@ -38,6 +38,9 @@ Therefore all the specific configuration and specific procedures are used by the
     *  libcap2-2.22
     *  kmod-25
     *  attr-2.4.47
+    *  expat-2.1.0
+    *  dbus-1.12.10
+    *  blueZ-5.50 (http://www.bluez.org/)
 
 3.  Image: SD bootable image.
 
