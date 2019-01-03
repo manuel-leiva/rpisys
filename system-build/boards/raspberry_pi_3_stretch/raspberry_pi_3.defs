@@ -30,6 +30,7 @@ BOARD_TOOLCHAIN_TAR_NAME:=gcc-linaro-arm-linux-gnueabihf-raspbian-4.8.3.tar.gz
 BOARD_TOOLCHAIN_DL_URL:=https://www.dropbox.com/s/3kvuznuff1qiv6r/
 BOARD_TOOLCHAIN_SHA1SUM:=efd6f554eb34fc5226e5ab095430bbbd9c4b681a
 BOARD_TOOLCHAIN_PKG_NAME:=tools
+BOARD_TOOLCHAIN_DEST=$(BOARD_PRJ_COMMON_PATH)
 BOARD_TOOLCHAIN_PATH:=$(BOARD_PRJ_COMMON_PATH)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
 BOARD_TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
 BOARD_TOOLCHAIN_PATCHES_PATH=$(LOCAL_BOARD_PATH)/toolchain.patch
