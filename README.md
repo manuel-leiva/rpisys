@@ -258,3 +258,11 @@ BOARD_IMAGE_P1_PATH:=${BOARD_FILESYSTEM_INSTALLATION_PATH}
 
 The target image-custom was defined to add a hook and make custom images configurations if it's required.
 
+## Backing up the partition table
+
+
+sfdisk supports an  option to save a description of the device layout to a text file unsing --dump.
+The dump format is suitable for later  sfdisk  input. For example:
+```
+sudo sfdisk --dump /dev/mmcblk0 > mmcblk0.dump
+```
