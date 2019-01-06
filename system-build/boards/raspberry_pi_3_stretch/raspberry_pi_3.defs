@@ -37,8 +37,8 @@ BOARD_TOOLCHAIN_PATCHES_PATH=$(LOCAL_BOARD_PATH)/toolchain.patch
 
 # BOOTLOADER ##################################################################
 BOARD_BOOTLOADER_TAR_NAME:=rpi-boot-stretch-lite-2018_11_13.tar.gz
-BOARD_BOOTLOADER_DL_URL:=https://www.dropbox.com/s/l4zq8ggog9kfz1a/
-BOARD_BOOTLOADER_SHA1SUM:=6337e5da8abfcad5e7eae80802f75db1c4d489ee
+BOARD_BOOTLOADER_DL_URL:=https://www.dropbox.com/s/u50v3vw5vaqg4wv/
+BOARD_BOOTLOADER_SHA1SUM:=6466e7e732af337308fc0fc17c5cc35e30f9e2fe
 BOARD_BOOTLOADER_PKG_NAME:=boot
 BOARD_BOOTLOADER_PATCHES_PATH=$(LOCAL_BOARD_PATH)/bootloader.patch
 
@@ -109,3 +109,5 @@ BOARD_APPLICATION_NAME_LIST:=""
 
 # BOARD_IMAGE_EXT_SD_DEVICE: external sd card device used to install the image built
 BOARD_IMAGE_EXT_SD_DEVICE:=/dev/mmcblk0
+
+BOARD_IMAGE_DISK_PARTITION_PATH=$(LOCAL_BOARD_PATH)/rpi-stretch-partition-table.dump
