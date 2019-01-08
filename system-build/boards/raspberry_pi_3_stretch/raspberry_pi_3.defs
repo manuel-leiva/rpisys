@@ -36,6 +36,7 @@ BOARD_TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
 BOARD_TOOLCHAIN_PATCHES_PATH=$(LOCAL_BOARD_PATH)/toolchain.patch
 
 # BOOTLOADER ##################################################################
+
 BOARD_BOOTLOADER_TAR_NAME:=rpi-boot-stretch-lite-2018_11_13.tar.gz
 BOARD_BOOTLOADER_DL_URL:=https://www.dropbox.com/s/u50v3vw5vaqg4wv/
 BOARD_BOOTLOADER_SHA1SUM:=6466e7e732af337308fc0fc17c5cc35e30f9e2fe
@@ -63,8 +64,8 @@ BOARD_LINUX_DEFCONFIG:=bcm2709_defconfig
 # FILESYSTEM ###################################################################
 
 BOARD_FILESYSTEM_TAR_NAME:=rpi-fs-stretch-lite-2018_11_13.tar.gz
-BOARD_FILESYSTEM_DL_URL:=https://www.dropbox.com/s/vgpix63ro9pli4p/
-BOARD_FILESYSTEM_SHA1SUM:=60927f52f14cf66029bb4e5f57209b9dfcc612ee
+BOARD_FILESYSTEM_DL_URL:=https://www.dropbox.com/s/56ow5g4xs1x7vu3/
+BOARD_FILESYSTEM_SHA1SUM:=41e06bba40d3e68cd9d935a4e731caab4773f780
 BOARD_FILESYSTEM_PKG_NAME:=filesystem
 # BOARD_FILESYSTEM_SU: Force to use super user permissions to decompress and manage the
 # filesystem. Options: "y" or "n".
