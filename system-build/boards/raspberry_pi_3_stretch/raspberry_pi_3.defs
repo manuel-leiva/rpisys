@@ -1,0 +1,119 @@
+
+BOARD_NAME:="Raspberry_Pi_3"
+
+# Profile description:
+# Kernel: Kernel source tree for Raspberry Pi Foundation 4.14.89 (https://github.com/raspberrypi/linux)
+# Filesystem: Rasbian Stretch Lite (2018-11-13) https://www.raspberrypi.org/downloads/raspbian/
+# Toolchain: gcc-linaro-arm-linux-gnueabihf-raspbian 4.8.3 (https://github.com/raspberrypi/tools)
+
+# COMMON VARIABLES #############################################################
+
+# This directory is used to share files between projects as the toolchain
+BOARD_PRJ_COMMON_PATH:=/home/${USER}/rpisys_toolchain
+
+# Destination directory to download packages
+BOARD_PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/rpisys
+
+# Percentage used to compute the number of recipes to execute at once.
+# The number of recipes is computed with this formula:
+# JOBS=HOST_CORES*BOARD_PRJ_MAKE_JOBS_PER_CORE/100
+# If BOARD_PRJ_MAKE_JOBS_PER_CORE is not defined JOBS=1
+BOARD_PRJ_MAKE_JOBS_PER_CORE:=75
+# ARM Architecture
+BOARD_PRJ_ARCH=arm
+
+# CONFIGURATION FILES ##########################################################
+
+# This file contains the list of packages needed to build the board image
+BOARD_PRJ_TOOLS_PATH=$(LOCAL_BOARD_PATH)/board_tools.txt
+BOARD_PRJ_MAKEFILE_HOOKS_PATH=$(LOCAL_BOARD_PATH)/Makefile.hook
+
+
+# TOOLCHAIN ####################################################################
+
+BOARD_TOOLCHAIN_TAR_NAME:=gcc-linaro-arm-linux-gnueabihf-raspbian-4.8.3.tar.gz
+BOARD_TOOLCHAIN_DL_URL:=https://www.dropbox.com/s/3kvuznuff1qiv6r/
+BOARD_TOOLCHAIN_SHA1SUM:=efd6f554eb34fc5226e5ab095430bbbd9c4b681a
+BOARD_TOOLCHAIN_PKG_NAME:=tools
+BOARD_TOOLCHAIN_DEST=$(BOARD_PRJ_COMMON_PATH)
+BOARD_TOOLCHAIN_PATH:=$(BOARD_PRJ_COMMON_PATH)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
+BOARD_TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
+BOARD_TOOLCHAIN_PATCHES_PATH=$(LOCAL_BOARD_PATH)/toolchain.patch
+
+# BOOTLOADER ##################################################################
+
+BOARD_BOOTLOADER_TAR_NAME:=rpi-boot-stretch-lite-2018_11_13.tar.gz
+BOARD_BOOTLOADER_DL_URL:=https://www.dropbox.com/s/u50v3vw5vaqg4wv/
+BOARD_BOOTLOADER_SHA1SUM:=6466e7e732af337308fc0fc17c5cc35e30f9e2fe
+BOARD_BOOTLOADER_PKG_NAME:=boot
+BOARD_BOOTLOADER_PATCHES_PATH=$(LOCAL_BOARD_PATH)/bootloader.patch
+
+
+# LINUX #######################################################################
+# https://www.raspberrypi.org/documentation/linux/kernel/building.md
+
+BOARD_LINUX_TAR_NAME:=rpi-linux-4.14.y.tar.gz
+BOARD_LINUX_DL_URL:=https://www.dropbox.com/s/pqdudsngje3ryoz/
+BOARD_LINUX_SHA1SUM:=b126745445fe35e4b815c377b741164bbdb02a83
+BOARD_LINUX_PKG_NAME:=linux
+# By default are added the kernel flags CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX)
+# This variable allows add some extra flag
+BOARD_LINUX_KERNEL_EXTRAFLAGS:="KERNEL=kernel7"
+# Kernel configuration file
+# For Pi 2, Pi 3, Pi 3+, or Compute Module 3
+BOARD_LINUX_DEFCONFIG:=bcm2709_defconfig
+# For Pi 1, Pi Zero, Pi Zero W, or Compute Module
+# BOARD_LINUX_DEFCONFIG:=bcmrpi_defconfig
+
+
+# FILESYSTEM ###################################################################
+
+BOARD_FILESYSTEM_TAR_NAME:=rpi-fs-stretch-lite-2018_11_13.tar.gz
+BOARD_FILESYSTEM_DL_URL:=https://www.dropbox.com/s/56ow5g4xs1x7vu3/
+BOARD_FILESYSTEM_SHA1SUM:=41e06bba40d3e68cd9d935a4e731caab4773f780
+BOARD_FILESYSTEM_PKG_NAME:=filesystem
+# BOARD_FILESYSTEM_SU: Force to use super user permissions to decompress and manage the
+# filesystem. Options: "y" or "n".
+BOARD_FILESYSTEM_SU:=y
+BOARD_FILESYSTEM_PATCHES_PATH=$(LOCAL_BOARD_PATH)/filesystem.patch
+
+
+# LIBRARIES ####################################################################
+
+BOARD_LIBRARY_HOST=arm-none-linux
+# Library directory for the normal user-programs installation
+BOARD_LIBRARY_BOARD_INSTALLDIR:=/usr/lib/arm-linux-gnueabihf
+# List of library to build
+BOARD_LIBRARY_NAME_LIST := \
+readline-6.3 \
+libffi-3.2.1 \
+pcre-8.40 \
+zlib-1.2.11 \
+glib-2.50.3 \
+libsoup-2.57.1 \
+libxml2-2.9.4 \
+sqlite-autoconf-3170000 ncurses-6.0 \
+gstreamer-1.10.5 \
+gst-plugins-base-1.10.5 \
+gst-plugins-good-1.10.5 \
+gst-plugins-bad-1.10.5 \
+gst-plugins-ugly-1.10.5 \
+gst-rtsp-server-1.10.5 \
+gst-libav-1.10.5 \
+gst-omx-1.10.5 \
+gst-rpicamsrc-4fc608e \
+x264-snapshot-20170811-2245-stable
+
+
+# APPLICATIONS #################################################################
+
+# List of applications to build
+BOARD_APPLICATION_NAME_LIST:=""
+
+
+# IMAGE ########################################################################
+
+# BOARD_IMAGE_EXT_SD_DEVICE: external sd card device used to install the image built
+BOARD_IMAGE_EXT_SD_DEVICE:=/dev/mmcblk0
+
+BOARD_IMAGE_DISK_PARTITION_PATH=$(LOCAL_BOARD_PATH)/rpi-stretch-partition-table.dump

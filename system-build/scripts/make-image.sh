@@ -4,7 +4,7 @@
 # Author: Manuel Leiva F. <manuelleivaf@gmail.com>
 
 # Partition name
-PARTITION_0_NAME="BOOT"
+PARTITION_0_NAME="boot"
 PARTITION_1_NAME="rootfs"
 # Directory name
 PARTITION_0_MOUNT_DIR="p0_mount_dir"
@@ -208,9 +208,11 @@ fi
 if [ -z ${PARTITION_FILE} ]; then
    echo -e ${WARNCOLOR}Warn:${ENDCOLOR} Partition file not defined
 else
-    # Check if the device is available
+    # Check if the file exists
     if [ ! -f ${PARTITION_FILE} ]; then
         echo -e "${ERRORCOLOR}Error:${ENDCOLOR} File \"${PARTITION_FILE}\" does not exist. Using default configuration\n"
+    else
+        echo -e "${INFOCOLOR}  Partition file:${ENDCOLOR} ${PARTITION_FILE}"
     fi
 fi
 

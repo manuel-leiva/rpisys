@@ -1,0 +1,18 @@
+# Board hook recipe
+
+# https://www.raspberrypi.org/documentation/linux/kernel/building.md
+linux-dtbs-post:
+	$(V) mkdir -p $(LINUX_KERNEL_INSTALL_PATH)/overlays
+	$(V) cp ${LINUX_PKG_DIR_NAME}/arch/arm/boot/dts/overlays/*.dtb* $(LINUX_KERNEL_INSTALL_PATH)/overlays
+	$(V) cp ${LINUX_PKG_DIR_NAME}/arch/arm/boot/dts/overlays/README $(LINUX_KERNEL_INSTALL_PATH)/overlays
+
+linux-install-post:
+	echo "  Linux post install"
+	$(V) cp $(LINUX_KERNEL_INSTALLATION_PATH)/zImage $(LINUX_KERNEL_INSTALLATION_PATH)/kernel7.img
+
+filesystem-patch-pre:
+# Change owner
+	echo "You need root permisions"
+	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant
+	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant/wpa_supplicant.conf
+
