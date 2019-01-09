@@ -1,6 +1,11 @@
 
 BOARD_NAME:="Raspberry_Pi_3"
 
+# Profile description:
+# Kernel: Kernel source tree for Raspberry Pi Foundation 4.14.89 (https://github.com/raspberrypi/linux)
+# Filesystem: Rasbian Stretch Lite (2018-11-13) https://www.raspberrypi.org/downloads/raspbian/
+# Toolchain: gcc-linaro-arm-linux-gnueabihf-raspbian 4.8.3 (https://github.com/raspberrypi/tools)
+
 # COMMON VARIABLES #############################################################
 
 # This directory is used to share files between projects as the toolchain

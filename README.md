@@ -17,8 +17,8 @@ Therefore all the specific configuration and specific procedures are used by the
 
 ## Raspberry Pi 3
 
-1.  Kernel: Kernel source tree for Raspberry Pi Foundation 4.4.50 (https://github.com/raspberrypi/linux)
-2.  Filesystem: Rasbian Lite (2017-03-02) https://www.raspberrypi.org/downloads/raspbian/
+1.  Kernel: Kernel source tree for Raspberry Pi Foundation 4.14.89 (https://github.com/raspberrypi/linux)
+2.  Filesystem: Rasbian Stretch Lite (2018-11-13) https://www.raspberrypi.org/downloads/raspbian/
 3.  Toolchain: gcc-linaro-arm-linux-gnueabihf-raspbian 4.8.3 (https://github.com/raspberrypi/tools)
 4.  Libraries:
     *  glib 2.50.3
@@ -71,8 +71,13 @@ make
 ```
 
 4.  Create a bootable image
+
+Insert a microSD memory and define the memory device in the board configuration. For example:
+```
+BOARD_IMAGE_EXT_SD_DEVICE:=/dev/mmcblk0
+```
+Create SD image.
 ```bash
-# Create SD image
 make image-sd
 ```
 
@@ -260,9 +265,9 @@ The target image-custom was defined to add a hook and make custom images configu
 
 ## Backing up the partition table
 
-
 sfdisk supports an  option to save a description of the device layout to a text file unsing --dump.
 The dump format is suitable for later  sfdisk  input. For example:
-```
+
+```!bash
 sudo sfdisk --dump /dev/mmcblk0 > mmcblk0.dump
 ```
