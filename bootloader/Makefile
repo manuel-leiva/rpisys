@@ -26,6 +26,29 @@ endif
 BOOTLOADER_PKG_PATH = $(PRJ_ROOT_PATH)/bootloader/${BOARD_BOOTLOADER_PKG_NAME}
 BOOTLOADER_PATH = $(PRJ_ROOT_PATH)/bootloader
 
+# Create parameter list to download the package
+ifdef BOARD_BOOTLOADER_PKG_NAME
+BOOTLOADER_DOWNLOAD_SCRIPT_PARAMS=--pkg-name ${BOARD_BOOTLOADER_PKG_NAME}
+endif
+ifdef BOARD_BOOTLOADER_PKG_NAME
+BOOTLOADER_DOWNLOAD_SCRIPT_PARAMS+=--pkg-target-name  ${BOARD_BOOTLOADER_TAR_NAME}
+endif
+ifdef BOARD_PRJ_DOWNLOAD_PATH
+BOOTLOADER_DOWNLOAD_SCRIPT_PARAMS+=--dl-path ${BOARD_PRJ_DOWNLOAD_PATH}
+endif
+ifdef BOARD_BOOTLOADER_DL_URL
+BOOTLOADER_DOWNLOAD_SCRIPT_PARAMS+=--dl-url ${BOARD_BOOTLOADER_DL_URL}
+endif
+ifdef BOARD_BOOTLOADER_SHA1SUM
+BOOTLOADER_DOWNLOAD_SCRIPT_PARAMS+=--sha1sum ${BOARD_BOOTLOADER_SHA1SUM}
+endif
+ifdef BOARD_BOOTLOADER_BRANCH
+BOOTLOADER_DOWNLOAD_SCRIPT_PARAMS+=--branch ${BOARD_BOOTLOADER_BRANCH}
+endif
+ifdef BOARD_BOOTLOADER_GIT_DEPTH
+BOOTLOADER_DOWNLOAD_SCRIPT_PARAMS+=--git-depth ${BOARD_BOOTLOADER_GIT_DEPTH}
+endif
+
 # Public targets ###############################################################
 all: bootloader-header bootloader-make
 
@@ -61,11 +84,7 @@ bootloader-download:
 ifdef BOARD_BOOTLOADER_TAR_NAME
 	@$(ECHO) "${MSG_INFO}  Download bootloader${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
-    --pkg-name bootloader \
-    --pkg-target-name $(BOARD_BOOTLOADER_TAR_NAME) \
-    --sha1sum ${BOARD_BOOTLOADER_SHA1SUM} \
-    --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
-    --dl-url ${BOARD_BOOTLOADER_DL_URL}
+    ${BOOTLOADER_DOWNLOAD_SCRIPT_PARAMS}
 endif
 	$(V) touch $@
 

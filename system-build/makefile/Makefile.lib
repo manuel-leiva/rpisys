@@ -1,7 +1,7 @@
 # Include board definitions
 include ../../board.defs
 # Include local configuration
-include ../system-build/makefile/Makefile.local
+include ../../system-build/makefile/Makefile.local
 # Include common recipes and definitions
 include ../../system-build/makefile/Makefile.common
 
@@ -10,23 +10,48 @@ include ../../system-build/makefile/Makefile.common
 PKGNAME := $(notdir $(shell pwd))
 
 CROSS_COMPILE := $(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX)
-AUTOTOOLS_DL_URL_FILE = $(AUTOTOOLS_DL_URL)$(AUTOTOOLS_NAME_TAR)
-AUTOTOOLS_DL_TAR_PATH = $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
-AUTOTOOLS_PKG_PATH = $(PRJ_ROOT_PATH)/libraries/$(PKGNAME)
+LIB_DL_URL_FILE = $(AUTOTOOLS_DL_URL)$(AUTOTOOLS_NAME_TAR)
+LIB_DL_TAR_PATH = $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
+LIB_PKG_PATH = $(PRJ_ROOT_PATH)/libraries/$(PKGNAME)
 
-AUTOTOOLS_BOARD_LIBS_DIR:=board-libs
-AUTOTOOLS_HOST_LIBS_DIR:=host-libs
 
-AUTOTOOLS_PREFIX_INC_DIR:=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)
+LIB_BOARD_LIBS_DIR:=board-libs
+LIB_HOST_LIBS_DIR:=host-libs
+
+LIB_PREFIX_INC_DIR:=$(PRJ_ROOT_PATH)/libraries/$(LIB_HOST_LIBS_DIR)
 
 # Add standard include files and libraries location
-LIB_CFLAGS+="-I${AUTOTOOLS_PREFIX_INC_DIR}/usr/include"
-LIB_LDFLAGS+="-L$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)$(BOARD_LIBRARY_BOARD_INSTALLDIR)"
+LIB_CFLAGS+=-I${LIB_PREFIX_INC_DIR}/usr/include
+LIB_LDFLAGS+=-L$(PRJ_ROOT_PATH)/libraries/$(LIB_HOST_LIBS_DIR)$(BOARD_LIBRARY_BOARD_INSTALLDIR)
 
 
 export DESTDIR=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)/
 # PKG_CONFIG_LIBDIR: Replaces the default pkg-config search directory.
 export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/$(BOARD_LIBRARY_BOARD_INSTALLDIR)/pkgconfig
+
+
+# Create parameter list to download the package
+ifdef PKGNAME
+LINUX_DOWNLOAD_SCRIPT_PARAMS=--pkg-name ${PKGNAME}
+endif
+ifdef LIB_NAME_TAR
+LINUX_DOWNLOAD_SCRIPT_PARAMS+=--pkg-target-name  ${LIB_NAME_TAR}
+endif
+ifdef BOARD_PRJ_DOWNLOAD_PATH
+LINUX_DOWNLOAD_SCRIPT_PARAMS+=--dl-path ${BOARD_PRJ_DOWNLOAD_PATH}
+endif
+ifdef LIB_DL_URL
+LINUX_DOWNLOAD_SCRIPT_PARAMS+=--dl-url ${LIB_DL_URL}
+endif
+ifdef  LIB_SHA1SUM
+LINUX_DOWNLOAD_SCRIPT_PARAMS+=--sha1sum ${LIB_SHA1SUM}
+endif
+ifdef LIB_BRANCH
+LINUX_DOWNLOAD_SCRIPT_PARAMS+=--branch ${LIB_BRANCH}
+endif
+ifdef LIB_GIT_DEPTH
+LINUX_DOWNLOAD_SCRIPT_PARAMS+=--git-depth ${LIB_GIT_DEPTH}
+endif
 
 .PHONY: all clean help download install
 
@@ -34,17 +59,16 @@ export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/$
 
 all: lib-make
 
-#~ clean: autotools-revpatch
-clean:
+clean: lib-revpatch
 	@$(ECHO) "${MSG_INFO}  Clean ${PKGNAME}${MSG_END} "
 # Remove flags files
-	$(V) $(RM) lib-decomp \
+	$(V) $(RM) lib-revpatch \
 	lib-patch \
 	lib-make \
-	lib-install
-	$(V) $(MAKE) ${PKGNAME} clean
+	lib-install \
+	lib-download
 # Remove package directory
-#~ 	$(V) $(RM) $(PKGNAME)
+	$(V) $(RM) $(PKGNAME)
 
 # Alias target to download the package
 download: lib-download
@@ -54,17 +78,20 @@ download: lib-download
 lib-download:
 	@$(ECHO) "${MSG_INFO}  Download ${PKGNAME}${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
-    --pkg-name ${PKGNAME} \
-    --pkg-target-name $(LIB_NAME_TAR) \
-    --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
-    --dl-url ${LIB_DL_URL}
+    ${LINUX_DOWNLOAD_SCRIPT_PARAMS}
 	$(V) touch $@
 
+# lib-revpatch:
+# Parameters: target_prefix, dependecies, package-path, message
+$(eval $(call COMMON_TARGET_REVPATCH,lib,,${LIB_PKG_PATH},${PKGNAME}))
 
-lib-make:
+# lib-patch:
+# Parameters: target_prefix, dependecies, package-path, message
+$(eval $(call COMMON_TARGET_PATCH,lib,lib-download,${LIB_PKG_PATH},${PKGNAME}))
+
+lib-make: lib-patch
 	@    $(ECHO) "${MSG_INFO}  Build ${PKGNAME}${MSG_END}"
-	$(V) $(MAKE) ${PKGNAME} CXX=${CROSS_COMPILE}g++ AR=${CROSS_COMPILE}ar CC=${CROSS_COMPILE}gcc RANLIB=${CROSS_COMPILE}ranlib \
-    CFLAGS="${LIB_CFLAGS}" LDFLAGS="${LIB_LDFLAGS}" $(LIB_MAKE_FLAGS)
+	$(MAKE) ${PKGNAME} CXX=${CROSS_COMPILE}g++ AR=${CROSS_COMPILE}ar CC=${CROSS_COMPILE}gcc RANLIB=${CROSS_COMPILE}ranlib CFLAGS=${LIB_CFLAGS} LDFLAGS=${LIB_LDFLAGS} DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install $(LIB_MAKE_FLAGS)
 	$(V) touch $@
 
 generic-make-install: generic-make
@@ -74,12 +101,22 @@ generic-make-install: generic-make
 	$(V) cp -ar $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/* $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)/
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-change-prefix.sh ${PKGNAME} $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR) ${BOARD_LIBRARY_BOARD_INSTALLDIR}
 	$(V) cp -ar $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/* $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/
-#~ 	$(V) $(RM) install
+	$(V) $(RM) install
 	$(V) touch $@
 
 # Alias target to download the package
 install:
 	@    $(ECHO) "${MSG_WARN}  Make install not supported yet ${PKGNAME}${MSG_END}"
+	$(V) $(MAKE) ${PKGNAME} install CXX=${CROSS_COMPILE}g++ AR=${CROSS_COMPILE}ar CC=${CROSS_COMPILE}gcc RANLIB=${CROSS_COMPILE}ranlib CFLAGS=${LIB_CFLAGS} LDFLAGS=${LIB_LDFLAGS} DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install $(LIB_MAKE_INSTALL_FLAGS)
+	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_BOARD_LIBS_DIR)
+	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-lib-installer.sh \
+        --pkg-name ${PKGNAME} \
+        --host-prefix ${PRJ_ROOT_PATH}/libraries/${COMMON_LIB_HOST_LIBS_DIR} \
+        --libs-path ${BOARD_LIBRARY_BOARD_INSTALLDIR} \
+        --libsrc-path $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/ \
+        --boarddest-path $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_BOARD_LIBS_DIR) \
+        --hostdest-path $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
 
 help:
 	@$(ECHO) "  Targets:"
@@ -99,7 +136,9 @@ generic-debug-var:
 	@$(ECHO) PKGNAME: ${PKGNAME}
 	@$(ECHO) DESTDIR: ${DESTDIR}
 	@$(ECHO) PKG_CONFIG_LIBDIR: ${PKG_CONFIG_LIBDIR}
-	@$(ECHO) AUTOTOOLS_FLAGS: ${AUTOTOOLS_FLAGS}
+	@$(ECHO) LIB_CFLAGS: ${LIB_CFLAGS}
+	@$(ECHO) LIB_LDFLAGS: ${LIB_LDFLAGS}
+	@$(ECHO) LIB_MAKE_FLAGS: ${LIB_MAKE_FLAGS}
 	@$(ECHO) AUTOTOOLS_DL_URL_FILE: ${AUTOTOOLS_DL_URL_FILE}
 	@$(ECHO) AUTOTOOLS_DL_TAR_PATH: ${AUTOTOOLS_DL_TAR_PATH}
 	@$(ECHO) AUTOTOOLS_PKG_PATH: ${AUTOTOOLS_PKG_PATH}

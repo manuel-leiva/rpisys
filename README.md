@@ -17,8 +17,8 @@ Therefore all the specific configuration and specific procedures are used by the
 
 ## Raspberry Pi 3
 
-1.  Kernel: Kernel source tree for Raspberry Pi Foundation 4.4.50 (https://github.com/raspberrypi/linux)
-2.  Filesystem: Rasbian Lite (2017-03-02) https://www.raspberrypi.org/downloads/raspbian/
+1.  Kernel: Kernel source tree for Raspberry Pi Foundation 4.14.89 (https://github.com/raspberrypi/linux)
+2.  Filesystem: Rasbian Stretch Lite (2018-11-13) https://www.raspberrypi.org/downloads/raspbian/
 3.  Toolchain: gcc-linaro-arm-linux-gnueabihf-raspbian 4.8.3 (https://github.com/raspberrypi/tools)
 4.  Libraries:
     *  glib 2.50.3
@@ -34,6 +34,7 @@ Therefore all the specific configuration and specific procedures are used by the
     *  sqlite-autoconf 3170000
     *  x264 snapshot 2017-08-11 2245 stable
     *  zlib 1.2.11
+
 3.  Image: SD bootable image.
 
 ## Tegra X1/X2
@@ -61,7 +62,7 @@ git clone https://manuelleiva@bitbucket.org/manuelleiva/rpisys.git
 2.  Configure board
 
 ```bash
-./configure --board raspberry_pi_3/raspberry_pi_3.defs
+./configure --board raspberry_pi_3_stretch/raspberry_pi_3.defs
 ```
 
 3.  Build system
@@ -70,8 +71,13 @@ make
 ```
 
 4.  Create a bootable image
+
+Insert a microSD memory and define the memory device in the board configuration. For example:
+```
+BOARD_IMAGE_EXT_SD_DEVICE:=/dev/mmcblk0
+```
+Create SD image.
 ```bash
-# Create SD image
 make image-sd
 ```
 
@@ -131,7 +137,32 @@ system-build/makefile/Makefile.local:line 5:
 
 # Development information
 
-## Project directory description 
+## Libraries
+
+    *  attr-2.4.47
+    *  blueZ-5.50 (http://www.bluez.org/)
+    *  dbus-1.12.10
+    *  expat-2.1.0
+    *  glib 2.50.3
+    *  gst-libav 1.10.5
+    *  GStreamer 1.10.5 (plugins base, bad, good and ugly, gst-rtsp-server)
+    *  Gst rpicamsrc 4fc608e (https://github.com/thaytan/gst-rpicamsrc/commit/4fc608eb8196f45c591263e5d50fd3057ac380e5)
+    *  kmod-25
+    *  libcap2-2.22
+    *  libffi 3.2.1
+    *  libsoup 2.57.1
+    *  libusb-1.0.22
+    *  libxml2 2.9.4
+    *  ncurses 6.0
+    *  pcre 8.40
+    *  readline 6.3
+    *  sqlite-autoconf 3170000
+    *  util-linux-2.33
+    *  x264 snapshot 2017-08-11 2245 stable
+    *  xz-5.2.4 (https://tukaani.org/xz/)
+    *  zlib 1.2.11
+
+## Project directory description
 
 *  toolchain: Build toolchain
 *  linux: Build Linux kernel
@@ -180,7 +211,7 @@ system-build/makefile/Makefile.local:line 5:
 #!bash
 mkdir ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/
 ```
-2.Create Makefile 
+2.Create Makefile
 ```
 #!bash
 touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/Makefile
@@ -209,7 +240,7 @@ touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/dependency.txt
 #!Makefile
 BOARD_LIBRARY_NAME_LIST := libsoup-2.57.1
 ```
-Note: You can apply one or more patches. You have to create a directory called patches with a file called series where you can add the list of the patches (quilt aproach). 
+Note: You can apply one or more patches. You have to create a directory called patches with a file called series where you can add the list of the patches (quilt aproach).
 
 ## Image
 
@@ -232,3 +263,11 @@ BOARD_IMAGE_P1_PATH:=${BOARD_FILESYSTEM_INSTALLATION_PATH}
 
 The target image-custom was defined to add a hook and make custom images configurations if it's required.
 
+## Backing up the partition table
+
+sfdisk supports an  option to save a description of the device layout to a text file unsing --dump.
+The dump format is suitable for later  sfdisk  input. For example:
+
+```!bash
+sudo sfdisk --dump /dev/mmcblk0 > mmcblk0.dump
+```

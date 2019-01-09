@@ -35,6 +35,31 @@ endif
 ## Exported definitions
 export FILESYSTEM_PKG_PATH:=${PRJ_ROOT_PATH}/filesystem/${BOARD_FILESYSTEM_PKG_NAME}
 
+# Create parameter list to download the package
+ifdef BOARD_FILESYSTEM_PKG_NAME
+FILESYSTEM_DOWNLOAD_SCRIPT_PARAMS=--pkg-name ${BOARD_FILESYSTEM_PKG_NAME}
+endif
+ifdef BOARD_FILESYSTEM_PKG_NAME
+FILESYSTEM_DOWNLOAD_SCRIPT_PARAMS+=--pkg-target-name  ${BOARD_FILESYSTEM_TAR_NAME}
+endif
+ifdef BOARD_PRJ_DOWNLOAD_PATH
+FILESYSTEM_DOWNLOAD_SCRIPT_PARAMS+=--dl-path ${BOARD_PRJ_DOWNLOAD_PATH}
+endif
+ifdef BOARD_FILESYSTEM_DL_URL
+FILESYSTEM_DOWNLOAD_SCRIPT_PARAMS+=--dl-url ${BOARD_FILESYSTEM_DL_URL}
+endif
+ifdef BOARD_FILESYSTEM_SHA1SUM
+FILESYSTEM_DOWNLOAD_SCRIPT_PARAMS+=--sha1sum ${BOARD_FILESYSTEM_SHA1SUM}
+endif
+ifdef BOARD_FILESYSTEM_BRANCH
+FILESYSTEM_DOWNLOAD_SCRIPT_PARAMS+=--branch ${BOARD_FILESYSTEM_BRANCH}
+endif
+ifdef BOARD_FILESYSTEM_GIT_DEPTH
+FILESYSTEM_DOWNLOAD_SCRIPT_PARAMS+=--git-depth ${BOARD_FILESYSTEM_GIT_DEPTH}
+endif
+ifdef BOARD_FILESYSTEM_SU
+FILESYSTEM_DOWNLOAD_SCRIPT_PARAMS+=--su ${BOARD_FILESYSTEM_SU}
+endif
 
 # Public targets ###############################################################
 
@@ -70,13 +95,7 @@ endif
 filesystem-download:
 	@    $(ECHO) "${MSG_INFO}  Download filesystem${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
-    --pkg-name filesystem \
-    --pkg-target-name ${BOARD_FILESYSTEM_TAR_NAME} \
-    --sha1sum ${BOARD_FILESYSTEM_SHA1SUM} \
-    --dl-path ${BOARD_PRJ_DOWNLOAD_PATH} \
-    --dl-url ${BOARD_FILESYSTEM_DL_URL} \
-    --su ${BOARD_FILESYSTEM_SU} \
-    --dest ${FILESYSTEM_PATH}/${BOARD_FILESYSTEM_DEST_DIR}
+    ${FILESYSTEM_DOWNLOAD_SCRIPT_PARAMS}
 	$(V) touch $@
 
 filesystem-patch: filesystem-download

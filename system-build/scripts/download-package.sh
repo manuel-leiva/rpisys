@@ -49,6 +49,16 @@ do
         DOWNLOAD_URL="$2"
         shift
         ;;
+        # Repository branch
+        -b|--branch)
+        BRANCH="$2"
+        shift
+        ;;
+        # Repository depth
+        --git-depth)
+        GIT_DEPTH="$2"
+        shift
+        ;;
         -o|--dest)
         DESTINATION_PATH="$2"
         shift
@@ -122,38 +132,54 @@ function TarDecompress
     fi
 }
 
-# Download tarball package
+# Process tarball package
 function TarProcess
 {
     FileDownload
     TarDecompress
+}
 
+# Download Git repository
+function GitProcess
+{
+    # If the branch is not defined, clone master branch
+    if [ -z ${BRANCH} ]; then
+        BRANCH=master
+    fi
+    GIT_CLONE_PARAMETERS="-b ${BRANCH} "
+    if [ ! -z ${GIT_DEPTH} ]; then
+        GIT_CLONE_PARAMETERS+="--depth=${GIT_DEPTH} "
+    fi
+    GIT_CLONE_PARAMETERS+=${DOWNLOAD_URL}${PKG_TARGET_NAME}
+    # Clone repository
+    git clone ${GIT_CLONE_PARAMETERS}
 }
 
 # Verify the type of target
-
-case ${PKG_TARGET_NAME} in
-    *.tar.*) # tar command recognizes the format by itself
-        TarProcess
-        ;;
-    *.tbz2) # tar command recognizes the format by itself
-        TarProcess
-        ;;
-    *.git)
-        # TODO
-        echo -e "${ERRORCOLOR}ERROR: Target ${PKG_TARGET_NAME} is not supported${ENDCOLOR}"
-        ;;
-    *)
-        echo -e "${WARNCOLOR}WARN: Target ${PKG_TARGET_NAME} format is not identified${ENDCOLOR}"
-        echo -e "${INFOCOLOR}  Check if ${PKG_TARGET_NAME} is a tarball${ENDCOLOR}"
-        TarVerify
-        if [ $? -eq 0 ] ; then
+if [ ! -z ${PKG_TARGET_NAME} ]; then
+    case ${PKG_TARGET_NAME} in
+        *.tar.*) # tar command recognizes the format by itself
             TarProcess
-            exit 0
-        fi
-        echo -e "${ERRORCOLOR}ERROR: Target ${PKG_TARGET_NAME} is not supported${ENDCOLOR}"
-        exit 1
-esac
+            ;;
+        *.tbz2) # tar command recognizes the format by itself
+            TarProcess
+            ;;
+        *.git)
+            # Clone GIT repository
+            GitProcess
+            ;;
+        *)
+            echo -e "${WARNCOLOR}WARN: Target ${PKG_TARGET_NAME} format is not identified${ENDCOLOR}"
+            echo -e "${INFOCOLOR}  Check if ${PKG_TARGET_NAME} is a tarball${ENDCOLOR}"
+            TarVerify
+            if [ $? -eq 0 ] ; then
+                TarProcess
+                exit 0
+            fi
+            echo -e "${ERRORCOLOR}ERROR: Target ${PKG_TARGET_NAME} is not supported${ENDCOLOR}"
+            exit 1
+    esac
+fi
 
 
 
