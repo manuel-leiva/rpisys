@@ -1,0 +1,145 @@
+# Include board definitions
+include ../../board.defs
+# Include local configuration
+include ../../system-build/makefile/Makefile.local
+# Include common recipes and definitions
+include ../../system-build/makefile/Makefile.common
+
+# Definitions ##################################################################
+
+## Verify external variables ##
+ifndef BOARD_LIBRARY_HOST
+$(error ERROR: BOARD_LIBRARY_HOST not defined)
+endif
+
+# Private definitions ##########################################################
+PKGNAME := $(notdir $(shell pwd))
+
+CROSS_COMPILE := $(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX)
+DEB_DL_URL_FILE = $(DEB_DL_URL)$(DEB_NAME_TAR)
+DEB_DL_TAR_PATH = $(BOARD_PRJ_DOWNLOAD_PATH)/$(DEB_NAME_TAR)
+DEB_PKG_PATH = $(PRJ_ROOT_PATH)/libraries/$(PKGNAME)
+
+DEB_PREFIX_INC_DIR:=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
+DEB_PATH:=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/usr/bin
+
+export DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install
+# PKG_CONFIG_LIBDIR: Replaces the default pkg-config search directory.
+export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/$(BOARD_LIBRARY_BOARD_INSTALLDIR)/pkgconfig
+# Tell make not to export PKG_CONFIG_PATH variable to child processes.
+unexport PKG_CONFIG_PATH
+
+# Create parameter list to download the package
+ifdef PKGNAME
+DEB_DOWNLOAD_SCRIPT_PARAMS=--pkg-name ${PKGNAME}
+endif
+ifdef DEB_NAME_TAR
+DEB_DOWNLOAD_SCRIPT_PARAMS+=--pkg-target-name  ${DEB_NAME_TAR}
+endif
+ifdef BOARD_PRJ_DOWNLOAD_PATH
+DEB_DOWNLOAD_SCRIPT_PARAMS+=--dl-path ${BOARD_PRJ_DOWNLOAD_PATH}
+endif
+ifdef DEB_DL_URL
+DEB_DOWNLOAD_SCRIPT_PARAMS+=--dl-url ${DEB_DL_URL}
+endif
+ifdef DEB_SHA1SUM
+DEB_DOWNLOAD_SCRIPT_PARAMS+=--sha1sum ${DEB_SHA1SUM}
+endif
+ifdef DEB_BRANCH
+DEB_DOWNLOAD_SCRIPT_PARAMS+=--branch ${DEB_BRANCH}
+endif
+ifdef DEB_GIT_DEPTH
+DEB_DOWNLOAD_SCRIPT_PARAMS+=--git-depth ${DEB_GIT_DEPTH}
+endif
+ifdef BOARD_LIBRARY_BOARD_ARCH
+DEB_DOWNLOAD_SCRIPT_PARAMS+=--arch ${BOARD_LIBRARY_BOARD_ARCH}
+endif
+DEB_DOWNLOAD_SCRIPT_PARAMS+=--dest ./install
+
+
+# Public targets ###############################################################
+
+.PHONY: all clean help download install
+
+all: deb-make
+
+clean: deb-revpatch
+	@$(ECHO) "${MSG_INFO}  Clean ${PKGNAME}${MSG_END} "
+# Remove flags files
+	$(V) $(RM) deb-download \
+	deb-patch \
+	deb-make \
+	deb-make-install
+# Remove package directory
+	$(V) $(RM) install
+	$(call COMMON_RECIPE_RM_PATCH,$(DEB_PKG_PATH))
+
+
+# Alias target to download the package
+download: deb-download
+
+# Private targets ##############################################################
+
+deb-download:
+	@$(ECHO) "${MSG_INFO}  Download ${PKGNAME}${MSG_END}"
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
+    ${DEB_DOWNLOAD_SCRIPT_PARAMS}
+	$(V) touch $@
+
+# deb-revpatch:
+# Parameters: target_prefix, dependecies, package-path, message
+$(eval $(call COMMON_TARGET_REVPATCH,deb,,${DEB_PKG_PATH},${PKGNAME}))
+
+# deb-patch:
+# Parameters: target_prefix, dependecies, package-path, message
+$(eval $(call COMMON_TARGET_PATCH,deb,deb-download,${DEB_PKG_PATH},${PKGNAME}))
+
+deb-make: deb-patch
+	@    $(ECHO) "${MSG_INFO}  Make ${PKGNAME}${MSG_END}"
+	$(V) touch $@
+
+deb-make-install: deb-make
+	@    $(ECHO) "${MSG_INFO}  Make install ${PKGNAME}${MSG_END}"
+# Change library package config files
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-lib-installer.sh \
+        --pkg-name ${PKGNAME} \
+        --host-prefix ${PRJ_ROOT_PATH}/libraries/${COMMON_LIB_HOST_LIBS_DIR} \
+        --libs-path ${BOARD_LIBRARY_BOARD_INSTALLDIR} \
+        --libsrc-path $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/ \
+        --boarddest-path $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_BOARD_LIBS_DIR) \
+        --hostdest-path $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
+	$(V) touch $@
+
+# Alias target to download the package
+install: deb-make-install
+
+help:
+	@$(ECHO) "  Targets:"
+	@$(ECHO) "    all:       Build autotools package"
+	@$(ECHO) "    install:   Install autotools package"
+	@$(ECHO) "    download:  Download autotools package"
+	@$(ECHO) "  Variables"
+	@$(ECHO) "    DEB_DL_URL    : URL address"
+	@$(ECHO) "    DEB_NAME_TAR  : Tar package name"
+	@$(ECHO) "    DEB_FLAGS     : configure script flags"
+
+help-debug:
+	@$(ECHO) "    deb-debug-var:            Show variables used during build process"
+	@$(ECHO) "    deb-debug-libs-installed: Show the list of libraries installed using: pkg-config --list-all"
+
+deb-debug-var:
+	@$(ECHO) PKGNAME: ${PKGNAME}
+	@$(ECHO) DESTDIR: ${DESTDIR}
+	@$(ECHO) PATH:    ${PATH}
+	@$(ECHO) PKG_CONFIG_LIBDIR: ${PKG_CONFIG_LIBDIR}
+	@$(ECHO) DEB_FLAGS: ${DEB_FLAGS}
+	@$(ECHO) DEB_DL_URL_FILE: ${DEB_DL_URL_FILE}
+	@$(ECHO) DEB_DL_TAR_PATH: ${DEB_DL_TAR_PATH}
+	@$(ECHO) DEB_PKG_PATH: ${DEB_PKG_PATH}
+
+deb-debug-libs-installed:
+	@pkg-config --list-all
+
+deb-debug-targets:
+    # The lines must be coherent with the lines used in order to show the real recipes
+	@$(ECHO) $(info $(call COMMON_TARGET_REVPATCH,deb,,${DEB_PKG_PATH},${PKGNAME}))
