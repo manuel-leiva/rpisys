@@ -25,7 +25,7 @@ AUTOTOOLS_PATH:=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/usr/bin
 
 export DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install
 # PKG_CONFIG_LIBDIR: Replaces the default pkg-config search directory.
-export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/$(BOARD_LIBRARY_BOARD_INSTALLDIR)/pkgconfig
+export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/$(BOARD_LIBRARY_BOARD_INSTALLDIR)/pkgconfig:$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/usr/share/pkgconfig
 # Tell make not to export PKG_CONFIG_PATH variable to child processes.
 unexport PKG_CONFIG_PATH
 
