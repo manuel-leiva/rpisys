@@ -119,6 +119,7 @@ if [ -n "${AUTOTOOLS_PC_FILES}" ]; then
         sed -i "s:^prefix=:prefix=${PREFIX}:g" $i ;
         sed -i "s:^libdir=:libdir=${PREFIX}:g" $i ;
         sed -i "s:^toolexeclibdir=:toolexeclibdir=${PREFIX}:g" $i ;
+        sed -i "s:^includedir=:includedir=${PREFIX}:g" $i ;
     done ;
 fi
 
