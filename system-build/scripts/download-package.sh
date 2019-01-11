@@ -132,6 +132,13 @@ function TarDecompress
     fi
 }
 
+function DebDecompress
+{
+    DEB_PKG_PARAMETERS+=${DOWNLOAD_URL}${PKG_TARGET_NAME}
+    # Clone repository
+    dpkg -x ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} ${DESTINATION_PATH}
+}
+
 # Process tarball package
 function TarProcess
 {
@@ -155,6 +162,13 @@ function GitProcess
     git clone ${GIT_CLONE_PARAMETERS}
 }
 
+# Download Debian package
+function DebianProcess
+{
+    FileDownload
+    DebDecompress
+}
+
 # Verify the type of target
 if [ ! -z ${PKG_TARGET_NAME} ]; then
     case ${PKG_TARGET_NAME} in
@@ -167,6 +181,10 @@ if [ ! -z ${PKG_TARGET_NAME} ]; then
         *.git)
             # Clone GIT repository
             GitProcess
+            ;;
+         *.deb)
+            # Download Debian package
+            DebianProcess
             ;;
         *)
             echo -e "${WARNCOLOR}WARN: Target ${PKG_TARGET_NAME} format is not identified${ENDCOLOR}"
