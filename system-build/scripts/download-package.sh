@@ -68,6 +68,11 @@ do
         SUPER_USER="$2"
         shift
         ;;
+        # Define architecture
+        -a|--arch)
+        ARCHITECTURE="$2"
+        shift
+        ;;
         # Help
         -h|--help)
         help
@@ -134,9 +139,18 @@ function TarDecompress
 
 function DebDecompress
 {
-    DEB_PKG_PARAMETERS+=${DOWNLOAD_URL}${PKG_TARGET_NAME}
-    # Clone repository
-    dpkg -x ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} ${DESTINATION_PATH}
+    if [ -z ${ARCHITECTURE} ]; then
+        echo -e "${ERRORCOLOR}Error:${ENDCOLOR} System architecture not defined"
+    else
+        # Check if the debian package architecture matches
+        ARCH=$( dpkg -I ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} | grep Architecture | awk '{print $2}' )
+        if [ "$ARCHITECTURE" = "$ARCH" ]; then
+            dpkg -x ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} ${DESTINATION_PATH}
+        else
+            echo -e "${ERRORCOLOR}Error:${ENDCOLOR} package architecture ($ARCH) does not match system ($ARCHITECTURE)"
+            exit 1
+        fi
+    fi
 }
 
 # Process tarball package
