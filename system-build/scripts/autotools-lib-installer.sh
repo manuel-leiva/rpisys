@@ -104,7 +104,6 @@ cp -a ${LIBSRC_PATH}/* ${BOARDDEST_PATH}/
 AUTOTOOLS_LA_LIBS=$(find ${LIBSRC_PATH} -name *.la)
 if [ -n "${AUTOTOOLS_LA_LIBS}" ]; then
     for i in ${AUTOTOOLS_LA_LIBS}; do
-        echo Lib $i ;
         sed -i "s:^libdir=':libdir='${PREFIX}:g" $i ;
         # This command is to substitude the paths in the dependency_libs variable
         sed -i "s: ${LIBS_INSTALLDIR}: ${PREFIX}${LIBS_INSTALLDIR}:g" $i ;
@@ -115,7 +114,6 @@ fi
 AUTOTOOLS_PC_FILES=$(find ${LIBSRC_PATH} -name *.pc)
 if [ -n "${AUTOTOOLS_PC_FILES}" ]; then
     for i in ${AUTOTOOLS_PC_FILES}; do
-        echo Files $i ;
         sed -i "s:^prefix=:prefix=${PREFIX}:g" $i ;
         sed -i "s:^libdir=:libdir=${PREFIX}:g" $i ;
         sed -i "s:^toolexeclibdir=:toolexeclibdir=${PREFIX}:g" $i ;
