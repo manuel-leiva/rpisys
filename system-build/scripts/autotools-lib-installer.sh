@@ -117,7 +117,12 @@ if [ -n "${AUTOTOOLS_PC_FILES}" ]; then
         sed -i "s:^prefix=:prefix=${PREFIX}:g" $i ;
         sed -i "s:^libdir=:libdir=${PREFIX}:g" $i ;
         sed -i "s:^toolexeclibdir=:toolexeclibdir=${PREFIX}:g" $i ;
-        sed -i "s:^includedir=:includedir=${PREFIX}:g" $i ;
+        # Check if the includedir has prefix or libdir
+        CHECK_PREFIX=$( grep ^includedir $i | grep -e prefix -e libdir )
+        # if there not prefix
+        if [ -z "$CHECK_PREFIX" ]; then
+            sed -i "s:^includedir=:includedir=${PREFIX}:g" $i ;
+        fi
     done ;
 fi
 
