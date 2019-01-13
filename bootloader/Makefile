@@ -99,7 +99,6 @@ bootloader-make: bootloader-patch
 bootloader-install: bootloader-make
 	@$(ECHO) "${MSG_INFO}  Install bootloader${MSG_END}"
 	$(V) cd boot; find . | cpio -pdum ${BOOTLOADER_INSTALLATION_PATH}
-	$(V) touch $@
 
 bootloader-uninstall:
 	@$(ECHO) "${MSG_INFO}  Uninstall bootloader${MSG_END}"

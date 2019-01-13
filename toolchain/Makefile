@@ -67,6 +67,8 @@ endif
 
 all: toolchain-header $(BOARD_PRJ_COMMON_PATH)/$(BOARD_TOOLCHAIN_PKG_NAME)/toolchain-build
 
+install: all
+
 clean: toolchain-header toolchain-clean
 
 download: toolchain-header $(BOARD_PRJ_COMMON_PATH)/$(BOARD_TOOLCHAIN_PKG_NAME)/toolchain-download
