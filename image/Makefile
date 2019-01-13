@@ -123,7 +123,7 @@ image-make-custom:
 
 image-clean:
 	@$(ECHO) "${MSG_INFO}  Remove image${MSG_END}"
-	@$(ECHO) "${MSG_REQ}You need to be logged in as root you to remove the image${MSG_END}"
+	@$(ECHO) "${MSG_REQ}You need super user permissions to clean image${MSG_END}"
 	$(V) sudo $(RM) image
 	$(V) sudo $(RM) image-download image-patch image-make
 	$(call COMMON_RECIPE_HOOK,$(BOARD_PRJ_MAKEFILE_HOOKS_PATH),$@-post)

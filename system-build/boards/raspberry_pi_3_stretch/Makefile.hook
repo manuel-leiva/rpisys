@@ -12,7 +12,7 @@ linux-install-post:
 
 filesystem-patch-pre:
 # Change owner
-	echo "You need root permisions"
+	echo "You need super user permissions to change the wpa_supplicant file owner"
 	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant
 	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant/wpa_supplicant.conf
 
