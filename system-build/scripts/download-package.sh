@@ -127,7 +127,7 @@ function TarDecompress
     OWNER=$(ls ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -l | awk '{print $3 }')
     echo -e "${INFOCOLOR}  Decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
     if [ "root" == ${OWNER} ]  || [ "y" == ${SUPER_USER} ] ; then
-        echo -e "${MSGCOLOR}You need root permissions to decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
+        echo -e "${MSGCOLOR}You need super user permissions to decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
         # Decompress Package
         sudo \
         tar -xpf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -C ${DESTINATION_PATH}

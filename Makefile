@@ -45,37 +45,24 @@ help:
 	@$(ECHO) "    image-file:       Create image file"
 
 toolchain: board
-	$(V) $(MAKE) $@
+	$(V) $(MAKE) $@ install
 
 bootloader: toolchain
-	$(V) $(MAKE) $@
+	$(V) $(MAKE) $@ install
 
 linux: toolchain
-	$(V) $(MAKE) $@
+	$(V) $(MAKE) $@ install
 
 filesystem: board
-	$(V) $(MAKE) $@
+	$(V) $(MAKE) $@ install
 
 libraries: filesystem linux
-	$(V) $(MAKE) $@
-
-applications:
-	$(V) $(MAKE) $@
+	$(V) $(MAKE) $@ install
 
 image:  bootloader libraries
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/bootloader install
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/linux install
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/libraries install
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/filesystem install
-	$(V)$(MAKE) ${PRJ_ROOT_PATH}/applications install
-	$(V)$(MAKE) $@
+
 
 image-clean:
-	$(V)$(MAKE) bootloader   uninstall
-	$(V)$(MAKE) linux        uninstall
-	$(V)$(MAKE) filesystem   uninstall
-	$(V)$(MAKE) libraries    uninstall
-	$(V)$(MAKE) applications uninstall
 	$(V)$(MAKE) image clean
 
 image-sd:

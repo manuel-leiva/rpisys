@@ -44,9 +44,9 @@ clean: libraries-header $(LIB_CLEAN_TARGET_LIST)
 	@$(RM) host-libs board-libs libraries-install
 
 # Alias target to install linux
-install: libraries-install
+install: libraries-header libraries-install
 
-uninstall:
+uninstall: libraries-header
 	@$(ECHO) "${MSG_INFO}  Uninstall libraries${MSG_END}"
 	$(V) $(RM) libraries-install
 
@@ -61,10 +61,10 @@ $(info $(foreach i,$(BOARD_LIBRARY_NAME_LIST),$(eval $(call CLEAN_RECIPE,$(i))))
 libraries-header:
 	@$(ECHO) "${MSG_INFO}Libraries${MSG_END}"
 
-libraries-install:
+libraries-install: all
 	@$(ECHO) "${MSG_INFO}  Libraries install${MSG_END}"
-	$(V) cd board-libs; find . | cpio -pdum ${LIBRARY_INSTALLATION_PATH}
-	$(V) touch $@
+	@$(ECHO) "${MSG_REQ}You need super user permissions to install libraries${MSG_END}"
+	$(V) cd board-libs; sudo find . | sudo cpio -pdum ${LIBRARY_INSTALLATION_PATH}
 
 
 libraries-debug-targets:

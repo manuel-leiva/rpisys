@@ -61,7 +61,7 @@ define COMMON_RECIPE_DEPENDENCY
              PKG_INSTALLED=$$(apt-cache policy $$PACKAGE  | grep Installed) ; \
              $(ECHO) "    $$PACKAGE:$$PKG_INSTALLED" ; \
              if [ -n "$$(echo $$PKG_INSTALLED | grep none )" ]; then \
-                 $(ECHO) "${MSG_REQ}You need root permissions to install $$PACKAGE${MSG_END}" ; \
+                 $(ECHO) "${MSG_REQ}You need super user permissions to install $$PACKAGE${MSG_END}" ; \
                  sudo apt-get install $$PACKAGE ; \
              fi \
         done \

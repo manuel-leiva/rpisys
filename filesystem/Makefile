@@ -86,7 +86,7 @@ filesystem-clean: filesystem-revpatch
 	$(V) $(RM) filesystem-*
 	$(call COMMON_RECIPE_RM_PATCH,$(FILESYSTEM_PATH))
 ifeq ($(BOARD_FILESYSTEM_SU),y)
-	@$(ECHO) "${MSG_REQ}You need to be logged in as root you to clean filesystem${MSG_END}"
+	@$(ECHO) "${MSG_REQ}You need super user permissions to clean the filesystem${MSG_END}"
 	$(V) sudo $(RM) filesystem
 else
 	$(V) $(RM) filesystem
@@ -124,12 +124,11 @@ filesystem-install: filesystem-patch
 	@$(ECHO) "${MSG_INFO}  Install filesystem${MSG_END}"
 	$(V) $(MKDIR) ${FILESYSTEM_INSTALLATION_PATH}
 ifeq ($(BOARD_FILESYSTEM_SU),y)
-	@$(ECHO) "${MSG_REQ}You need to be logged in as root you to install filesystem${MSG_END}"
+	@$(ECHO) "${MSG_REQ}You need super user permissions to install the filesystem${MSG_END}"
 	$(V) cd filesystem; sudo find . | sudo cpio -pdum ${FILESYSTEM_INSTALLATION_PATH}
 else
 	$(V) cd filesystem; find . | cpio -pdum ${FILESYSTEM_INSTALLATION_PATH}
 endif
-	$(V) touch $@
 
 linux-export-var:
 	@$(ECHO) FILESYSTEM_PKG_PATH: ${FILESYSTEM_PKG_PATH}
