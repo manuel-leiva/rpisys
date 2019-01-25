@@ -129,7 +129,7 @@ board-install: $(LOCAL_BOARD_PATH)/board_tools
             if [ -d "$${LIBRARY_DIR}" ]; then \
                 $(ECHO) "${MSG_INFO}    Library $${LIBRARY_DIR}${MSG_END}" ; \
                 BASENAME="$$(basename $$LIBRARY_DIR)"  ; \
-                ln -s $${LIBRARY_DIR} ${PRJ_ROOT_PATH}/libraries/$$BASENAME ; \
+                cp -r $${LIBRARY_DIR} ${PRJ_ROOT_PATH}/libraries/$$BASENAME ; \
             else \
                 $(ECHO) "    ${MSG_WARN}WARN:${MSG_END} The directory $${LIBRARY_DIR} doesn't exist"; \
             fi \
