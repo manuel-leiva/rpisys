@@ -52,8 +52,21 @@ clean: header
         $(ECHO) "${MSG_INFO}  Remove image patches${MSG_END}" ; \
         $(RM) ${PRJ_ROOT_PATH}/image/patches ; \
     fi
-	$(RM) board-install
-	$(RM) $(LOCAL_BOARD_PATH)/board_tools
+# Install board libraries
+	$(V) if [ -n "${BOARD_LIBRARY_INSTALL_DIR}" ]; then \
+	$(ECHO) "${MSG_INFO}  Remove Library${MSG_END}" ; \
+        for LIBRARY_DIR in $(BOARD_LIBRARY_INSTALL_DIR) ; do \
+            if [ -d "$${LIBRARY_DIR}" ]; then \
+                BASENAME="$$(basename $$LIBRARY_DIR)"  ; \
+                $(ECHO) "${MSG_INFO}    Library $${BASENAME}${MSG_END}" ; \
+                $(RM) ${PRJ_ROOT_PATH}/libraries/$$BASENAME ; \
+            else \
+                $(ECHO) "    ${MSG_WARN}WARN:${MSG_END} The directory \"${PRJ_ROOT_PATH}/libraries/$$BASENAME\" doesn't exist"; \
+            fi \
+        done \
+    fi
+	$(V) $(RM) board-install
+	$(V) $(RM) $(LOCAL_BOARD_PATH)/board_tools
 
 $(LOCAL_BOARD_PATH)/board_tools:
 	$(V) $(ECHO) "${MSG_INFO}  Check ${BOARD_NAME} dependency tools${MSG_END}"
@@ -108,6 +121,19 @@ board-install: $(LOCAL_BOARD_PATH)/board_tools
             $(ECHO) "${MSG_INFO}  Install image patches${MSG_END}" ; \
             ln -s ${BOARD_IMAGE_PATCHES_PATH} ${PRJ_ROOT_PATH}/image/patches ; \
         fi \
+    fi
+# Install board libraries
+	$(V) if [ -n "${BOARD_LIBRARY_INSTALL_DIR}" ]; then \
+	$(ECHO) "${MSG_INFO}  Install Library${MSG_END}" ; \
+        for LIBRARY_DIR in $(BOARD_LIBRARY_INSTALL_DIR) ; do \
+            if [ -d "$${LIBRARY_DIR}" ]; then \
+                $(ECHO) "${MSG_INFO}    Library $${LIBRARY_DIR}${MSG_END}" ; \
+                BASENAME="$$(basename $$LIBRARY_DIR)"  ; \
+                cp -r $${LIBRARY_DIR} ${PRJ_ROOT_PATH}/libraries/$$BASENAME ; \
+            else \
+                $(ECHO) "    ${MSG_WARN}WARN:${MSG_END} The directory $${LIBRARY_DIR} doesn't exist"; \
+            fi \
+        done \
     fi
 	$(V) touch $@
 
