@@ -121,6 +121,6 @@ BOARD_APPLICATION_NAME_LIST:=""
 # IMAGE ########################################################################
 
 # BOARD_IMAGE_EXT_SD_DEVICE: external sd card device used to install the image built
-BOARD_IMAGE_EXT_SD_DEVICE:=/dev/mmcblk0
+BOARD_IMAGE_EXT_SD_DEVICE:=/dev/sdb
 
 BOARD_IMAGE_DISK_PARTITION_PATH=$(LOCAL_BOARD_PATH)/rpi-stretch-partition-table.dump
