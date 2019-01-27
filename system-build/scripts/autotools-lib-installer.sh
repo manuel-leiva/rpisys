@@ -115,7 +115,12 @@ AUTOTOOLS_PC_FILES=$(find ${LIBSRC_PATH} -name *.pc)
 if [ -n "${AUTOTOOLS_PC_FILES}" ]; then
     for i in ${AUTOTOOLS_PC_FILES}; do
         sed -i "s:^prefix=:prefix=${PREFIX}:g" $i ;
-        sed -i "s:^libdir=:libdir=${PREFIX}:g" $i ;
+        # Check if the libdir has prefix
+        CHECK_PREFIX=$( grep ^libdir $i | grep prefix )
+        # if there not prefix
+        if [ -z "$CHECK_PREFIX" ]; then
+            sed -i "s:^libdir=:libdir=${PREFIX}:g" $i ;
+        fi
         sed -i "s:^toolexeclibdir=:toolexeclibdir=${PREFIX}:g" $i ;
         # Check if the includedir has prefix or libdir
         CHECK_PREFIX=$( grep ^includedir $i | grep -e prefix -e libdir )

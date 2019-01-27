@@ -2,8 +2,15 @@
 
 RPISYS (**R**aspberry **Pi** **sys**tem) was created in order to build all the packages required to create a bootable image for Raspberry Pi. The project is based on Makefiles and bash scripts.
 
-The main goal of the project is to contain a set of recipes and scripts that perform generic tasks such build a kernel, compile libraries create an image etc, therefore you can use these generic recipes to build different systems. You can convert this generic task to a specific task through parameters that are defined in a configuration file that is called board definition.
-Since there are some tasks where you need specific procedures that are not covered by these generic recipes, The SDK allows adding hooks with customs procedures that can be called before and after certain recipe.
+The main goal of the project is to contain a set of recipes and scripts
+that perform generic tasks such build a kernel, compile libraries create an image etc,
+therefore you can use these generic recipes to build different systems.
+
+You can convert this generic task to a specific task through parameters
+that are defined in a configuration file that is called machine definition.
+
+Since there are some tasks where you need specific procedures that are not covered by these generic recipes,
+The SDK allows adding hooks with customs procedures that can be called before and after certain recipe.
 Therefore all the specific configuration and specific procedures are used by the SDK but also can be easily removed and replaced with a new configuration.
 
 # Configuration files
@@ -62,7 +69,7 @@ git clone https://manuelleiva@bitbucket.org/manuelleiva/rpisys.git
 2.  Configure board
 
 ```bash
-./configure --board raspberry_pi_3_stretch/raspberry_pi_3.defs
+./configure --machine machine/raspberry_pi_3_stretch/raspberry_pi_3.defs
 ```
 
 3.  Build system
@@ -112,7 +119,7 @@ make image-sd
 
 ```bash
 make clean
-make board-clean
+make machine-clean
 ./configure --clean
 ```
 
@@ -167,7 +174,7 @@ system-build/makefile/Makefile.local:line 5:
 *  toolchain: Build toolchain
 *  linux: Build Linux kernel
 *  filesystem: Build filesystem
-*  Libraries: Build libraries
+*  Libraries: Build libraries and applications
 *  image: Build image
 *  system-build: Collection of recipes and scripts used to build the system
 

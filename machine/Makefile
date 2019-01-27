@@ -1,15 +1,19 @@
 # Include board definitions
-include ../../board.defs
+include ../machine.defs
 # Include local configuration
-include ../../system-build/makefile/Makefile.local
+include ../system-build/makefile/Makefile.local
 # Include common recipes and definitions
-include ../../system-build/makefile/Makefile.common
+include ../system-build/makefile/Makefile.common
 
 # Definitions ##################################################################
 
 ## Verify external variables ##
 ifndef BOARD_PRJ_TOOLS_PATH
 $(error ERROR: BOARD_PRJ_TOOLS_PATH not defined)
+endif
+
+ifndef PRJ_ROOT_PATH
+$(error ERROR: PRJ_ROOT_PATH not defined)
 endif
 
 # Public targets ###############################################################

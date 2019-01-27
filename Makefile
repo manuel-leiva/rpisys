@@ -1,5 +1,5 @@
-# Include board definitions
-include board.defs
+# Include machine definitions
+include machine.defs
 # Include local configuration
 include system-build/makefile/Makefile.local
 # Include common recipes and definitions
@@ -9,7 +9,7 @@ include system-build/makefile/Makefile.common
 
 PWD:=$(shell pwd)
 
-.PHONY: all clean toolchain bootloader linux filesystem libraries applications image board
+.PHONY: all clean toolchain bootloader linux filesystem libraries image machine
 
 # Public targets ###############################################################
 
@@ -21,30 +21,28 @@ clean:
 	$(V) $(MAKE) linux clean
 	$(V) $(MAKE) filesystem clean
 	$(V) $(MAKE) libraries clean
-	$(V) $(MAKE) applications clean
 	$(V) $(MAKE) image clean
 
 toolchain-clean:
 	$(V) $(MAKE) toolchain clean
 
-clean-all: clean tools-clean board-clean
+clean-all: clean tools-clean machine-clean
 
 help:
 	@$(ECHO) "  Targets:"
 	@$(ECHO) "    tools:            Install system dependecies"
-	@$(ECHO) "    board:            Configure system for selected board profile"
+	@$(ECHO) "    machine:          Configure system for selected machine profile"
 	@$(ECHO) "    clean:            Clean all the modules built"
 	@$(ECHO) "    toolchain:        Build toolchain"
 	@$(ECHO) "    bootloader:       Build bootloader"
 	@$(ECHO) "    linux:            Build linux"
 	@$(ECHO) "    filesystem:       Build filesystem"
 	@$(ECHO) "    libraries:        Build libraries"
-	@$(ECHO) "    applications:     Build applications"
 	@$(ECHO) "    image:            Build image"
 	@$(ECHO) "    image-sd:         Install image generated into a SD card"
 	@$(ECHO) "    image-file:       Create image file"
 
-toolchain: board
+toolchain: machine
 	$(V) $(MAKE) $@ install
 
 bootloader: toolchain
@@ -53,7 +51,7 @@ bootloader: toolchain
 linux: toolchain
 	$(V) $(MAKE) $@ install
 
-filesystem: board
+filesystem: machine
 	$(V) $(MAKE) $@ install
 
 libraries: filesystem linux
@@ -79,13 +77,13 @@ tools: $(SYSTEM_BUILD_PATH)/common_tools
 tools-clean:
 	$(V) $(RM) $(SYSTEM_BUILD_PATH)/common_tools
 
-board: tools
-	$(V) $(MAKE) system-build/boards
+machine: tools
+	$(V) $(MAKE) machine
 
-board-clean:
-	$(V) $(MAKE) $(SYSTEM_BUILD_PATH)/boards clean
+machine-clean:
+	$(V) $(MAKE) $(PRJ_ROOT_PATH)/machine clean
 
-board-info:
+machine-info:
 	@$(ECHO) "${MSG_INFO}  Name: ${BOARD_NAME}${MSG_END}"
 	@$(ECHO) "  Linux:      ${BOARD_LINUX_DL_URL}${BOARD_LINUX_TAR_NAME}"
 	@$(ECHO) "  Filesystem: ${BOARD_FILESYSTEM_DL_URL}${BOARD_FILESYSTEM_TAR_NAME}"
@@ -99,10 +97,10 @@ $(SYSTEM_BUILD_PATH)/common_tools:
 	$(call COMMON_RECIPE_DEPENDENCY,$(SYSTEM_BUILD_PATH)/dependency.txt)
 	$(V) touch $@
 
-board.defs:
+machine.defs:
 	@$(ECHO) "${MSG_ERROR}ERROR:${MSG_END} System have not been configured"
-	@$(ECHO) "    board file needs to be defined"
-	@$(ECHO) "    Example: ./configure --board board_name.defs"
+	@$(ECHO) "    machine file needs to be defined"
+	@$(ECHO) "    Example: ./configure --machine machine_name.defs"
 	@$(ECHO)
 	@exit 1
 
