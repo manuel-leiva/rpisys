@@ -15,4 +15,6 @@ filesystem-patch-pre:
 	echo "You need super user permissions to change the wpa_supplicant file owner"
 	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant
 	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant/wpa_supplicant.conf
+	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/lib/systemd/system/
+	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/lib/systemd/system/bluetooth.service
 
