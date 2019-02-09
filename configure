@@ -46,7 +46,7 @@ do
         help
         ;;
         *)
-          echo -e "${ERRORCOLOR}Error:${ENDCOLOR} invalid option $1"
+          echo -e "${ERRORCOLOR}ERROR:${ENDCOLOR} invalid option $1"
           exit
         ;;
     esac
@@ -68,6 +68,14 @@ else
 fi
 
 if [ x${CLEAN} = x"1" ]; then
+    # Check if the board-install file exist
+    # if the file exists, then we can clean tha machine because current machine
+    # is still installed
+    if [ -f ${PWD}/machine/board-install ]; then
+        echo -e "${ERRORCOLOR}ERROR:${ENDCOLOR} Machine information has not been cleaned"
+        echo -e "Run: make machine-clean"
+        exit
+    fi
 
     if [ -f ${PWD}/${SYM_LINK_NAME} ]; then
         rm ${PWD}/${SYM_LINK_NAME}
