@@ -26,7 +26,7 @@ Therefore all the specific configuration and specific procedures are used by the
 
 1.  Kernel: Kernel source tree for Raspberry Pi Foundation 4.14.89 (https://github.com/raspberrypi/linux)
 2.  Filesystem: Rasbian Stretch Lite (2018-11-13) https://www.raspberrypi.org/downloads/raspbian/
-3.  Toolchain: gcc-linaro-arm-linux-gnueabihf-raspbian 4.8.3 (https://github.com/raspberrypi/tools)
+3.  Toolchain: gcc-linaro-arm-linux-gnueabihf 6.1.1 (https://releases.linaro.org/components/toolchain/binaries/6.1-2016.08/)
 4.  Libraries:
     *  glib 2.50.3
     *  gst-libav 1.10.5
