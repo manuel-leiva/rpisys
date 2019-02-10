@@ -11,14 +11,14 @@ include ../system-build/makefile/Makefile.common
 
 ## Local definitions ##
 # Install kernel modules in the filesystem by default
-ifndef BOARD_LIBRARY_INSTALLATION_DIR
+ifndef MACHINE_LIBRARY_INSTALLATION_DIR
 LIBRARY_INSTALLATION_PATH=${COMMON_IMAGE_ROOTFS_PATH}
 else
-LIBRARY_INSTALLATION_PATH=${PRJ_ROOT_PATH}/image/$(BOARD_LIBRARY_INSTALLATION_DIR)
+LIBRARY_INSTALLATION_PATH=${PRJ_ROOT_PATH}/image/$(MACHINE_LIBRARY_INSTALLATION_DIR)
 endif
 
 # Public targets ###############################################################
-.PHONY: $(BOARD_LIBRARY_NAME_LIST)
+.PHONY: $(MACHINE_LIBRARY_NAME_LIST)
 
 
 define BUILD_RECIPE
@@ -34,10 +34,10 @@ clean-$(1):
 
 endef
 
-LIB_CLEAN_TARGET_LIST:=$(BOARD_LIBRARY_NAME_LIST:%=clean-%)
+LIB_CLEAN_TARGET_LIST:=$(MACHINE_LIBRARY_NAME_LIST:%=clean-%)
 
 
-all: libraries-header $(BOARD_LIBRARY_NAME_LIST)
+all: libraries-header $(MACHINE_LIBRARY_NAME_LIST)
 
 clean: libraries-header $(LIB_CLEAN_TARGET_LIST)
 	@$(ECHO) "${MSG_INFO}  Clean Libraries ${MSG_END}"
@@ -51,10 +51,10 @@ uninstall: libraries-header
 	$(V) $(RM) libraries-install
 
 # Build targets
-$(info $(foreach i,$(BOARD_LIBRARY_NAME_LIST),$(eval $(call BUILD_RECIPE,$(i),$(shell if [ -f $(i)/dependency.txt ]; then cat $(i)/dependency.txt ; fi )))))
+$(info $(foreach i,$(MACHINE_LIBRARY_NAME_LIST),$(eval $(call BUILD_RECIPE,$(i),$(shell if [ -f $(i)/dependency.txt ]; then cat $(i)/dependency.txt ; fi )))))
 
 # Clean targets
-$(info $(foreach i,$(BOARD_LIBRARY_NAME_LIST),$(eval $(call CLEAN_RECIPE,$(i)))))
+$(info $(foreach i,$(MACHINE_LIBRARY_NAME_LIST),$(eval $(call CLEAN_RECIPE,$(i)))))
 
 # Private targets ###############################################################
 
@@ -69,9 +69,9 @@ libraries-install: all
 
 libraries-debug-targets:
 # The lines must be coherent with the lines used in order to show the real recipes
-	@echo $(info $(foreach i,$(BOARD_LIBRARY_NAME_LIST),$(call BUILD_RECIPE,$(i),$(shell if [ -f $(i)/dependency.txt ]; then cat $(i)/dependency.txt ; fi ))))
+	@echo $(info $(foreach i,$(MACHINE_LIBRARY_NAME_LIST),$(call BUILD_RECIPE,$(i),$(shell if [ -f $(i)/dependency.txt ]; then cat $(i)/dependency.txt ; fi ))))
 	@echo $(info $(foreach i,$(LIB_CLEAN_TARGET_LIST),$(call CLEAN_RECIPE,$(i))))
 
 libraries-debug-var:
-	@echo "BOARD_LIBRARY_NAME_LIST: $(BOARD_LIBRARY_NAME_LIST)"
+	@echo "MACHINE_LIBRARY_NAME_LIST: $(MACHINE_LIBRARY_NAME_LIST)"
 	@echo "LIB_CLEAN_TARGET_LIST: $(LIB_CLEAN_TARGET_LIST)"

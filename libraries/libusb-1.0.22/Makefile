@@ -6,7 +6,7 @@ AUTOTOOLS_NAME_TAR := libusb-1.0.22.tar.bz2
 
 AUTOTOOLS_SHA1SUM:=10116aa265aac4273a0c894faa089370262ec0dc
 
-AUTOTOOLS_FLAGS += --prefix=/usr --libdir=$(BOARD_LIBRARY_BOARD_INSTALLDIR) --host=$(BOARD_LIBRARY_HOST) --disable-udev
+AUTOTOOLS_FLAGS += --prefix=/usr --libdir=$(MACHINE_LIBRARY_MACHINE_INSTALLDIR) --host=$(MACHINE_LIBRARY_HOST) --disable-udev
 
 #  --enable-udev: use udev for device enumeration and hotplug support (recommended) [default=yes]
 

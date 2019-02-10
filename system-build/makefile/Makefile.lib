@@ -9,25 +9,25 @@ include ../../system-build/makefile/Makefile.common
 
 PKGNAME := $(notdir $(shell pwd))
 
-CROSS_COMPILE := $(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX)
+CROSS_COMPILE := $(MACHINE_TOOLCHAIN_PATH)/$(MACHINE_TOOLCHAIN_PREFIX)
 LIB_DL_URL_FILE = $(AUTOTOOLS_DL_URL)$(AUTOTOOLS_NAME_TAR)
 LIB_DL_TAR_PATH = $(DOWNLOADDIR)/$(AUTOTOOLS_NAME_TAR)
 LIB_PKG_PATH = $(PRJ_ROOT_PATH)/libraries/$(PKGNAME)
 
 
-LIB_BOARD_LIBS_DIR:=board-libs
+LIB_MACHINE_LIBS_DIR:=board-libs
 LIB_HOST_LIBS_DIR:=host-libs
 
 LIB_PREFIX_INC_DIR:=$(PRJ_ROOT_PATH)/libraries/$(LIB_HOST_LIBS_DIR)
 
 # Add standard include files and libraries location
 LIB_CFLAGS+=-I${LIB_PREFIX_INC_DIR}/usr/include
-LIB_LDFLAGS+=-L$(PRJ_ROOT_PATH)/libraries/$(LIB_HOST_LIBS_DIR)$(BOARD_LIBRARY_BOARD_INSTALLDIR)
+LIB_LDFLAGS+=-L$(PRJ_ROOT_PATH)/libraries/$(LIB_HOST_LIBS_DIR)$(MACHINE_LIBRARY_MACHINE_INSTALLDIR)
 
 
-export DESTDIR=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)/
+export DESTDIR=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_MACHINE_LIBS_DIR)/
 # PKG_CONFIG_LIBDIR: Replaces the default pkg-config search directory.
-export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/$(BOARD_LIBRARY_BOARD_INSTALLDIR)/pkgconfig
+export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/$(MACHINE_LIBRARY_MACHINE_INSTALLDIR)/pkgconfig
 
 
 # Create parameter list to download the package
@@ -37,8 +37,8 @@ endif
 ifdef LIB_NAME_TAR
 LINUX_DOWNLOAD_SCRIPT_PARAMS+=--pkg-target-name  ${LIB_NAME_TAR}
 endif
-ifdef BOARD_PRJ_DOWNLOAD_PATH
-LINUX_DOWNLOAD_SCRIPT_PARAMS+=--dl-path ${BOARD_PRJ_DOWNLOAD_PATH}
+ifdef MACHINE_PRJ_DOWNLOAD_PATH
+LINUX_DOWNLOAD_SCRIPT_PARAMS+=--dl-path ${MACHINE_PRJ_DOWNLOAD_PATH}
 endif
 ifdef LIB_DL_URL
 LINUX_DOWNLOAD_SCRIPT_PARAMS+=--dl-url ${LIB_DL_URL}
@@ -98,8 +98,8 @@ generic-make-install: generic-make
 	@    $(ECHO) "${MSG_INFO}  Make install ${PKGNAME}${MSG_END}"
 	$(V) mkdir -p install
 	$(V) DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install $(MAKE) ${PKGNAME} install $(MAKE_FLAGS)
-	$(V) cp -ar $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/* $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_BOARD_LIBS_DIR)/
-	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-change-prefix.sh ${PKGNAME} $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR) ${BOARD_LIBRARY_BOARD_INSTALLDIR}
+	$(V) cp -ar $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/* $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_MACHINE_LIBS_DIR)/
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-change-prefix.sh ${PKGNAME} $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR) ${MACHINE_LIBRARY_MACHINE_INSTALLDIR}
 	$(V) cp -ar $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/* $(PRJ_ROOT_PATH)/libraries/$(AUTOTOOLS_HOST_LIBS_DIR)/
 	$(V) $(RM) install
 	$(V) touch $@
@@ -108,14 +108,14 @@ generic-make-install: generic-make
 install:
 	@    $(ECHO) "${MSG_WARN}  Make install not supported yet ${PKGNAME}${MSG_END}"
 	$(V) $(MAKE) ${PKGNAME} install CXX=${CROSS_COMPILE}g++ AR=${CROSS_COMPILE}ar CC=${CROSS_COMPILE}gcc RANLIB=${CROSS_COMPILE}ranlib CFLAGS=${LIB_CFLAGS} LDFLAGS=${LIB_LDFLAGS} DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install $(LIB_MAKE_INSTALL_FLAGS)
-	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_BOARD_LIBS_DIR)
+	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_MACHINE_LIBS_DIR)
 	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-lib-installer.sh \
         --pkg-name ${PKGNAME} \
         --host-prefix ${PRJ_ROOT_PATH}/libraries/${COMMON_LIB_HOST_LIBS_DIR} \
-        --libs-path ${BOARD_LIBRARY_BOARD_INSTALLDIR} \
+        --libs-path ${MACHINE_LIBRARY_MACHINE_INSTALLDIR} \
         --libsrc-path $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/ \
-        --boarddest-path $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_BOARD_LIBS_DIR) \
+        --boarddest-path $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_MACHINE_LIBS_DIR) \
         --hostdest-path $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
 
 help:

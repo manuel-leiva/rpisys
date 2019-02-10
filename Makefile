@@ -84,10 +84,10 @@ machine-clean:
 	$(V) $(MAKE) $(PRJ_ROOT_PATH)/machine clean
 
 machine-info:
-	@$(ECHO) "${MSG_INFO}  Name: ${BOARD_NAME}${MSG_END}"
-	@$(ECHO) "  Linux:      ${BOARD_LINUX_DL_URL}${BOARD_LINUX_TAR_NAME}"
-	@$(ECHO) "  Filesystem: ${BOARD_FILESYSTEM_DL_URL}${BOARD_FILESYSTEM_TAR_NAME}"
-	@$(ECHO) "  Toolchain:  ${BOARD_TOOLCHAIN_DL_URL}${BOARD_TOOLCHAIN_TAR_NAME}"
+	@$(ECHO) "${MSG_INFO}  Name: ${MACHINE_NAME}${MSG_END}"
+	@$(ECHO) "  Linux:      ${MACHINE_LINUX_DL_URL}${MACHINE_LINUX_TAR_NAME}"
+	@$(ECHO) "  Filesystem: ${MACHINE_FILESYSTEM_DL_URL}${MACHINE_FILESYSTEM_TAR_NAME}"
+	@$(ECHO) "  Toolchain:  ${MACHINE_TOOLCHAIN_DL_URL}${MACHINE_TOOLCHAIN_TAR_NAME}"
 	@$(ECHO)
 
 # Private targets ##############################################################

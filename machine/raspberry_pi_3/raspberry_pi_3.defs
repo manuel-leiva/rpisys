@@ -1,80 +1,80 @@
 
-BOARD_NAME:="Raspberry_Pi_3"
+MACHINE_NAME:="Raspberry_Pi_3"
 
 # COMMON VARIABLES #############################################################
 
 # This directory is used to share files between projects as the toolchain
-BOARD_PRJ_COMMON_PATH:=/home/${USER}/rpisys_toolchain
+MACHINE_PRJ_COMMON_PATH:=/home/${USER}/rpisys_toolchain
 
 # Destination directory to download packages
-BOARD_PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/rpisys
+MACHINE_PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/rpisys
 
 # Percentage used to compute the number of recipes to execute at once.
 # The number of recipes is computed with this formula:
-# JOBS=HOST_CORES*BOARD_PRJ_MAKE_JOBS_PER_CORE/100
-# If BOARD_PRJ_MAKE_JOBS_PER_CORE is not defined JOBS=1
-BOARD_PRJ_MAKE_JOBS_PER_CORE:=75
+# JOBS=HOST_CORES*MACHINE_PRJ_MAKE_JOBS_PER_CORE/100
+# If MACHINE_PRJ_MAKE_JOBS_PER_CORE is not defined JOBS=1
+MACHINE_PRJ_MAKE_JOBS_PER_CORE:=75
 # ARM Architecture
-BOARD_PRJ_ARCH=arm
+MACHINE_PRJ_ARCH=arm
 
 # CONFIGURATION FILES ##########################################################
 
 # This file contains the list of packages needed to build the board image
-BOARD_PRJ_TOOLS_PATH=$(LOCAL_BOARD_PATH)/board_tools.txt
-BOARD_PRJ_MAKEFILE_HOOKS_PATH=$(LOCAL_BOARD_PATH)/Makefile.hook
+MACHINE_PRJ_TOOLS_PATH=$(LOCAL_MACHINE_PATH)/board_tools.txt
+MACHINE_PRJ_MAKEFILE_HOOKS_PATH=$(LOCAL_MACHINE_PATH)/Makefile.hook
 
 
 # TOOLCHAIN ####################################################################
 
-BOARD_TOOLCHAIN_TAR_NAME:=gcc-linaro-arm-linux-gnueabihf-raspbian-4.8.3.tar.gz
-BOARD_TOOLCHAIN_DL_URL:=https://www.dropbox.com/s/3kvuznuff1qiv6r/
-BOARD_TOOLCHAIN_SHA1SUM:=efd6f554eb34fc5226e5ab095430bbbd9c4b681a
-BOARD_TOOLCHAIN_PKG_NAME:=tools
-BOARD_TOOLCHAIN_PATH:=$(BOARD_PRJ_COMMON_PATH)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
-BOARD_TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
-BOARD_TOOLCHAIN_PATCHES_PATH=$(LOCAL_BOARD_PATH)/toolchain.patch
+MACHINE_TOOLCHAIN_TAR_NAME:=gcc-linaro-arm-linux-gnueabihf-raspbian-4.8.3.tar.gz
+MACHINE_TOOLCHAIN_DL_URL:=https://www.dropbox.com/s/3kvuznuff1qiv6r/
+MACHINE_TOOLCHAIN_SHA1SUM:=efd6f554eb34fc5226e5ab095430bbbd9c4b681a
+MACHINE_TOOLCHAIN_PKG_NAME:=tools
+MACHINE_TOOLCHAIN_PATH:=$(MACHINE_PRJ_COMMON_PATH)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
+MACHINE_TOOLCHAIN_PREFIX:=arm-linux-gnueabihf-
+MACHINE_TOOLCHAIN_PATCHES_PATH=$(LOCAL_MACHINE_PATH)/toolchain.patch
 
 # BOOTLOADER ##################################################################
 
-BOARD_BOOTLOADER_TAR_NAME:=rpi-boot-2017-03-02.tar.gz
-BOARD_BOOTLOADER_DL_URL:=https://www.dropbox.com/s/brgw0r3kucwks6n/
-BOARD_BOOTLOADER_SHA1SUM:=5c1340a93d6cefdae6c95235b531c23c49913232
-BOARD_BOOTLOADER_PKG_NAME:=boot
-BOARD_BOOTLOADER_PATCHES_PATH=$(LOCAL_BOARD_PATH)/bootloader.patch
+MACHINE_BOOTLOADER_TAR_NAME:=rpi-boot-2017-03-02.tar.gz
+MACHINE_BOOTLOADER_DL_URL:=https://www.dropbox.com/s/brgw0r3kucwks6n/
+MACHINE_BOOTLOADER_SHA1SUM:=5c1340a93d6cefdae6c95235b531c23c49913232
+MACHINE_BOOTLOADER_PKG_NAME:=boot
+MACHINE_BOOTLOADER_PATCHES_PATH=$(LOCAL_MACHINE_PATH)/bootloader.patch
 
 
 # LINUX #######################################################################
 
-BOARD_LINUX_TAR_NAME:=rpi-linux-4.4.50.tar.gz
-BOARD_LINUX_DL_URL:=https://www.dropbox.com/s/pqdudsngje3ryoz/
-BOARD_LINUX_SHA1SUM:=6095d24d68ff198585a42429dd1b5b295098b317
-BOARD_LINUX_PKG_NAME:=linux
-# By default are added the kernel flags CROSS_COMPILE=$(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX)
+MACHINE_LINUX_TAR_NAME:=rpi-linux-4.4.50.tar.gz
+MACHINE_LINUX_DL_URL:=https://www.dropbox.com/s/pqdudsngje3ryoz/
+MACHINE_LINUX_SHA1SUM:=6095d24d68ff198585a42429dd1b5b295098b317
+MACHINE_LINUX_PKG_NAME:=linux
+# By default are added the kernel flags CROSS_COMPILE=$(MACHINE_TOOLCHAIN_PATH)/$(MACHINE_TOOLCHAIN_PREFIX)
 # This variable allows add some extra flag
-BOARD_LINUX_KERNEL_EXTRAFLAGS:="KERNEL=kernel7"
+MACHINE_LINUX_KERNEL_EXTRAFLAGS:="KERNEL=kernel7"
 # Kernel configuration file
-BOARD_LINUX_DEFCONFIG:=bcm2709_defconfig
+MACHINE_LINUX_DEFCONFIG:=bcm2709_defconfig
 
 
 # FILESYSTEM ###################################################################
 
-BOARD_FILESYSTEM_TAR_NAME:=rpi-fs-2017_03_02.tar.gz
-BOARD_FILESYSTEM_DL_URL:=https://www.dropbox.com/s/39wtb79wl8o60h2/
-BOARD_FILESYSTEM_SHA1SUM:=e04320f1d463585dcb7d74d096b2c1778ede9416
-BOARD_FILESYSTEM_PKG_NAME:=filesystem
-# BOARD_FILESYSTEM_SU: Force to use super user permissions to decompress and manage the
+MACHINE_FILESYSTEM_TAR_NAME:=rpi-fs-2017_03_02.tar.gz
+MACHINE_FILESYSTEM_DL_URL:=https://www.dropbox.com/s/39wtb79wl8o60h2/
+MACHINE_FILESYSTEM_SHA1SUM:=e04320f1d463585dcb7d74d096b2c1778ede9416
+MACHINE_FILESYSTEM_PKG_NAME:=filesystem
+# MACHINE_FILESYSTEM_SU: Force to use super user permissions to decompress and manage the
 # filesystem. Options: "y" or "n".
-BOARD_FILESYSTEM_SU:=y
-BOARD_FILESYSTEM_PATCHES_PATH=$(LOCAL_BOARD_PATH)/filesystem.patch
+MACHINE_FILESYSTEM_SU:=y
+MACHINE_FILESYSTEM_PATCHES_PATH=$(LOCAL_MACHINE_PATH)/filesystem.patch
 
 
 # LIBRARIES ####################################################################
 
-BOARD_LIBRARY_HOST=arm-none-linux
+MACHINE_LIBRARY_HOST=arm-none-linux
 # Library directory for the normal user-programs installation
-BOARD_LIBRARY_BOARD_INSTALLDIR:=/usr/lib/arm-linux-gnueabihf
+MACHINE_LIBRARY_MACHINE_INSTALLDIR:=/usr/lib/arm-linux-gnueabihf
 # List of library to build
-BOARD_LIBRARY_NAME_LIST := \
+MACHINE_LIBRARY_NAME_LIST := \
 readline-6.3 \
 libffi-3.2.1 \
 pcre-8.40 \
@@ -98,10 +98,10 @@ x264-snapshot-20170811-2245-stable
 # APPLICATIONS #################################################################
 
 # List of applications to build
-BOARD_APPLICATION_NAME_LIST:=""
+MACHINE_APPLICATION_NAME_LIST:=""
 
 
 # IMAGE ########################################################################
 
-# BOARD_IMAGE_EXT_SD_DEVICE: external sd card device used to install the image built
-BOARD_IMAGE_EXT_SD_DEVICE:=/dev/mmcblk0
+# MACHINE_IMAGE_EXT_SD_DEVICE: external sd card device used to install the image built
+MACHINE_IMAGE_EXT_SD_DEVICE:=/dev/mmcblk0

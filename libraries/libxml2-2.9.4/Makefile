@@ -6,7 +6,7 @@ AUTOTOOLS_NAME_TAR := libxml2-2.9.4.tar.gz
 
 AUTOTOOLS_SHA1SUM:=958ae70baf186263a4bd801a81dd5d682aedd1db
 
-AUTOTOOLS_FLAGS += --prefix=/usr --libdir=$(BOARD_LIBRARY_BOARD_INSTALLDIR) --host=$(BOARD_LIBRARY_HOST) \
+AUTOTOOLS_FLAGS += --prefix=/usr --libdir=$(MACHINE_LIBRARY_MACHINE_INSTALLDIR) --host=$(MACHINE_LIBRARY_HOST) \
 --with-python=no
 
 # Build package using autotools recipe

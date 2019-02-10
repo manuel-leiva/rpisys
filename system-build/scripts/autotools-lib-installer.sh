@@ -42,7 +42,7 @@ do
         ;;
         # Host library destination
         -b|--boarddest-path)
-        BOARDDEST_PATH="$2"
+        MACHINEDEST_PATH="$2"
         shift
         ;;
         # Help
@@ -72,13 +72,13 @@ else
 fi
 
 # Check if the filesystem path was defined
-if [ -z ${BOARDDEST_PATH} ]; then
+if [ -z ${MACHINEDEST_PATH} ]; then
    echo -e "${ERRORCOLOR}Error:${ENDCOLOR} Option \"--boarddest-path\" not defined."
    exit
 else
     # Check if the filesystem exists
-    if [ ! -d ${BOARDDEST_PATH} ]; then
-       echo -e "${ERRORCOLOR}Error:${ENDCOLOR} ${BOARDDEST_PATH} does not exist."
+    if [ ! -d ${MACHINEDEST_PATH} ]; then
+       echo -e "${ERRORCOLOR}Error:${ENDCOLOR} ${MACHINEDEST_PATH} does not exist."
        exit
     fi
 fi
@@ -98,7 +98,7 @@ fi
 ## Copy libraries
 
 # Copy original directory into board destination directory
-cp -a ${LIBSRC_PATH}/* ${BOARDDEST_PATH}/
+cp -a ${LIBSRC_PATH}/* ${MACHINEDEST_PATH}/
 
 # Change library la files
 AUTOTOOLS_LA_LIBS=$(find ${LIBSRC_PATH} -name *.la)
