@@ -1,19 +1,29 @@
+[TOC]
+
 # RPISYS project
 
-RPISYS (**R**aspberry **Pi** **sys**tem) was created in order to build all the packages required to create a bootable image for Raspberry Pi. The project is based on Makefiles and bash scripts.
+RPISYS (**R**aspberry **Pi** **sys**tem) was created in order to build all
+the packages required to create a bootable image for Raspberry Pi but now
+it can be configured to create a bootable image for multiple target platforms.
+The project is based on Makefiles and bash scripts and it simplifies and automates
+the process of building a complete and bootable Linux environment for an embedded system
+while using cross-compilation to allow building for multiple target platforms
+on a single Linux-based development system.
 
-The main goal of the project is to contain a set of recipes and scripts
+The project contains a set of recipes and scripts
 that perform generic tasks such build a kernel, compile libraries create an image etc,
 therefore you can use these generic recipes to build different systems.
 
 You can convert this generic task to a specific task through parameters
-that are defined in a configuration file that is called machine definition.
+that are defined in a configuration file called machine definition.
 
-Since there are some tasks where you need specific procedures that are not covered by these generic recipes,
-The SDK allows adding hooks with customs procedures that can be called before and after certain recipe.
-Therefore all the specific configuration and specific procedures are used by the SDK but also can be easily removed and replaced with a new configuration.
+Since there are some tasks where you need specific procedures that are not
+covered by these generic recipes, The SDK allows adding hooks with customs
+procedures that can be called before and after certain recipe.
+Therefore all the specific configuration and specific procedures are used
+by the SDK but also can be easily removed and replaced with a new configuration.
 
-# Configuration files
+# Current configuration files
 
 1.  Raspberry Pi 3
     *  Configuration file: raspberry_pi_3.defs
@@ -58,7 +68,7 @@ Therefore all the specific configuration and specific procedures are used by the
 
 # Build project
 
-1. Download project
+1.Download project
 
 ```bash
 git clone https://manuelleiva@bitbucket.org/manuelleiva/rpisys.git
@@ -66,18 +76,18 @@ git clone https://manuelleiva@bitbucket.org/manuelleiva/rpisys.git
 
 ## Raspberry Pi 3
 
-2.  Configure board
+2.Configure board
 
 ```bash
 ./configure --machine machine/raspberry_pi_3_stretch/raspberry_pi_3.defs
 ```
 
-3.  Build system
+3.Build system
 ```bash
 make
 ```
 
-4.  Create a bootable image
+4.Create a bootable image
 
 Insert a microSD memory and define the memory device in the board configuration. For example:
 ```
@@ -146,6 +156,80 @@ system-build/makefile/Makefile.local:line 5:
 
 ## Libraries
 
+### How to add a new library based on autootools
+
+1.Create a new directory with the name of the library in libraries directory. e.g.
+```
+#!bash
+mkdir ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/
+```
+2.Create Makefile
+```
+#!bash
+touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/Makefile
+```
+3.Define download URL, tarball name and autotools flags
+```
+#!Makefile
+AUTOTOOLS_DL_URL := http://ftp.gnome.org/pub/GNOME/sources/libsoup/2.57/
+AUTOTOOLS_TAR_NAME := libsoup-2.57.1.tar.xz
+AUTOTOOLS_SHA1SUM:=a855a98c1d002a4e2bfb7562135265a8df4dad65
+AUTOTOOLS_FLAGS += --prefix=/usr --libdir=$(BOARD_LIBRARY_BOARD_INSTALLDIR) --host=$(BOARD_LIBRARY_HOST)
+```
+4.Include Makefile. Since libsoup is an autotools project then Makefile.autotools file must be included
+```
+#!Makefile
+# Build package using autotools recipe
+include ../../system-build/makefile/Makefile.autotools
+```
+5.If the library has some dependency, define the list of dependency libraries in a file called dependency.txt
+```
+#!bash
+touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/dependency.txt
+```
+6.To compile the library as part of the system, add the library name into LIB_NAME_LIST defined in Make.defs
+```
+#!Makefile
+BOARD_LIBRARY_NAME_LIST := libsoup-2.57.1
+```
+Note: You can apply one or more patches. You have to create a directory called patches with a file called series where you can add the list of the patches (quilt aproach).
+
+### How to add a new library from a repository
+
+### How to add a new debian package
+
+## Image
+
+### Configuration
+
+By default the filesystem is installed in $RPISYS/image/image/rootfs.
+if you want to define a custom location you can define BOARD_FILESYSTEM_INSTALLATION_PATH, in this case the installation path is $RPISYS/image/$BOARD_FILESYSTEM_INSTALLATION_PATH.
+
+By default the Bootloader Linux image and device tree is installed in $RPISYS/image/image/boot.
+if you want to define a custom location you can define BOARD_BOOTLOADER_INSTALLATION_PATH or BOARD_LINUX_INSTALLATION_PATH, in this case the installation path is $RPISYS/image/$BOARD_BOOTLOADER_INSTALLATION_PATH and $RPISYS/image/$BOARD_LINUX_INSTALLATION_PATH.
+
+If is defined a custom path for linux image, device tree, bootloader or  filesystem you have to define the partition path, For example:
+```
+#!Makefile
+BOARD_IMAGE_P0_PATH:=${BOARD_BOOTLOADER_INSTALLATION_PATH}
+BOARD_IMAGE_P1_PATH:=${BOARD_FILESYSTEM_INSTALLATION_PATH}
+```
+
+### Custom images
+
+The target image-custom was defined to add a hook and make custom images configurations if it's required.
+
+## Backing up the partition table
+
+sfdisk supports an  option to save a description of the device layout to a text file unsing --dump.
+The dump format is suitable for later  sfdisk  input. For example:
+
+```!bash
+sudo sfdisk --dump /dev/mmcblk0 > mmcblk0.dump
+```
+
+## Libraries
+
     *  attr-2.4.47
     *  blueZ-5.50 (http://www.bluez.org/)
     *  dbus-1.12.10
@@ -209,72 +293,3 @@ system-build/makefile/Makefile.local:line 5:
 * _SHA1SUM: SHA1SUM value for tarball file.
 * _PKG_NAME: Package name after decompress the tarball or clone the repository.
 
-## Libraries
-
-### How to add a new library
-
-1.Create a new directory with the name of the library at:
-```
-#!bash
-mkdir ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/
-```
-2.Create Makefile
-```
-#!bash
-touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/Makefile
-```
-3.Define download URL, tarball name and autotools flags
-```
-#!Makefile
-AUTOTOOLS_DL_URL := http://ftp.gnome.org/pub/GNOME/sources/libsoup/2.57/
-AUTOTOOLS_TAR_NAME := libsoup-2.57.1.tar.xz
-AUTOTOOLS_SHA1SUM:=a855a98c1d002a4e2bfb7562135265a8df4dad65
-AUTOTOOLS_FLAGS += --prefix=/usr --libdir=$(BOARD_LIBRARY_BOARD_INSTALLDIR) --host=$(BOARD_LIBRARY_HOST)
-```
-4.Include Makefile. Since libsoup is an autotools project then Makefile.autotools file must be included
-```
-#!Makefile
-# Build package using autotools recipe
-include ../../system-build/makefile/Makefile.autotools
-```
-5.If the library has some dependency, define the list of dependency libraries in a file called dependency.txt
-```
-#!bash
-touch ${PRJ_ROOT_PATH}/libraries/libsoup-2.57.1/dependency.txt
-```
-6.To compile the library as part of the system, add the library name into LIB_NAME_LIST defined in Make.defs
-```
-#!Makefile
-BOARD_LIBRARY_NAME_LIST := libsoup-2.57.1
-```
-Note: You can apply one or more patches. You have to create a directory called patches with a file called series where you can add the list of the patches (quilt aproach).
-
-## Image
-
-### Configuration
-
-By default the filesystem is installed in $RPISYS/image/image/rootfs.
-if you want to define a custom location you can define BOARD_FILESYSTEM_INSTALLATION_PATH, in this case the installation path is $RPISYS/image/$BOARD_FILESYSTEM_INSTALLATION_PATH.
-
-By default the Bootloader Linux image and device tree is installed in $RPISYS/image/image/boot.
-if you want to define a custom location you can define BOARD_BOOTLOADER_INSTALLATION_PATH or BOARD_LINUX_INSTALLATION_PATH, in this case the installation path is $RPISYS/image/$BOARD_BOOTLOADER_INSTALLATION_PATH and $RPISYS/image/$BOARD_LINUX_INSTALLATION_PATH.
-
-If is defined a custom path for linux image, device tree, bootloader or  filesystem you have to define the partition path, For example:
-```
-#!Makefile
-BOARD_IMAGE_P0_PATH:=${BOARD_BOOTLOADER_INSTALLATION_PATH}
-BOARD_IMAGE_P1_PATH:=${BOARD_FILESYSTEM_INSTALLATION_PATH}
-```
-
-### Custom images
-
-The target image-custom was defined to add a hook and make custom images configurations if it's required.
-
-## Backing up the partition table
-
-sfdisk supports an  option to save a description of the device layout to a text file unsing --dump.
-The dump format is suitable for later  sfdisk  input. For example:
-
-```!bash
-sudo sfdisk --dump /dev/mmcblk0 > mmcblk0.dump
-```
