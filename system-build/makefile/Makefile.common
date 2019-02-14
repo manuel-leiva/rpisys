@@ -98,7 +98,7 @@ $(1)-patch: $(2)
 endef
 
 
-# Revert patch
+# Revert patch  (deprecated)
 # Verify if patches directory exists, if it exists, then verify if the
 # flag autotools-patch file exists, if it exists, then remove the
 # patches
@@ -113,12 +113,13 @@ $(1)-revpatch: $(2)
 	$(V) $(RM) $(1)-patch
 endef
 
-# Common recipe
+# Common recipe remove patch
 # Remove patch metainformation
 # Parameters:
 # 1: Patches path
 define COMMON_RECIPE_RM_PATCH
 	$(V) if [ -d $(1)/patches ]; then \
+        quilt pop -a ; \
         $(RM) $(1)/.pc; \
     fi
 endef

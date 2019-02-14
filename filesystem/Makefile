@@ -84,7 +84,6 @@ uninstall:
 filesystem-clean: filesystem-revpatch
 	@$(ECHO) "${MSG_INFO}  Remove filesystem${MSG_END}"
 	$(V) $(RM) filesystem-*
-	$(call COMMON_RECIPE_RM_PATCH,$(FILESYSTEM_PATH))
 ifeq ($(MACHINE_FILESYSTEM_SU),y)
 	@$(ECHO) "${MSG_REQ}You need super user permissions to clean the filesystem${MSG_END}"
 	$(V) sudo $(RM) filesystem
@@ -115,15 +114,12 @@ filesystem-patch: filesystem-download
 
 # Reverse patches
 filesystem-revpatch:
-# Verify if patches directory exists, if it exists, then verify if the
-# flag filesystem-patch file exists, if it exists, then remove the
-# patches
-	$(V) if [ -d ${PRJ_ROOT_PATH}/filesystem/patches ]; then \
-        if [ -f ${PRJ_ROOT_PATH}/filesystem/filesystem-patch ]; then \
-            echo "${MSG_INFO}  Reverse patches filesystem ${MSG_END}" ; \
-            quilt pop -a ; \
-        fi \
-    fi
+# Call pre-patch recipe
+	$(call COMMON_RECIPE_HOOK,$(MACHINE_PRJ_MAKEFILE_HOOKS_PATH),$@-pre)
+# Remove patch
+	$(call COMMON_RECIPE_RM_PATCH,$(FILESYSTEM_PATH))
+# Call post-patch recipe
+	$(call COMMON_RECIPE_HOOK,$(MACHINE_PRJ_MAKEFILE_HOOKS_PATH),$@-post)
 	$(V) $(RM) filesystem-patch
 
 filesystem-install: filesystem-patch

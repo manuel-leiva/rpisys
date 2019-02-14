@@ -88,9 +88,14 @@ ifdef MACHINE_BOOTLOADER_TAR_NAME
 endif
 	$(V) touch $@
 
-# bootloader-patch:
-# Parameters: target_prefix, dependecies, package-path, message
-$(eval $(call COMMON_TARGET_PATCH,bootloader,bootloader-download,${BOOTLOADER_PATH},bootloader))
+bootloader-patch: bootloader-download
+# Call pre-patch recipe
+	$(call COMMON_RECIPE_HOOK,$(MACHINE_PRJ_MAKEFILE_HOOKS_PATH),$@-pre)
+# Apply patch
+	$(call COMMON_RECIPE_PATCH,$(BOOTLOADER_PATH),${MACHINE_BOOTLOADER_PKG_NAME})
+# Call post-patch recipe
+	$(call COMMON_RECIPE_HOOK,$(MACHINE_PRJ_MAKEFILE_HOOKS_PATH),$@-post)
+	$(V) touch $@
 
 bootloader-make: bootloader-patch
 	@$(ECHO) "${MSG_INFO}  Build bootloader${MSG_END}"
@@ -104,9 +109,15 @@ bootloader-uninstall:
 	@$(ECHO) "${MSG_INFO}  Uninstall bootloader${MSG_END}"
 	$(V) $(RM) bootloader-install
 
-# bootloader-revpatch:
-# Parameters: target_prefix, dependecies, package-path, message
-$(eval $(call COMMON_TARGET_REVPATCH,bootloader,,${BOOTLOADER_PATH},bootloader))
+# Reverse patches
+bootloader-revpatch:
+# Call pre-patch recipe
+	$(call COMMON_RECIPE_HOOK,$(MACHINE_PRJ_MAKEFILE_HOOKS_PATH),$@-pre)
+# Remove patch
+	$(call COMMON_RECIPE_RM_PATCH,$(BOOTLOADER_PATH))
+# Call post-patch recipe
+	$(call COMMON_RECIPE_HOOK,$(MACHINE_PRJ_MAKEFILE_HOOKS_PATH),$@-post)
+	$(V) $(RM) bootloader-patch
 
 # Debug targets ################################################################
 

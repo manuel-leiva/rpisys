@@ -136,14 +136,24 @@ linux-download:
 	$(call COMMON_RECIPE_HOOK,$(MACHINE_PRJ_MAKEFILE_HOOKS_PATH),$@-post)
 	$(V) touch $@
 
+# Reverse patches
+linux-revpatch:
+# Call pre-patch recipe
+	$(call COMMON_RECIPE_HOOK,$(MACHINE_PRJ_MAKEFILE_HOOKS_PATH),$@-pre)
+# Remove patch
+	$(call COMMON_RECIPE_RM_PATCH,$(LINUX_PATH))
+# Call post-patch recipe
+	$(call COMMON_RECIPE_HOOK,$(MACHINE_PRJ_MAKEFILE_HOOKS_PATH),$@-post)
+	$(V) $(RM) linux-patch
 
-# linux-revpatch:
-# Parameters: target_prefix, dependecies, package-path, message
-$(eval $(call COMMON_TARGET_REVPATCH,linux,,${LINUX_PATH},${MACHINE_LINUX_PKG_NAME}))
-
-# linux-patch:
-# Parameters: target_prefix, dependecies, package-path, message
-$(eval $(call COMMON_TARGET_PATCH,linux,linux-download,${LINUX_PATH},${MACHINE_LINUX_PKG_NAME}))
+linux-patch: linux-download
+# Call pre-patch recipe
+	$(call COMMON_RECIPE_HOOK,$(MACHINE_PRJ_MAKEFILE_HOOKS_PATH),$@-pre)
+# Apply patch
+	$(call COMMON_RECIPE_PATCH,$(LINUX_PATH),${MACHINE_LINUX_PKG_NAME})
+# Call post-patch recipe
+	$(call COMMON_RECIPE_HOOK,$(MACHINE_PRJ_MAKEFILE_HOOKS_PATH),$@-post)
+	$(V) touch $@
 
 linux-config: linux-patch
 	@    $(ECHO) "${MSG_INFO}  Configuration $(MACHINE_LINUX_DEFCONFIG)${MSG_END}"
