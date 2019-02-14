@@ -22,6 +22,9 @@ COMMON_LIB_MACHINE_LIBS_DIR:=board-libs
 COMMON_LIB_HOST_LIBS_DIR:=host-libs
 COMMON_LIB_HOST_LIB_PATH:=${PRJ_ROOT_PATH}/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
 
+# Name of the symbolic link to machine filesystem files
+COMMON_CUSTOM_FILESYSTEM_SL_NAME:=custom_filesystem
+
 # Message types
 MSG_ERROR := \033[1;31m
 MSG_WARN := \033[0;33m
@@ -31,7 +34,7 @@ MSG_DEBUG := \033[0;34m
 MSG_END := \033[0m
 
 # Commands
-CP :=cp
+CP :=cp -a
 RM :=rm -rf
 MKDIR :=mkdir -p
 

@@ -96,6 +96,12 @@ filesystem-download:
 	@    $(ECHO) "${MSG_INFO}  Download filesystem${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/download-package.sh \
     ${FILESYSTEM_DOWNLOAD_SCRIPT_PARAMS}
+# Install machine filesystem files from symbolic link
+# Check if the symbolic link exist
+	$(V) if [ -h "${COMMON_CUSTOM_FILESYSTEM_SL_NAME}" ]; then \
+        $(ECHO) "${MSG_INFO}    Install custom files: ${MSG_END} ${MACHINE_FILESYSTEM_INSTALL_DIR}" ; \
+        sudo $(CP) -a $(COMMON_CUSTOM_FILESYSTEM_SL_NAME)/* $(MACHINE_FILESYSTEM_PKG_NAME) ; \
+    fi
 	$(V) touch $@
 
 filesystem-patch: filesystem-download

@@ -23,42 +23,51 @@ endif
 all: header install
 
 header:
-	$(V) $(ECHO) "${MSG_INFO}Board${MSG_END}"
+	$(V) $(ECHO) "${MSG_INFO}Machine${MSG_END}"
 
-install: header board-install
+install: header machine-install
 
 clean: header
 	$(V) if [ -d ${LOCAL_MACHINE_PATH}/toolchain.patch ]; then \
-        $(ECHO) "${MSG_INFO}  Remove toolchain patches${MSG_END}" ; \
+        $(ECHO) "${MSG_INFO}  Uninstall toolchain patches${MSG_END}" ; \
         $(RM) ${PRJ_ROOT_PATH}/toolchain/patches ; \
     fi
 	$(V) if [ -d ${LOCAL_MACHINE_PATH}/bootloader.patch ]; then \
-        $(ECHO) "${MSG_INFO}  Remove bootloader patches${MSG_END}" ; \
+        $(ECHO) "${MSG_INFO}  Uninstall bootloader patches${MSG_END}" ; \
         $(RM) ${PRJ_ROOT_PATH}/bootloader/patches ; \
     fi
 	$(V) if [ -d ${LOCAL_MACHINE_PATH}/linux.patch ]; then \
-        $(ECHO) "${MSG_INFO}  Remove linux patches${MSG_END}" ; \
+        $(ECHO) "${MSG_INFO}  Uninstall linux patches${MSG_END}" ; \
         $(RM) ${PRJ_ROOT_PATH}/linux/patches ; \
     fi
 	$(V) if [ -d ${LOCAL_MACHINE_PATH}/filesystem.patch ]; then \
-        $(ECHO) "${MSG_INFO}  Remove filesystem patches${MSG_END}" ; \
+        $(ECHO) "${MSG_INFO}  Uninstall filesystem patches${MSG_END}" ; \
         $(RM) ${PRJ_ROOT_PATH}/filesystem/patches ; \
     fi
 	$(V) if [ -d ${LOCAL_MACHINE_PATH}/libraries.patch ]; then \
-        $(ECHO) "${MSG_INFO}  Remove libraries patches${MSG_END}" ; \
+        $(ECHO) "${MSG_INFO}  Uninstall libraries patches${MSG_END}" ; \
         $(RM) ${PRJ_ROOT_PATH}/libraries/patches ; \
     fi
 	$(V) if [ -d ${LOCAL_MACHINE_PATH}/applications.patch ]; then \
-        $(ECHO) "${MSG_INFO}  Remove applications patches${MSG_END}" ; \
+        $(ECHO) "${MSG_INFO}  Uninstall applications patches${MSG_END}" ; \
         $(RM) ${PRJ_ROOT_PATH}/applications/patches ; \
     fi
 	$(V) if [ -d ${LOCAL_MACHINE_PATH}/image.patch ]; then \
-        $(ECHO) "${MSG_INFO}  Remove image patches${MSG_END}" ; \
+        $(ECHO) "${MSG_INFO}  Uninstall image patches${MSG_END}" ; \
         $(RM) ${PRJ_ROOT_PATH}/image/patches ; \
     fi
-# Install board libraries
+# Uninstall machine filesystem files
+	$(V) if [ -n "${MACHINE_FILESYSTEM_INSTALL_DIR}" ]; then \
+        $(ECHO) "${MSG_INFO}  Uninstall filesystem${MSG_END}" ; \
+        if [ -d "${MACHINE_FILESYSTEM_INSTALL_DIR}" ]; then \
+            $(RM) ${PRJ_ROOT_PATH}/filesystem/${COMMON_CUSTOM_FILESYSTEM_SL_NAME} ; \
+        else \
+            $(ECHO) "    ${MSG_WARN}WARN:${MSG_END} The directory ${MACHINE_FILESYSTEM_INSTALL_DIR} doesn't exist"; \
+        fi \
+    fi
+# Uninstall machine libraries recipies
 	$(V) if [ -n "${MACHINE_LIBRARY_INSTALL_DIR}" ]; then \
-	$(ECHO) "${MSG_INFO}  Remove Library${MSG_END}" ; \
+	$(ECHO) "${MSG_INFO}  Uninstall Library${MSG_END}" ; \
         for LIBRARY_DIR in $(MACHINE_LIBRARY_INSTALL_DIR) ; do \
             if [ -d "$${LIBRARY_DIR}" ]; then \
                 BASENAME="$$(basename $$LIBRARY_DIR)"  ; \
@@ -78,7 +87,7 @@ $(LOCAL_MACHINE_PATH)/board_tools:
 	$(V) touch $@
 
 
-board-install: $(LOCAL_MACHINE_PATH)/board_tools
+machine-install: $(LOCAL_MACHINE_PATH)/board_tools
 # Create default directories
 	$(V) $(ECHO) "${MSG_INFO}  Install external directories${MSG_END}"
 	$(V) $(MKDIR) $(MACHINE_PRJ_COMMON_PATH)
@@ -126,9 +135,18 @@ board-install: $(LOCAL_MACHINE_PATH)/board_tools
             ln -s ${MACHINE_IMAGE_PATCHES_PATH} ${PRJ_ROOT_PATH}/image/patches ; \
         fi \
     fi
-# Install board libraries
+# Install machine filesystem files
+	$(V) if [ -n "${MACHINE_FILESYSTEM_INSTALL_DIR}" ]; then \
+        $(ECHO) "${MSG_INFO}  Install filesystem${MSG_END}" ; \
+        if [ -d "${MACHINE_FILESYSTEM_INSTALL_DIR}" ]; then \
+            ln -s ${MACHINE_FILESYSTEM_INSTALL_DIR} ${PRJ_ROOT_PATH}/filesystem/$(COMMON_CUSTOM_FILESYSTEM_SL_NAME) ; \
+        else \
+            $(ECHO) "    ${MSG_WARN}WARN:${MSG_END} The directory ${MACHINE_FILESYSTEM_INSTALL_DIR} doesn't exist"; \
+        fi \
+    fi
+# Install machine libraries recipies
 	$(V) if [ -n "${MACHINE_LIBRARY_INSTALL_DIR}" ]; then \
-	$(ECHO) "${MSG_INFO}  Install Library${MSG_END}" ; \
+        $(ECHO) "${MSG_INFO}  Install Library${MSG_END}" ; \
         for LIBRARY_DIR in $(MACHINE_LIBRARY_INSTALL_DIR) ; do \
             if [ -d "$${LIBRARY_DIR}" ]; then \
                 $(ECHO) "${MSG_INFO}    Library $${LIBRARY_DIR}${MSG_END}" ; \
