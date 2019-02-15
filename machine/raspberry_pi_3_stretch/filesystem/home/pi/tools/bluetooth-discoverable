@@ -1,0 +1,41 @@
+#! /bin/bash
+
+function help
+{
+    echo "    Usage: ./configure [OPTION]"
+    echo
+    echo "Set bluetooth discoverable"
+    echo
+    echo "Defaults for the options are specified in brackets."
+    echo
+    echo "Configuration:"
+    echo "  on          set discoverable on"
+    echo "  off         set discoverable off"
+    echo "  help        show this help"
+    echo
+    exit 0
+}
+
+while [ $# -gt 0 ]
+do
+    key="$1"
+    case $key in
+        on)
+        echo -e 'discoverable on \npairable on \nquit' | bluetoothctl
+        shift
+        ;;
+        off)
+        echo -e 'discoverable off \npairable off \nquit' | bluetoothctl
+        shift
+        ;;
+        # Help
+        -h|--help)
+        help
+        ;;
+        *)
+          echo -e "Error: invalid option $1"
+          exit
+        ;;
+    esac
+    shift
+done
