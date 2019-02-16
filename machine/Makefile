@@ -78,7 +78,7 @@ clean: header
             fi \
         done \
     fi
-	$(V) $(RM) board-install
+	$(V) $(RM) machine-install
 	$(V) $(RM) $(LOCAL_MACHINE_PATH)/board_tools
 
 $(LOCAL_MACHINE_PATH)/board_tools:
