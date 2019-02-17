@@ -132,6 +132,7 @@ endef
 define COMMON_RECIPE_HOOK
 	$(V) $(MAKE_F) $(1) -q $(2) 2> /dev/null ; \
 if [ $$? -le 1 ] ; then \
+    $(ECHO) " ${MSG_INFO}  Calling task: $(2)${MSG_END}" ; \
     $(MAKE_F) $(1) $(2) ; \
 fi
 endef
