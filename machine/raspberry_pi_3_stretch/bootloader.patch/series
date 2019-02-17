@@ -1,3 +1,4 @@
 enable-serial-interface.patch
 enable-ssh.patch
 enable_spi.patch
+enable-i2c.patch

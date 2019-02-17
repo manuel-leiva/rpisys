@@ -1,2 +1,3 @@
 set-wifi.patch
 allow-bluez-sdp_connect.patch
+load-i2c-driver.patch

@@ -107,10 +107,11 @@ gst-omx-1.10.5 \
 gst-rpicamsrc-4fc608e \
 x264-snapshot-20170811-2245-stable \
 libbluetooth3_5.43-2 \
-libbluetooth-dev_5.43-2
+libbluetooth-dev_5.43-2 \
+i2c-tools_3.1.2-3
 
 # Install specific custom libraries for this machine (optional)
-# MACHINE_LIBRARY_INSTALL_DIR="$(LOCAL_MACHINE_PATH)/libraries/library1" "$(LOCAL_MACHINE_PATH)/libraries/library2"
+MACHINE_LIBRARY_INSTALL_DIR=$(LOCAL_MACHINE_PATH)/libraries/i2c-tools_3.1.2-3
 
 # IMAGE ########################################################################
 
