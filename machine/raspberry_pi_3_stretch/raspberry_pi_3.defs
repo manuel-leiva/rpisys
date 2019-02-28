@@ -95,6 +95,7 @@ zlib-1.2.11 \
 glib-2.50.3 \
 libsoup-2.57.1 \
 libxml2-2.9.4 \
+x264-snapshot-20170811-2245-stable \
 sqlite-autoconf-3170000 ncurses-6.0 \
 gstreamer-1.10.5 \
 gst-plugins-base-1.10.5 \
@@ -105,7 +106,7 @@ gst-rtsp-server-1.10.5 \
 gst-libav-1.10.5 \
 gst-omx-1.10.5 \
 gst-rpicamsrc-4fc608e \
-x264-snapshot-20170811-2245-stable \
+jpeg-9c \
 libbluetooth3_5.43-2 \
 libbluetooth-dev_5.43-2 \
 i2c-tools_3.1.2-3
