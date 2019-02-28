@@ -17,4 +17,31 @@ filesystem-patch-pre:
 	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant/wpa_supplicant.conf
 	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/lib/systemd/system/
 	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/lib/systemd/system/bluetooth.service
+	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/
+	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/modules
+
+filesystem-patch-post:
+# Change owner
+	echo "You need super user permissions to change the wpa_supplicant file owner"
+	sudo chown root:root ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant
+	sudo chown root:root ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant/wpa_supplicant.conf
+	sudo chown root:root ${FILESYSTEM_PKG_PATH}/lib/systemd/system/
+	sudo chown root:root ${FILESYSTEM_PKG_PATH}/lib/systemd/system/bluetooth.service
+	sudo chown root:root ${FILESYSTEM_PKG_PATH}/etc/
+	sudo chown root:root ${FILESYSTEM_PKG_PATH}/etc/modules
+
+filesystem-revpatch-pre:
+# Change owner
+	if [ -e ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant/wpa_supplicant.conf ] ; then \
+        echo "You need super user permissions to change wpa_supplicant file owner" ; \
+        sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant ; \
+        sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant/wpa_supplicant.conf ; \
+        echo "You need super user permissions to change bluetooth.service file owner" ; \
+        sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/lib/systemd/system/ ; \
+        sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/lib/systemd/system/bluetooth.service ; \
+        echo "You need super user permissions to change modules file owner" ; \
+        sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/ ; \
+        sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/modules ; \
+    fi
+
 

@@ -1,0 +1,13 @@
+Index: bootloader/boot/config.txt
+===================================================================
+--- bootloader.orig/boot/config.txt
++++ bootloader/boot/config.txt
+@@ -43,7 +43,7 @@
+ #arm_freq=800
+ 
+ # Uncomment some or all of these to enable the optional hardware interfaces
+-#dtparam=i2c_arm=on
++dtparam=i2c_arm=on
+ #dtparam=i2s=on
+ dtparam=spi=on
+ 
