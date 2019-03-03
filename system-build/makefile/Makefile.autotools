@@ -1,5 +1,5 @@
 # Include board definitions
-include ../../board.defs
+include ../../machine.defs
 # Include local configuration
 include ../../system-build/makefile/Makefile.local
 # Include common recipes and definitions
@@ -8,16 +8,16 @@ include ../../system-build/makefile/Makefile.common
 # Definitions ##################################################################
 
 ## Verify external variables ##
-ifndef BOARD_LIBRARY_HOST
-$(error ERROR: BOARD_LIBRARY_HOST not defined)
+ifndef MACHINE_LIBRARY_HOST
+$(error ERROR: MACHINE_LIBRARY_HOST not defined)
 endif
 
 # Private definitions ##########################################################
 PKGNAME := $(notdir $(shell pwd))
 
-CROSS_COMPILE := $(BOARD_TOOLCHAIN_PATH)/$(BOARD_TOOLCHAIN_PREFIX)
+CROSS_COMPILE := $(MACHINE_TOOLCHAIN_PATH)/$(MACHINE_TOOLCHAIN_PREFIX)
 AUTOTOOLS_DL_URL_FILE = $(AUTOTOOLS_DL_URL)$(AUTOTOOLS_NAME_TAR)
-AUTOTOOLS_DL_TAR_PATH = $(BOARD_PRJ_DOWNLOAD_PATH)/$(AUTOTOOLS_NAME_TAR)
+AUTOTOOLS_DL_TAR_PATH = $(MACHINE_PRJ_DOWNLOAD_PATH)/$(AUTOTOOLS_NAME_TAR)
 AUTOTOOLS_PKG_PATH = $(PRJ_ROOT_PATH)/libraries/$(PKGNAME)
 
 AUTOTOOLS_PREFIX_INC_DIR:=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
@@ -25,7 +25,7 @@ AUTOTOOLS_PATH:=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/usr/bin
 
 export DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install
 # PKG_CONFIG_LIBDIR: Replaces the default pkg-config search directory.
-export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/$(BOARD_LIBRARY_BOARD_INSTALLDIR)/pkgconfig
+export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/$(MACHINE_LIBRARY_MACHINE_INSTALLDIR)/pkgconfig:$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/usr/share/pkgconfig
 # Tell make not to export PKG_CONFIG_PATH variable to child processes.
 unexport PKG_CONFIG_PATH
 
@@ -34,10 +34,10 @@ ifdef PKGNAME
 LINUX_DOWNLOAD_SCRIPT_PARAMS=--pkg-name ${PKGNAME}
 endif
 ifdef AUTOTOOLS_NAME_TAR
-LINUX_DOWNLOAD_SCRIPT_PARAMS+=--pkg-target-name  ${AUTOTOOLS_NAME_TAR}
+LINUX_DOWNLOAD_SCRIPT_PARAMS+=--pkg-target-name ${AUTOTOOLS_NAME_TAR}
 endif
-ifdef BOARD_PRJ_DOWNLOAD_PATH
-LINUX_DOWNLOAD_SCRIPT_PARAMS+=--dl-path ${BOARD_PRJ_DOWNLOAD_PATH}
+ifdef MACHINE_PRJ_DOWNLOAD_PATH
+LINUX_DOWNLOAD_SCRIPT_PARAMS+=--dl-path ${MACHINE_PRJ_DOWNLOAD_PATH}
 endif
 ifdef AUTOTOOLS_DL_URL
 LINUX_DOWNLOAD_SCRIPT_PARAMS+=--dl-url ${AUTOTOOLS_DL_URL}
@@ -113,14 +113,14 @@ autotools-make-install: autotools-make
 	@    $(ECHO) "${MSG_INFO}  Make install ${PKGNAME}${MSG_END}"
 	$(V) mkdir -p install
 	$(V) $(MAKE) ${PKGNAME} install -j $(COMMON_MAKE_JOBS) DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install
-	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_BOARD_LIBS_DIR)
+	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_MACHINE_LIBS_DIR)
 	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-lib-installer.sh \
         --pkg-name ${PKGNAME} \
         --host-prefix ${PRJ_ROOT_PATH}/libraries/${COMMON_LIB_HOST_LIBS_DIR} \
-        --libs-path ${BOARD_LIBRARY_BOARD_INSTALLDIR} \
+        --libs-path ${MACHINE_LIBRARY_MACHINE_INSTALLDIR} \
         --libsrc-path $(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install/ \
-        --boarddest-path $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_BOARD_LIBS_DIR) \
+        --boarddest-path $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_MACHINE_LIBS_DIR) \
         --hostdest-path $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
 	$(V) $(RM) install
 	$(V) touch $@

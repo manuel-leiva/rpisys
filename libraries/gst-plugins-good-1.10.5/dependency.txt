@@ -1,1 +1,2 @@
 gst-plugins-base-1.10.5
+jpeg-9c/

@@ -6,7 +6,7 @@ AUTOTOOLS_NAME_TAR := gstreamer-1.10.5.tar.xz
 
 AUTOTOOLS_SHA1SUM:=acaf187b71692f98a2bafe8cac043a6df0a1b954
 
-AUTOTOOLS_FLAGS += --build=x86_64-linux-gnu --prefix=/usr --libdir=$(BOARD_LIBRARY_BOARD_INSTALLDIR) --host=$(BOARD_LIBRARY_HOST) \
+AUTOTOOLS_FLAGS += --build=x86_64-linux-gnu --prefix=/usr --libdir=$(MACHINE_LIBRARY_MACHINE_INSTALLDIR) --host=$(MACHINE_LIBRARY_HOST) \
 --disable-gtk-doc --disable-failing-tests --disable-tests \
 --disable-examples --disable-benchmarks --disable-debug
 

@@ -1,0 +1,118 @@
+
+export MACHINE_NAME="Tegra_X2"
+# export MACHINE_NAME:="Tegra_X1"
+
+ifndef MACHINE_NAME
+$(error ERROR: MACHINE_NAME not defined)
+endif
+
+# The files and steps used to create tegra-x2 are based on the guide
+# https://developer.nvidia.com/embedded/downloads
+# * L4T Documentation  28.1 2017/07/24
+# wget http://developer2.download.nvidia.com/embedded/L4T/r28_Release_v1.0/Docs/NVIDIA_Tegra_Linux_Driver_Package.tar
+
+# COMMON VARIABLES #############################################################
+
+# This directory is used to share files between projects as the toolchain
+MACHINE_PRJ_COMMON_PATH:=/home/${USER}/tegra_toolchain
+
+# Destination directory to download packages
+MACHINE_PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/tegra
+
+# Percentage used to compute the number of recipes to execute at once.
+# The number of recipes is computed with this formula:
+# JOBS=HOST_CORES*MACHINE_PRJ_MAKE_JOBS_PER_CORE/100
+# If MACHINE_PRJ_MAKE_JOBS_PER_CORE is not defined JOBS=1
+MACHINE_PRJ_MAKE_JOBS_PER_CORE:=75
+# ARM Architecture
+MACHINE_PRJ_ARCH=arm64
+
+# CONFIGURATION FILES ##########################################################
+
+# This file contains the list of packages needed to build the board image
+MACHINE_PRJ_TOOLS_PATH=$(LOCAL_MACHINE_PATH)/board_tools.txt
+
+MACHINE_PRJ_MAKEFILE_HOOKS_PATH=$(LOCAL_MACHINE_PATH)/Makefile.hook
+
+
+# TOOLCHAIN ####################################################################
+
+MACHINE_TOOLCHAIN_TAR_NAME:=l4t-gcc-toolchain-64-bit-28-1
+MACHINE_TOOLCHAIN_DL_URL:=http://developer.nvidia.com/embedded/dlc/
+MACHINE_TOOLCHAIN_SHA1SUM:=37d69372208b8a3b6c2e10194d19aff615b71f6a
+MACHINE_TOOLCHAIN_PKG_NAME:=install
+MACHINE_TOOLCHAIN_PATH:=$(MACHINE_PRJ_COMMON_PATH)/install/bin/
+MACHINE_TOOLCHAIN_PREFIX:=aarch64-unknown-linux-gnu-
+
+# BOOTLOADER ##################################################################
+
+
+# LINUX #######################################################################
+
+MACHINE_LINUX_TAR_NAME:=source_release.tbz2
+MACHINE_LINUX_DL_URL:=http://developer2.download.nvidia.com/embedded/L4T/r28_Release_v1.0/BSP/
+MACHINE_LINUX_SHA1SUM:=651066d1306efddeeaa276692cc0e4eab0bade24
+MACHINE_LINUX_PKG_NAME:=sources/kernel/kernel-4.4/
+
+# By default are added the kernel flags CROSS_COMPILE=$(MACHINE_TOOLCHAIN_PATH)/$(MACHINE_TOOLCHAIN_PREFIX)
+# This variable allows add some extra flag
+MACHINE_LINUX_KERNEL_EXTRAFLAGS:=
+# Kernel configuration file
+ifeq ($(MACHINE_NAME),"Tegra_X2")
+    MACHINE_LINUX_DEFCONFIG:=tegra18_defconfig
+    MACHINE_LINUX_PATCHES_PATH=$(LOCAL_MACHINE_PATH)/tx2_linux_patches
+else
+    MACHINE_LINUX_DEFCONFIG:=tegra21_defconfig
+    MACHINE_LINUX_PATCHES_PATH=$(LOCAL_MACHINE_PATH)/tx1_linux_patches
+endif
+
+MACHINE_LINUX_KERNEL_INSTALLATION_DIR:=Linux_for_Tegra/kernel
+MACHINE_LINUX_MODULES_INSTALLATION_DIR:=Linux_for_Tegra/rootfs/
+
+# FILESYSTEM ###################################################################
+
+MACHINE_FILESYSTEM_TAR_NAME:=Tegra_Linux_Sample-Root-Filesystem_R28.1.0_aarch64.tbz2
+MACHINE_FILESYSTEM_DL_URL:=http://developer2.download.nvidia.com/embedded/L4T/r28_Release_v1.0/BSP/
+MACHINE_FILESYSTEM_SHA1SUM:=a0d419e702b3d535601dc41b6be97026ce20416e
+MACHINE_FILESYSTEM_PKG_NAME:=filesystem
+# Directory where all other files and subdirectories will be saved
+MACHINE_FILESYSTEM_DEST_DIR:=filesystem
+# The root filesystem, provided with Tegra186_Linux_R28.1.0_aarch64,
+# has to be extracted with 'sudo'
+MACHINE_FILESYSTEM_SU:=y
+
+MACHINE_FILESYSTEM_INSTALLATION_DIR:=Linux_for_Tegra/rootfs/
+
+# LIBRARIES ####################################################################
+
+MACHINE_LIBRARY_HOST=arm-none-linux
+# Library directory for the normal user-programs installation
+MACHINE_LIBRARY_MACHINE_INSTALLDIR:=/usr/lib/aarch64-linux-gnu
+# List of library to build
+MACHINE_LIBRARY_NAME_LIST := \
+readline-6.3
+MACHINE_LIBRARY_INSTALLATION_DIR:=Linux_for_Tegra/rootfs/
+
+# APPLICATIONS #################################################################
+
+# List of applications to build
+MACHINE_APPLICATION_NAME_LIST:=""
+
+# IMAGE ########################################################################
+
+ifeq ($(MACHINE_NAME),"Tegra_X2")
+    MACHINE_IMAGE_TAR_NAME:=Tegra186_Linux_R28.1.0_aarch64.tbz2
+    MACHINE_IMAGE_SHA1SUM:=e7508c4fa0a2e1c73ce9ac671d38ea32804912d5
+else
+    MACHINE_IMAGE_TAR_NAME:=Tegra210_Linux_R28.1.0_aarch64.tbz2
+    MACHINE_IMAGE_SHA1SUM:=a6d2d74043365d4c4e116b95c8534259d40b7589
+endif
+MACHINE_IMAGE_DL_URL:=http://developer2.download.nvidia.com/embedded/L4T/r28_Release_v1.0/BSP/
+
+MACHINE_IMAGE_PKG_NAME:=Linux_for_Tegra
+# MACHINE_IMAGE_EXT_SD_DEVICE: external sd card device used to install the image built
+MACHINE_IMAGE_EXT_SD_DEVICE:=/dev/mmcblk0
+
+MACHINE_IMAGE_PARTITION0_DIR:=Linux_for_Tegra/rootfs/
+MACHINE_IMAGE_DISK_PARTITION_PATH=$(LOCAL_MACHINE_PATH)/tegra_partition_table
+MACHINE_IMAGE_PARTITION0_NAME:=rootfs

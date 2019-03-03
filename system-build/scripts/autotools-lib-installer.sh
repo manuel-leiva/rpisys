@@ -42,7 +42,7 @@ do
         ;;
         # Host library destination
         -b|--boarddest-path)
-        BOARDDEST_PATH="$2"
+        MACHINEDEST_PATH="$2"
         shift
         ;;
         # Help
@@ -72,13 +72,13 @@ else
 fi
 
 # Check if the filesystem path was defined
-if [ -z ${BOARDDEST_PATH} ]; then
+if [ -z ${MACHINEDEST_PATH} ]; then
    echo -e "${ERRORCOLOR}Error:${ENDCOLOR} Option \"--boarddest-path\" not defined."
    exit
 else
     # Check if the filesystem exists
-    if [ ! -d ${BOARDDEST_PATH} ]; then
-       echo -e "${ERRORCOLOR}Error:${ENDCOLOR} ${BOARDDEST_PATH} does not exist."
+    if [ ! -d ${MACHINEDEST_PATH} ]; then
+       echo -e "${ERRORCOLOR}Error:${ENDCOLOR} ${MACHINEDEST_PATH} does not exist."
        exit
     fi
 fi
@@ -98,13 +98,12 @@ fi
 ## Copy libraries
 
 # Copy original directory into board destination directory
-cp -a ${LIBSRC_PATH}/* ${BOARDDEST_PATH}/
+cp -a ${LIBSRC_PATH}/* ${MACHINEDEST_PATH}/
 
 # Change library la files
 AUTOTOOLS_LA_LIBS=$(find ${LIBSRC_PATH} -name *.la)
 if [ -n "${AUTOTOOLS_LA_LIBS}" ]; then
     for i in ${AUTOTOOLS_LA_LIBS}; do
-        echo Lib $i ;
         sed -i "s:^libdir=':libdir='${PREFIX}:g" $i ;
         # This command is to substitude the paths in the dependency_libs variable
         sed -i "s: ${LIBS_INSTALLDIR}: ${PREFIX}${LIBS_INSTALLDIR}:g" $i ;
@@ -115,10 +114,20 @@ fi
 AUTOTOOLS_PC_FILES=$(find ${LIBSRC_PATH} -name *.pc)
 if [ -n "${AUTOTOOLS_PC_FILES}" ]; then
     for i in ${AUTOTOOLS_PC_FILES}; do
-        echo Files $i ;
         sed -i "s:^prefix=:prefix=${PREFIX}:g" $i ;
-        sed -i "s:^libdir=:libdir=${PREFIX}:g" $i ;
+        # Check if the libdir has prefix
+        CHECK_PREFIX=$( grep ^libdir $i | grep prefix )
+        # if there not prefix
+        if [ -z "$CHECK_PREFIX" ]; then
+            sed -i "s:^libdir=:libdir=${PREFIX}:g" $i ;
+        fi
         sed -i "s:^toolexeclibdir=:toolexeclibdir=${PREFIX}:g" $i ;
+        # Check if the includedir has prefix or libdir
+        CHECK_PREFIX=$( grep ^includedir $i | grep -e prefix -e libdir )
+        # if there not prefix
+        if [ -z "$CHECK_PREFIX" ]; then
+            sed -i "s:^includedir=:includedir=${PREFIX}:g" $i ;
+        fi
     done ;
 fi
 

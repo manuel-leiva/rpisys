@@ -1,0 +1,13 @@
+Index: filesystem/filesystem/lib/systemd/system/bluetooth.service
+===================================================================
+--- filesystem.orig/filesystem/lib/systemd/system/bluetooth.service
++++ filesystem/filesystem/lib/systemd/system/bluetooth.service
+@@ -6,7 +6,7 @@ ConditionPathIsDirectory=/sys/class/blue
+ [Service]
+ Type=dbus
+ BusName=org.bluez
+-ExecStart=/usr/lib/bluetooth/bluetoothd
++ExecStart=/usr/lib/bluetooth/bluetoothd --compat
+ NotifyAccess=main
+ #WatchdogSec=10
+ #Restart=on-failure

@@ -2,11 +2,11 @@
 SHELL=/bin/bash
 
 linux-download-post:
-ifeq ($(BOARD_NAME),"Tegra_X2")
-	echo "Decompress $(BOARD_NAME) kernel tx2"
+ifeq ($(MACHINE_NAME),"Tegra_X2")
+	echo "Decompress $(MACHINE_NAME) kernel tx2"
 	cd ${LINUX_PATH}/sources; tar -xjf kernel_src-tx2.tbz2
 else
-	echo "Decompress $(BOARD_NAME) kernel tx1"
+	echo "Decompress $(MACHINE_NAME) kernel tx1"
 	cd ${LINUX_PATH}/sources; tar -xjf kernel_src-tx1.tbz2
 endif
 
@@ -39,7 +39,7 @@ image-clean-post:
 
 image-make-custom: image-message
 ifeq ($(IMAGE),EMMC)
-ifeq ($(BOARD_NAME),"Tegra_X2")
+ifeq ($(MACHINE_NAME),"Tegra_X2")
 	read -n 1 -r ; \
     echo ; \
     if [[ $${REPLY} == [yY] ]]; then \
@@ -59,7 +59,7 @@ endif
 endif
 # See https://elinux.org/Jetson/TX2_DTB#R28.1
 ifeq ($(IMAGE),DTB)
-ifeq ($(BOARD_NAME),"Tegra_X2")
+ifeq ($(MACHINE_NAME),"Tegra_X2")
 	read -n 1 -r ; \
     echo ; \
     if [[ $${REPLY} == [yY] ]]; then \
@@ -79,7 +79,7 @@ endif
 endif
 
 image-make-sd-pre: image-message
-ifeq ($(BOARD),"Tegra_X2")
+ifeq ($(MACHINE),"Tegra_X2")
 	read -n 1 -r ; \
     echo ; \
     if [[ $${REPLY} == [yY] ]]; then \

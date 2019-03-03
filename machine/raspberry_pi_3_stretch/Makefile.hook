@@ -1,0 +1,47 @@
+# Board hook recipe
+
+# https://www.raspberrypi.org/documentation/linux/kernel/building.md
+linux-dtbs-post:
+	$(V) mkdir -p $(LINUX_KERNEL_INSTALL_PATH)/overlays
+	$(V) cp ${LINUX_PKG_DIR_NAME}/arch/arm/boot/dts/overlays/*.dtb* $(LINUX_KERNEL_INSTALL_PATH)/overlays
+	$(V) cp ${LINUX_PKG_DIR_NAME}/arch/arm/boot/dts/overlays/README $(LINUX_KERNEL_INSTALL_PATH)/overlays
+
+linux-install-post:
+	echo "  Linux post install"
+	$(V) cp $(LINUX_KERNEL_INSTALLATION_PATH)/zImage $(LINUX_KERNEL_INSTALLATION_PATH)/kernel7.img
+
+filesystem-patch-pre:
+# Change owner
+	echo "You need super user permissions to change the wpa_supplicant file owner"
+	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant
+	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant/wpa_supplicant.conf
+	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/lib/systemd/system/
+	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/lib/systemd/system/bluetooth.service
+	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/
+	sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/modules
+
+filesystem-patch-post:
+# Change owner
+	echo "You need super user permissions to change the wpa_supplicant file owner"
+	sudo chown root:root ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant
+	sudo chown root:root ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant/wpa_supplicant.conf
+	sudo chown root:root ${FILESYSTEM_PKG_PATH}/lib/systemd/system/
+	sudo chown root:root ${FILESYSTEM_PKG_PATH}/lib/systemd/system/bluetooth.service
+	sudo chown root:root ${FILESYSTEM_PKG_PATH}/etc/
+	sudo chown root:root ${FILESYSTEM_PKG_PATH}/etc/modules
+
+filesystem-revpatch-pre:
+# Change owner
+	if [ -e ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant/wpa_supplicant.conf ] ; then \
+        echo "You need super user permissions to change wpa_supplicant file owner" ; \
+        sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant ; \
+        sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/wpa_supplicant/wpa_supplicant.conf ; \
+        echo "You need super user permissions to change bluetooth.service file owner" ; \
+        sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/lib/systemd/system/ ; \
+        sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/lib/systemd/system/bluetooth.service ; \
+        echo "You need super user permissions to change modules file owner" ; \
+        sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/ ; \
+        sudo chown ${USER}:${USER} ${FILESYSTEM_PKG_PATH}/etc/modules ; \
+    fi
+
+

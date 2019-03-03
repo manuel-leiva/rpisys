@@ -7,20 +7,23 @@ COMMON_HOST_CORES:=$(shell cat /proc/cpuinfo | grep processor | wc -l)
 ## Verify external variables ##
 
 
-ifndef BOARD_PRJ_MAKE_JOBS_PER_CORE
-# If BOARD_PRJ_MAKE_JOBS_PER_CORE is not defined LINUX_MAKE_JOBS=1
+ifndef MACHINE_PRJ_MAKE_JOBS_PER_CORE
+# If MACHINE_PRJ_MAKE_JOBS_PER_CORE is not defined LINUX_MAKE_JOBS=1
 COMMON_MAKE_JOBS:=1
-$(warning WARN: BOARD_PRJ_MAKE_JOBS_PER_CORE not defined)
+$(warning WARN: MACHINE_PRJ_MAKE_JOBS_PER_CORE not defined)
 else
-COMMON_MAKE_JOBS:=$(shell echo ${BOARD_PRJ_MAKE_JOBS_PER_CORE}*${COMMON_HOST_CORES}/100 | bc )
+COMMON_MAKE_JOBS:=$(shell echo ${MACHINE_PRJ_MAKE_JOBS_PER_CORE}*${COMMON_HOST_CORES}/100 | bc )
 endif
 
 COMMON_IMAGE_BOOT_PATH:=${PRJ_ROOT_PATH}/image/image/boot
 COMMON_IMAGE_ROOTFS_PATH:=${PRJ_ROOT_PATH}/image/image/rootfs
 
-COMMON_LIB_BOARD_LIBS_DIR:=board-libs
+COMMON_LIB_MACHINE_LIBS_DIR:=board-libs
 COMMON_LIB_HOST_LIBS_DIR:=host-libs
 COMMON_LIB_HOST_LIB_PATH:=${PRJ_ROOT_PATH}/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
+
+# Name of the symbolic link to machine filesystem files
+COMMON_CUSTOM_FILESYSTEM_SL_NAME:=custom_filesystem
 
 # Message types
 MSG_ERROR := \033[1;31m
@@ -31,7 +34,7 @@ MSG_DEBUG := \033[0;34m
 MSG_END := \033[0m
 
 # Commands
-CP :=cp
+CP :=cp -a
 RM :=rm -rf
 MKDIR :=mkdir -p
 
@@ -61,7 +64,7 @@ define COMMON_RECIPE_DEPENDENCY
              PKG_INSTALLED=$$(apt-cache policy $$PACKAGE  | grep Installed) ; \
              $(ECHO) "    $$PACKAGE:$$PKG_INSTALLED" ; \
              if [ -n "$$(echo $$PKG_INSTALLED | grep none )" ]; then \
-                 $(ECHO) "${MSG_REQ}You need root permissions to install $$PACKAGE${MSG_END}" ; \
+                 $(ECHO) "${MSG_REQ}You need super user permissions to install $$PACKAGE${MSG_END}" ; \
                  sudo apt-get install $$PACKAGE ; \
              fi \
         done \
@@ -95,7 +98,7 @@ $(1)-patch: $(2)
 endef
 
 
-# Revert patch
+# Revert patch  (deprecated)
 # Verify if patches directory exists, if it exists, then verify if the
 # flag autotools-patch file exists, if it exists, then remove the
 # patches
@@ -110,12 +113,13 @@ $(1)-revpatch: $(2)
 	$(V) $(RM) $(1)-patch
 endef
 
-# Common recipe
+# Common recipe remove patch
 # Remove patch metainformation
 # Parameters:
 # 1: Patches path
 define COMMON_RECIPE_RM_PATCH
 	$(V) if [ -d $(1)/patches ]; then \
+        quilt pop -a ; \
         $(RM) $(1)/.pc; \
     fi
 endef
@@ -128,6 +132,7 @@ endef
 define COMMON_RECIPE_HOOK
 	$(V) $(MAKE_F) $(1) -q $(2) 2> /dev/null ; \
 if [ $$? -le 1 ] ; then \
+    $(ECHO) " ${MSG_INFO}  Calling task: $(2)${MSG_END}" ; \
     $(MAKE_F) $(1) $(2) ; \
 fi
 endef

@@ -68,6 +68,11 @@ do
         SUPER_USER="$2"
         shift
         ;;
+        # Define architecture
+        -a|--arch)
+        ARCHITECTURE="$2"
+        shift
+        ;;
         # Help
         -h|--help)
         help
@@ -122,13 +127,29 @@ function TarDecompress
     OWNER=$(ls ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -l | awk '{print $3 }')
     echo -e "${INFOCOLOR}  Decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
     if [ "root" == ${OWNER} ]  || [ "y" == ${SUPER_USER} ] ; then
-        echo -e "${MSGCOLOR}You need root permissions to decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
+        echo -e "${MSGCOLOR}You need super user permissions to decompress ${PKG_TARGET_NAME}${ENDCOLOR}"
         # Decompress Package
         sudo \
         tar -xpf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -C ${DESTINATION_PATH}
     else
         # Decompress Package
         tar -xf ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} -C ${DESTINATION_PATH}
+    fi
+}
+
+function DebDecompress
+{
+    if [ -z ${ARCHITECTURE} ]; then
+        echo -e "${ERRORCOLOR}Error:${ENDCOLOR} System architecture not defined"
+    else
+        # Check if the debian package architecture matches
+        ARCH=$( dpkg -I ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} | grep Architecture | awk '{print $2}' )
+        if [ "$ARCHITECTURE" = "$ARCH" ]; then
+            dpkg -x ${DOWNLOAD_PATH}/${PKG_TARGET_NAME} ${DESTINATION_PATH}
+        else
+            echo -e "${ERRORCOLOR}Error:${ENDCOLOR} package architecture ($ARCH) does not match system ($ARCHITECTURE)"
+            exit 1
+        fi
     fi
 }
 
@@ -155,6 +176,13 @@ function GitProcess
     git clone ${GIT_CLONE_PARAMETERS}
 }
 
+# Download Debian package
+function DebianProcess
+{
+    FileDownload
+    DebDecompress
+}
+
 # Verify the type of target
 if [ ! -z ${PKG_TARGET_NAME} ]; then
     case ${PKG_TARGET_NAME} in
@@ -167,6 +195,10 @@ if [ ! -z ${PKG_TARGET_NAME} ]; then
         *.git)
             # Clone GIT repository
             GitProcess
+            ;;
+         *.deb)
+            # Download Debian package
+            DebianProcess
             ;;
         *)
             echo -e "${WARNCOLOR}WARN: Target ${PKG_TARGET_NAME} format is not identified${ENDCOLOR}"

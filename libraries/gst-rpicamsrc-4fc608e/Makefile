@@ -6,7 +6,7 @@ AUTOTOOLS_NAME_TAR := gst-rpicamsrc-4fc608e.tar.gz
 
 AUTOTOOLS_SHA1SUM:=487bfc6b22d278dfc1a776f8e802021939408a4e
 
-AUTOTOOLS_FLAGS = --prefix=/usr --libdir=$(BOARD_LIBRARY_BOARD_INSTALLDIR) --host=$(BOARD_LIBRARY_HOST) \
+AUTOTOOLS_FLAGS = --prefix=/usr --libdir=$(MACHINE_LIBRARY_MACHINE_INSTALLDIR) --host=$(MACHINE_LIBRARY_HOST) \
 with_rpi_header_dir=$(PRJ_ROOT_PATH)/filesystem/filesystem/opt/vc/include  \
 LDFLAGS=-L$(PRJ_ROOT_PATH)/filesystem/filesystem/opt/vc/lib CFLAGS=-Wl,-rpath-link=$(PRJ_ROOT_PATH)/filesystem/filesystem/opt/vc/lib
 
