@@ -37,6 +37,9 @@ MSG_END := \033[0m
 CP :=cp -a
 RM :=rm -rf
 MKDIR :=mkdir -p
+MESON := ~/.local/bin/meson
+NINJA := ninja -C
+
 
 INCLUDE_MAKE_PATH:=$(PRJ_ROOT_PATH)/system-build/makefile
 SYSTEM_BUILD_PATH:=$(PRJ_ROOT_PATH)/system-build
