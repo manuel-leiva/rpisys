@@ -12,6 +12,17 @@ ifndef MACHINE_LIBRARY_HOST
 $(error ERROR: MACHINE_LIBRARY_HOST not defined)
 endif
 
+ifndef MACHINE_SYSTEM
+$(error ERROR: MACHINE_SYSTEM not defined)
+endif
+ifndef MACHINE_ENDIANESS
+$(error ERROR: MACHINE_ENDIANESS not defined)
+endif
+ifndef MACHINE_PRJ_ARCH
+$(error ERROR: MACHINE_PRJ_ARCH not defined)
+endif
+
+
 # Private definitions ##########################################################
 PKGNAME := $(notdir $(shell pwd))
 
@@ -51,6 +62,32 @@ endif
 ifdef MESON_GIT_DEPTH
 LINUX_DOWNLOAD_SCRIPT_PARAMS+=--git-depth ${MESON_GIT_DEPTH}
 endif
+
+
+MESON_FILE_SCRIPT_PARAMS= \
+    --system             ${MACHINE_SYSTEM} \
+    --system             ${MACHINE_SYSTEM} \
+    --cpu-family         ${MACHINE_PRJ_ARCH} \
+    --cpu                ${MACHINE_PRJ_ARCH} \
+    --endianess          ${MACHINE_ENDIANESS} \
+    --binaries-prefix    ${CROSS_COMPILE} \
+    --pkg-config-prefix  /usr/bin/ \
+    --output             ${MESON_PKG_PATH}/${PKGNAME}/
+
+ifdef PACKAGE_LIBRARY_INSTALLDIR
+MESON_FILE_SCRIPT_PARAMS+=--libdir ${PACKAGE_LIBRARY_INSTALLDIR}
+else
+# if is not defined. use default definition
+MESON_FILE_SCRIPT_PARAMS+=--libdir ${MACHINE_LIBRARY_MACHINE_INSTALLDIR}
+endif
+
+ifdef PACKAGE_LIBRARY_PREFIX
+MESON_FILE_SCRIPT_PARAMS+=--prefix ${PACKAGE_LIBRARY_PREFIX}
+else
+# if is not defined. use default definition
+MESON_FILE_SCRIPT_PARAMS+=--prefix /usr
+endif
+
 
 # Public targets ###############################################################
 
@@ -99,9 +136,10 @@ $(eval $(call COMMON_TARGET_PATCH,meson,meson-download,${MESON_PKG_PATH},${PKGNA
 
 meson-build: meson-patch
 	@    $(ECHO) "${MSG_INFO}  Build ${PKGNAME} ${MSG_END}"
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/meson-cross-file.sh ${MESON_FILE_SCRIPT_PARAMS}
 	$(V) cd ${PKGNAME} ; \
 	$(MKDIR) ${MESON_BUILD_DIR}; \
-	$(MESON) ${PACKAGE_FLAGS} ${MESON_BUILD_DIR} --cross-file ${MESON_PKG_PATH}/cross_file.txt ;
+	$(MESON) ${PACKAGE_FLAGS} ${MESON_BUILD_DIR} --cross-file ${MESON_PKG_PATH}/${PKGNAME}/cross_file.txt ;
 	$(V) touch $@
 
 debug:
@@ -115,10 +153,10 @@ meson-ninja: meson-build
 meson-ninja-install: meson-ninja
 	@    $(ECHO) "${MSG_INFO}  Make install ${PKGNAME}${MSG_END}"
 	$(V) mkdir -p install
-	$(V) $(NINJA) ${PKGNAME}/${MESON_BUILD_DIR} install -j $(COMMON_MAKE_JOBS) DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install
+	$(V) DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install $(NINJA) ${PKGNAME}/${MESON_BUILD_DIR} install -j $(COMMON_MAKE_JOBS)
 	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_MACHINE_LIBS_DIR)
 	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
-	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/meson-lib-installer.sh \
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-lib-installer.sh \
         --pkg-name ${PKGNAME} \
         --host-prefix ${PRJ_ROOT_PATH}/libraries/${COMMON_LIB_HOST_LIBS_DIR} \
         --libs-path ${MACHINE_LIBRARY_MACHINE_INSTALLDIR} \
