@@ -146,14 +146,16 @@ if [ -z ${C_ARGS} ]; then
     echo -e "${WARNCOLOR}Error:${ENDCOLOR} Option \"--c_args\" not defined."
     echo "c_args = []" >> ${OUTPUT}/$FILE
 else
-    echo "c_args = ['${C_ARGS}']" >> ${OUTPUT}/$FILE
+    PYTHON_ARGS=$(echo ${C_ARGS} | sed  "s:,:',':g")
+    echo "c_args = ['${PYTHON_ARGS}']" >> ${OUTPUT}/$FILE
 fi
 
 if [ -z ${C_LINK_ARGS} ]; then
     echo -e "${WARNCOLOR}Error:${ENDCOLOR} Option \"--c-link-args\" not defined."
     echo "c_link_args = []" >> ${OUTPUT}/$FILE
 else
-    echo "c_link_args = ['${C_LINK_ARGS}']" >> ${OUTPUT}/$FILE
+    PYTHON_ARGS=$(echo ${C_LINK_ARGS} | sed  "s:,:',':g")
+    echo "c_link_args = ['${PYTHON_ARGS}']" >> ${OUTPUT}/$FILE
 fi
 
 echo "" >> ${OUTPUT}/$FILE
