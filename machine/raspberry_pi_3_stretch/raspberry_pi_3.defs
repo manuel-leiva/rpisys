@@ -21,6 +21,10 @@ MACHINE_PRJ_DOWNLOAD_PATH:=/home/${USER}/Downloads/rpisys
 MACHINE_PRJ_MAKE_JOBS_PER_CORE:=75
 # ARM Architecture
 MACHINE_PRJ_ARCH=arm
+MACHINE_CPU:=armv7l
+MACHINE_SYSTEM:=linux
+MACHINE_ENDIANESS:=little
+
 
 # CONFIGURATION FILES ##########################################################
 
@@ -85,7 +89,7 @@ MACHINE_LIBRARY_HOST=arm-none-linux
 # Library directory for the normal user-programs installation
 MACHINE_LIBRARY_MACHINE_INSTALLDIR:=/usr/lib/arm-linux-gnueabihf
 # Architecture
-MACHINE_LIBRARY_MACHINE_ARCH:= armhf
+MACHINE_LIBRARY_MACHINE_ARCH:=armhf
 # List of library to build
 MACHINE_LIBRARY_NAME_LIST := \
 readline-6.3 \

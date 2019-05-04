@@ -121,5 +121,3 @@ fi
 if [ $VERSION == "8.25" ]; then
     echo "ECHO:=echo" >> ${PWD}/system-build/makefile/Makefile.local
 fi
-
-
