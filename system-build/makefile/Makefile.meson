@@ -63,16 +63,16 @@ ifdef MESON_GIT_DEPTH
 LINUX_DOWNLOAD_SCRIPT_PARAMS+=--git-depth ${MESON_GIT_DEPTH}
 endif
 
-
+# Create parameter list to create meson-cross-file
 MESON_FILE_SCRIPT_PARAMS= \
     --system             ${MACHINE_SYSTEM} \
-    --system             ${MACHINE_SYSTEM} \
     --cpu-family         ${MACHINE_PRJ_ARCH} \
-    --cpu                ${MACHINE_PRJ_ARCH} \
+    --cpu                ${MACHINE_CPU} \
     --endianess          ${MACHINE_ENDIANESS} \
     --binaries-prefix    ${CROSS_COMPILE} \
     --pkg-config-prefix  /usr/bin/ \
-    --output             ${MESON_PKG_PATH}/${PKGNAME}/
+    --output             ${MESON_PKG_PATH}/
+
 
 ifdef PACKAGE_LIBRARY_INSTALLDIR
 MESON_FILE_SCRIPT_PARAMS+=--libdir ${PACKAGE_LIBRARY_INSTALLDIR}
@@ -87,7 +87,12 @@ else
 # if is not defined. use default definition
 MESON_FILE_SCRIPT_PARAMS+=--prefix /usr
 endif
-
+ifdef MESON_CFLAGS
+MESON_FILE_SCRIPT_PARAMS+=--c-args ${MESON_CFLAGS}
+endif
+ifdef MESON_CFLAGS
+MESON_FILE_SCRIPT_PARAMS+=--c-link-args ${MESON_LDFLAGS}
+endif
 
 # Public targets ###############################################################
 
@@ -102,7 +107,8 @@ clean: meson-revpatch
 	meson-build \
 	meson-patch \
 	meson-ninja \
-	meson-ninja-install
+	meson-ninja-install \
+	cross_file.txt
 # Remove package directory
 	$(V) $(RM) $(PKGNAME)
 	$(call COMMON_RECIPE_RM_PATCH,$(MESON_PKG_PATH))
@@ -134,12 +140,15 @@ $(eval $(call COMMON_TARGET_REVPATCH,meson,,${MESON_PKG_PATH},${PKGNAME}))
 # Parameters: target_prefix, dependecies, package-path, message
 $(eval $(call COMMON_TARGET_PATCH,meson,meson-download,${MESON_PKG_PATH},${PKGNAME}))
 
-meson-build: meson-patch
-	@    $(ECHO) "${MSG_INFO}  Build ${PKGNAME} ${MSG_END}"
+cross_file.txt: meson-patch
+	@    $(ECHO) "${MSG_INFO}  Create cross_file.txt${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/meson-cross-file.sh ${MESON_FILE_SCRIPT_PARAMS}
+
+meson-build: ${MESON_PKG_PATH}/cross_file.txt
+	@    $(ECHO) "${MSG_INFO}  Build ${PKGNAME} ${MSG_END}"
 	$(V) cd ${PKGNAME} ; \
 	$(MKDIR) ${MESON_BUILD_DIR}; \
-	$(MESON) ${PACKAGE_FLAGS} ${MESON_BUILD_DIR} --cross-file ${MESON_PKG_PATH}/${PKGNAME}/cross_file.txt ;
+	$(MESON) ${PACKAGE_FLAGS} ${MESON_BUILD_DIR} --cross-file ${MESON_PKG_PATH}/cross_file.txt ;
 	$(V) touch $@
 
 debug:
@@ -152,7 +161,7 @@ meson-ninja: meson-build
 
 meson-ninja-install: meson-ninja
 	@    $(ECHO) "${MSG_INFO}  Make install ${PKGNAME}${MSG_END}"
-	$(V) mkdir -p install
+	$(V) $(MKDIR) install
 	$(V) DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install $(NINJA) ${PKGNAME}/${MESON_BUILD_DIR} install -j $(COMMON_MAKE_JOBS)
 	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_MACHINE_LIBS_DIR)
 	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
