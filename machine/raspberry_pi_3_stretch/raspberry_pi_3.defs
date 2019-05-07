@@ -82,6 +82,8 @@ MACHINE_FILESYSTEM_SU:=y
 MACHINE_FILESYSTEM_PATCHES_PATH=$(LOCAL_MACHINE_PATH)/filesystem.patch
 # Install specific custom files for this machine (optional)
 MACHINE_FILESYSTEM_INSTALL_DIR=$(LOCAL_MACHINE_PATH)/filesystem
+# Define the list of applications installed using apt-get install command
+# MACHINE_FILESYSTEM_PACKAGES_LIST:=v4l-utils
 
 # LIBRARIES ####################################################################
 
