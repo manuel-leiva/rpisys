@@ -16,7 +16,8 @@ function help
     echo "-p, --cpu                CPU Id"
     echo "-c, --endianess          CPU endianess"
     echo "-c, --c-args             GCC flags"
-    echo "-l, --c-link-args        G++ flags."
+    echo "-l, --c-link-args        GCC link flags."
+    echo "-l, --cpp-link-args      G++ flags."
     echo "-b, --binaries-prefix    Toolchain prefix."
     echo "-k, --pkg-config-prefix  Toolchain prefix."
     echo "-k, --prefix             Library installation directory prefix."
@@ -54,9 +55,19 @@ do
         C_ARGS="$2"
         shift
         ;;
+        # Compiler CPP args
+        -c|--cpp-args)
+        CPP_ARGS="$2"
+        shift
+        ;;
         # Compiler C link args
         -l|--c-link-args)
         C_LINK_ARGS="$2"
+        shift
+        ;;
+        # Compiler CPP link args
+        -l|--cpp-link-args)
+        CPP_LINK_ARGS="$2"
         shift
         ;;
         # Toolchain tools prefix
@@ -156,6 +167,22 @@ if [ -z ${C_LINK_ARGS} ]; then
 else
     PYTHON_ARGS=$(echo ${C_LINK_ARGS} | sed  "s:,:',':g")
     echo "c_link_args = ['${PYTHON_ARGS}']" >> ${OUTPUT}/$FILE
+fi
+
+if [ -z ${CPP_ARGS} ]; then
+    echo -e "${WARNCOLOR}Error:${ENDCOLOR} Option \"--cpp-args\" not defined."
+    echo "cpp_args = []" >> ${OUTPUT}/$FILE
+else
+    PYTHON_ARGS=$(echo ${CPP_ARGS} | sed  "s:,:',':g")
+    echo "cpp_args = ['${PYTHON_ARGS}']" >> ${OUTPUT}/$FILE
+fi
+
+if [ -z ${CPP_LINK_ARGS} ]; then
+    echo -e "${WARNCOLOR}Error:${ENDCOLOR} Option \"--cpp-link-args\" not defined."
+    echo "cpp_link_args = []" >> ${OUTPUT}/$FILE
+else
+    PYTHON_ARGS=$(echo ${CPP_LINK_ARGS} | sed  "s:,:',':g")
+    echo "cpp_link_args = ['${PYTHON_ARGS}']" >> ${OUTPUT}/$FILE
 fi
 
 echo "" >> ${OUTPUT}/$FILE

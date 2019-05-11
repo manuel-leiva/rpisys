@@ -90,8 +90,14 @@ endif
 ifdef MESON_CFLAGS
 MESON_FILE_SCRIPT_PARAMS+=--c-args ${MESON_CFLAGS}
 endif
-ifdef MESON_CFLAGS
+ifdef MESON_LDFLAGS
 MESON_FILE_SCRIPT_PARAMS+=--c-link-args ${MESON_LDFLAGS}
+endif
+ifdef MESON_CPPFLAGS
+MESON_FILE_SCRIPT_PARAMS+=--cpp-args ${MESON_CPPFLAGS}
+endif
+ifdef MESON_CPPLFLAGS
+MESON_FILE_SCRIPT_PARAMS+=--cpp-link-args ${MESON_CPPLFLAGS}
 endif
 
 # Public targets ###############################################################
@@ -144,7 +150,7 @@ cross_file.txt: meson-patch
 	@    $(ECHO) "${MSG_INFO}  Create cross_file.txt${MSG_END}"
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/meson-cross-file.sh ${MESON_FILE_SCRIPT_PARAMS}
 
-meson-build: ${MESON_PKG_PATH}/cross_file.txt
+meson-build: cross_file.txt
 	@    $(ECHO) "${MSG_INFO}  Build ${PKGNAME} ${MSG_END}"
 	$(V) cd ${PKGNAME} ; \
 	$(MKDIR) ${MESON_BUILD_DIR}; \
