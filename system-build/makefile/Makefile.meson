@@ -37,6 +37,13 @@ MESON_PATH:=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/usr/bin
 
 # PKG_CONFIG_LIBDIR: Replaces the default pkg-config search directory.
 export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/$(MACHINE_LIBRARY_MACHINE_INSTALLDIR)/pkgconfig:$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/usr/share/pkgconfig
+
+ifdef PACKAGE_PKGCONFIG_PATH
+export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/$(MACHINE_LIBRARY_MACHINE_INSTALLDIR)/pkgconfig:$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/usr/share/pkgconfig:${PACKAGE_PKGCONFIG_PATH}
+else
+export PKG_CONFIG_LIBDIR=$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/$(MACHINE_LIBRARY_MACHINE_INSTALLDIR)/pkgconfig:$(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)/usr/share/pkgconfig
+endif
+
 # Tell make not to export PKG_CONFIG_PATH variable to child processes.
 unexport PKG_CONFIG_PATH
 
@@ -169,8 +176,6 @@ meson-ninja-install: meson-ninja
 	@    $(ECHO) "${MSG_INFO}  Make install ${PKGNAME}${MSG_END}"
 	$(V) $(MKDIR) install
 	$(V) DESTDIR=$(PRJ_ROOT_PATH)/libraries/${PKGNAME}/install $(NINJA) ${PKGNAME}/${MESON_BUILD_DIR} install -j $(COMMON_MAKE_JOBS)
-	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_MACHINE_LIBS_DIR)
-	$(V) $(MKDIR) $(PRJ_ROOT_PATH)/libraries/$(COMMON_LIB_HOST_LIBS_DIR)
 	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/autotools-lib-installer.sh \
         --pkg-name ${PKGNAME} \
         --host-prefix ${PRJ_ROOT_PATH}/libraries/${COMMON_LIB_HOST_LIBS_DIR} \
