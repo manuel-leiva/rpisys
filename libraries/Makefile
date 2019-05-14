@@ -42,7 +42,7 @@ LIB_CLEAN_TARGET_LIST:=$(MACHINE_LIBRARY_NAME_LIST:%=clean-%)
 ifdef MACHINE_LIBRARY_NAME_LIST
 all: libraries-header libraries-filesystem $(MACHINE_LIBRARY_NAME_LIST)
 else
-all: libraries-header
+all: libraries-header $(MACHINE_LIBRARY_NAME_LIST)
 endif
 
 clean: libraries-header $(LIB_CLEAN_TARGET_LIST)
@@ -90,7 +90,7 @@ ifdef MACHINE_LIBRARY_FILESYSTEM_DEP
 	$(V) touch $@
 endif
 
-libraries-install: libraries-filesystem
+libraries-install: all
 	@$(ECHO) "${MSG_INFO}  Libraries install${MSG_END}"
 	@$(ECHO) "${MSG_REQ}You need super user permissions to install libraries${MSG_END}"
 	$(V) cd board-libs; sudo find . | sudo cpio -pdum ${LIBRARY_INSTALLATION_PATH}
