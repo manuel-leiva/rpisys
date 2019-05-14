@@ -47,9 +47,10 @@ endif
 
 clean: libraries-header $(LIB_CLEAN_TARGET_LIST)
 	@$(ECHO) "${MSG_INFO}  Clean Libraries ${MSG_END}"
-	@$(RM) ${COMMON_LIB_MACHINE_LIBS_DIR} ${COMMON_LIB_HOST_LIBS_DIR} \
+	@$(ECHO) "${MSG_REQ}You need super user permissions to clean libraries${MSG_END}"
+	$(V) sudo $(RM) ${COMMON_LIB_MACHINE_LIBS_DIR} ${COMMON_LIB_HOST_LIBS_DIR} \
 	libraries-install libraries-filesystem
-	@ sudo $(RM) ${LIBRARY_FILESYSTEM_DIR}
+	$(V) sudo $(RM) ${LIBRARY_FILESYSTEM_DIR}
 
 # Alias target to install linux
 install: libraries-header libraries-install
