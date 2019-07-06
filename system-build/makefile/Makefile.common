@@ -40,7 +40,7 @@ MSG_END := \033[0m
 CP :=cp -a
 RM :=rm -rf
 MKDIR :=mkdir -p
-MESON := ~/.local/bin/meson
+MESON := meson
 NINJA := ninja -C
 
 
