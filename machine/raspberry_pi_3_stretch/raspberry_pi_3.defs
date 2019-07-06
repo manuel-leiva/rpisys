@@ -4,7 +4,7 @@ MACHINE_NAME:="Raspberry_Pi_3"
 # Profile description:
 # Kernel: Kernel source tree for Raspberry Pi Foundation 4.14.89 (https://github.com/raspberrypi/linux)
 # Filesystem: Rasbian Stretch Lite (2018-11-13) https://www.raspberrypi.org/downloads/raspbian/
-# Toolchain: gcc-linaro-arm-linux-gnueabihf-raspbian 4.8.3 (https://github.com/raspberrypi/tools)
+# Toolchain: gcc-linaro-6.1.1 (https://releases.linaro.org/components/toolchain/binaries/6.1-2016.08/)
 
 # COMMON VARIABLES #############################################################
 
@@ -25,13 +25,11 @@ MACHINE_CPU:=armv7l
 MACHINE_SYSTEM:=linux
 MACHINE_ENDIANESS:=little
 
-
 # CONFIGURATION FILES ##########################################################
 
 # This file contains the list of packages needed to build the board image
 MACHINE_PRJ_TOOLS_PATH=$(LOCAL_MACHINE_PATH)/board_tools.txt
 MACHINE_PRJ_MAKEFILE_HOOKS_PATH=$(LOCAL_MACHINE_PATH)/Makefile.hook
-
 
 # TOOLCHAIN ####################################################################
 
@@ -52,7 +50,6 @@ MACHINE_BOOTLOADER_SHA1SUM:=6466e7e732af337308fc0fc17c5cc35e30f9e2fe
 MACHINE_BOOTLOADER_PKG_NAME:=boot
 MACHINE_BOOTLOADER_PATCHES_PATH=$(LOCAL_MACHINE_PATH)/bootloader.patch
 
-
 # LINUX #######################################################################
 # https://www.raspberrypi.org/documentation/linux/kernel/building.md
 
@@ -68,7 +65,6 @@ MACHINE_LINUX_KERNEL_EXTRAFLAGS:="KERNEL=kernel7"
 MACHINE_LINUX_DEFCONFIG:=bcm2709_defconfig
 # For Pi 1, Pi Zero, Pi Zero W, or Compute Module
 # MACHINE_LINUX_DEFCONFIG:=bcmrpi_defconfig
-
 
 # FILESYSTEM ###################################################################
 
@@ -118,7 +114,10 @@ libbluetooth-dev_5.43-2 \
 i2c-tools_3.1.2-3
 
 # Install specific custom libraries for this machine (optional)
-MACHINE_LIBRARY_INSTALL_DIR=$(LOCAL_MACHINE_PATH)/libraries/i2c-tools_3.1.2-3
+MACHINE_LIBRARY_INSTALL_DIR= \
+$(LOCAL_MACHINE_PATH)/libraries/i2c-tools_3.1.2-3 \
+$(LOCAL_MACHINE_PATH)/libraries/libbluetooth3_5.43-2 \
+$(LOCAL_MACHINE_PATH)/libraries/libbluetooth-dev_5.43-2
 
 # IMAGE ########################################################################
 
