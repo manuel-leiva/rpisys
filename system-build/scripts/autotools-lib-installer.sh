@@ -40,7 +40,7 @@ do
         HOSTDEST_PATH="$2"
         shift
         ;;
-        # Host library destination
+        # Build library destination
         -b|--boarddest-path)
         MACHINEDEST_PATH="$2"
         shift

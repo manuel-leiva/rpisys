@@ -29,6 +29,10 @@ filesystem-patch-post:
 	sudo chown root:root ${FILESYSTEM_PKG_PATH}/lib/systemd/system/bluetooth.service
 	sudo chown root:root ${FILESYSTEM_PKG_PATH}/etc/
 	sudo chown root:root ${FILESYSTEM_PKG_PATH}/etc/modules
+# Remove old glib 2.50 version (https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=896019)
+# Avoid error: symbol lookup error: /usr/lib/arm-linux-gnueabihf/libgobject-2.0.so.0: undefined symbol: g_date_copy
+	sudo rm -f ${FILESYSTEM_PKG_PATH}/lib/arm-linux-gnueabihf/libglib-2.0.so.0  lib/arm-linux-gnueabihf/libglib-2.0.so.0.5000.3
+
 
 filesystem-revpatch-pre:
 # Change owner

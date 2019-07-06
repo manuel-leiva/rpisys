@@ -1,10 +1,10 @@
 
-MACHINE_NAME:="Raspberry_Pi_3"
+MACHINE_NAME:=Raspberry_Pi_3
 
 # Profile description:
 # Kernel: Kernel source tree for Raspberry Pi Foundation 4.14.89 (https://github.com/raspberrypi/linux)
 # Filesystem: Rasbian Stretch Lite (2018-11-13) https://www.raspberrypi.org/downloads/raspbian/
-# Toolchain: gcc-linaro-6.1.1 (https://releases.linaro.org/components/toolchain/binaries/6.1-2016.08/)
+# Toolchain: gcc-linaro-arm-linux-gnueabihf-raspbian 4.8.3 (https://github.com/raspberrypi/tools)
 
 # COMMON VARIABLES #############################################################
 
@@ -25,11 +25,13 @@ MACHINE_CPU:=armv7l
 MACHINE_SYSTEM:=linux
 MACHINE_ENDIANESS:=little
 
+
 # CONFIGURATION FILES ##########################################################
 
 # This file contains the list of packages needed to build the board image
 MACHINE_PRJ_TOOLS_PATH=$(LOCAL_MACHINE_PATH)/board_tools.txt
 MACHINE_PRJ_MAKEFILE_HOOKS_PATH=$(LOCAL_MACHINE_PATH)/Makefile.hook
+
 
 # TOOLCHAIN ####################################################################
 
@@ -50,6 +52,7 @@ MACHINE_BOOTLOADER_SHA1SUM:=6466e7e732af337308fc0fc17c5cc35e30f9e2fe
 MACHINE_BOOTLOADER_PKG_NAME:=boot
 MACHINE_BOOTLOADER_PATCHES_PATH=$(LOCAL_MACHINE_PATH)/bootloader.patch
 
+
 # LINUX #######################################################################
 # https://www.raspberrypi.org/documentation/linux/kernel/building.md
 
@@ -65,6 +68,7 @@ MACHINE_LINUX_KERNEL_EXTRAFLAGS:="KERNEL=kernel7"
 MACHINE_LINUX_DEFCONFIG:=bcm2709_defconfig
 # For Pi 1, Pi Zero, Pi Zero W, or Compute Module
 # MACHINE_LINUX_DEFCONFIG:=bcmrpi_defconfig
+
 
 # FILESYSTEM ###################################################################
 
@@ -91,33 +95,37 @@ MACHINE_LIBRARY_MACHINE_ARCH:=armhf
 # List of library to build
 MACHINE_LIBRARY_NAME_LIST := \
 readline-6.3 \
+freetype-2.10.0 \
 libffi-3.2.1 \
 pcre-8.40 \
 zlib-1.2.11 \
-glib-2.50.3 \
-libsoup-2.57.1 \
 libxml2-2.9.4 \
 x264-snapshot-20170811-2245-stable \
-sqlite-autoconf-3170000 ncurses-6.0 \
-gstreamer-1.10.5 \
-gst-plugins-base-1.10.5 \
-gst-plugins-good-1.10.5 \
-gst-plugins-bad-1.10.5 \
-gst-plugins-ugly-1.10.5 \
-gst-rtsp-server-1.10.5 \
-gst-libav-1.10.5 \
-gst-omx-1.10.5 \
-gst-rpicamsrc-4fc608e \
+sqlite-autoconf-3170000 \
+ncurses-6.0 \
+glib-2.60.0 \
+gstreamer-1.16.0 \
+gst-plugins-base-1.16.0 \
+gst-plugins-good-1.16.0 \
+gst-plugins-bad-1.16.0 \
+gst-plugins-ugly-1.16.0 \
+libsoup-2.57.1 \
+ffmpeg-4.1.3 \
+gst-libav-1.16.0 \
+gst-rtsp-server-1.16.0 \
+gst-omx-1.16.0 \
+gst-rpicamsrc-4ee114f \
 jpeg-9c \
 libbluetooth3_5.43-2 \
 libbluetooth-dev_5.43-2 \
 i2c-tools_3.1.2-3
 
 # Install specific custom libraries for this machine (optional)
-MACHINE_LIBRARY_INSTALL_DIR= \
-$(LOCAL_MACHINE_PATH)/libraries/i2c-tools_3.1.2-3 \
-$(LOCAL_MACHINE_PATH)/libraries/libbluetooth3_5.43-2 \
-$(LOCAL_MACHINE_PATH)/libraries/libbluetooth-dev_5.43-2
+MACHINE_LIBRARY_INSTALL_DIR=$(LOCAL_MACHINE_PATH)/libraries/i2c-tools_3.1.2-3
+# Some libraries require dependencies available in the filsystem.
+# Specific directories can be imported into libraries build context
+# opt directory contains custom broadcom libraries required by gst-omx
+MACHINE_LIBRARY_FILESYSTEM_DEP:=opt
 
 # IMAGE ########################################################################
 

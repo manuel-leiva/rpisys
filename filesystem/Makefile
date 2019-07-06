@@ -65,7 +65,7 @@ endif
 
 .PHONY: all clean header
 
-all: header filesystem-patch
+all: header filesystem-packages
 
 header:
 	@$(ECHO) "${MSG_INFO}Filesystem${MSG_END} "
@@ -122,7 +122,17 @@ filesystem-revpatch:
 	$(call COMMON_RECIPE_HOOK,$(MACHINE_PRJ_MAKEFILE_HOOKS_PATH),$@-post)
 	$(V) $(RM) filesystem-patch
 
-filesystem-install: filesystem-patch
+filesystem-packages: filesystem-patch
+ifdef MACHINE_FILESYSTEM_PACKAGES_LIST
+	@$(ECHO) "${MSG_INFO}  Install packages${MSG_END}"
+	$(V) $(PRJ_ROOT_PATH)/system-build/scripts/filesystem-packages-installer.sh \
+       --cpu-family ${MACHINE_CPU} \
+       --filesystem ${FILESYSTEM_PKG_PATH} \
+       --packages   ${MACHINE_FILESYSTEM_PACKAGES_LIST}
+endif
+
+
+filesystem-install: filesystem-packages
 	@$(ECHO) "${MSG_INFO}  Install filesystem${MSG_END}"
 	$(V) $(MKDIR) ${FILESYSTEM_INSTALLATION_PATH}
 ifeq ($(MACHINE_FILESYSTEM_SU),y)
