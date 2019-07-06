@@ -1,5 +1,3 @@
-[TOC]
-
 # RPISYS project
 
 RPISYS (**R**aspberry **Pi** **sys**tem) was created in order to build all
@@ -71,7 +69,7 @@ by the SDK but also can be easily removed and replaced with a new configuration.
 1.Download project
 
 ```bash
-git clone https://manuelleiva@bitbucket.org/manuelleiva/rpisys.git
+git clone git@github.com:manuel-leiva/rpisys.git
 ```
 
 ## Raspberry Pi 3
@@ -111,7 +109,7 @@ File: system-build/boards/tegra/tegra_r28_1.defs
 ```
 2.  Configure board
 ```bash
-./configure --board tegra/tegra_r28_1.defs
+./configure --machine machine/tegra/tegra_r28_1.defs
 ```
 3.  Build system
 ```bash
